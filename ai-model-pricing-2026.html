@@ -1,0 +1,1639 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Model Pricing Comparison — July 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Figtree:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0e14;
+        --surface: #111720;
+        --surface2: #172030;
+        --border: #1e2d42;
+        --border-light: #253d5c;
+        --accent: #00d4a8;
+        --accent2: #4f9fff;
+        --accent3: #ffab40;
+        --text: #e8f0fe;
+        --muted: #6e8faf;
+        --muted2: #3a5070;
+        --red: #ff6b6b;
+        --green: #00d4a8;
+        --gold: #ffd166;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Figtree", sans-serif;
+        font-weight: 400;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── BACKGROUND MESH ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 60% 40% at 15% 20%,
+            rgba(0, 212, 168, 0.07) 0%,
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 50% 50% at 85% 80%,
+            rgba(79, 159, 255, 0.06) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 40% 60% at 50% 50%,
+            rgba(255, 171, 64, 0.03) 0%,
+            transparent 70%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── GRID LINES ── */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(0, 212, 168, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 212, 168, 0.025) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── WRAPPER ── */
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 60px 24px 100px;
+      }
+
+      /* ── HEADER ── */
+      header {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeDown 0.7s ease both;
+      }
+
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .eyebrow::before,
+      .eyebrow::after {
+        content: "";
+        display: block;
+        width: 36px;
+        height: 1px;
+        background: var(--accent);
+        opacity: 0.5;
+      }
+
+      h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(2.6rem, 6vw, 4.2rem);
+        line-height: 1.08;
+        letter-spacing: -0.015em;
+        color: var(--text);
+        margin-bottom: 20px;
+      }
+
+      h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .subtitle {
+        font-size: 1.05rem;
+        color: var(--muted);
+        font-weight: 300;
+        max-width: 560px;
+        margin: 0 auto 36px;
+        line-height: 1.65;
+      }
+
+      .meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      .meta-badge {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        padding: 5px 14px;
+        border-radius: 100px;
+        border: 1px solid var(--border-light);
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* ── SUMMARY CARDS ── */
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 40px;
+        animation: fadeUp 0.7s 0.15s ease both;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 24px;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .card:hover {
+        border-color: var(--border-light);
+        transform: translateY(-2px);
+      }
+      .card-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.67rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .card-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .card-value.gold {
+        color: var(--gold);
+      }
+      .card-value.blue {
+        color: var(--accent2);
+      }
+      .card-sub {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* ── CONTROLS ── */
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 20px;
+        animation: fadeUp 0.7s 0.25s ease both;
+      }
+
+      .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 220px;
+        max-width: 340px;
+      }
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+        font-size: 0.9rem;
+      }
+      #search {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: "Figtree", sans-serif;
+        font-size: 0.9rem;
+        padding: 10px 14px 10px 40px;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      #search:focus {
+        border-color: var(--accent);
+      }
+      #search::placeholder {
+        color: var(--muted2);
+      }
+
+      .sort-hint {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+      }
+      .sort-hint span {
+        color: var(--accent);
+      }
+
+      /* ── TABLE CONTAINER ── */
+      .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        animation: fadeUp 0.7s 0.35s ease both;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+
+      /* THEAD */
+      thead {
+        background: var(--surface2);
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      th {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 16px 20px;
+        text-align: left;
+        user-select: none;
+        cursor: pointer;
+        white-space: nowrap;
+        position: relative;
+        transition:
+          color 0.2s,
+          background 0.2s;
+      }
+      th:hover {
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      th.sorted {
+        color: var(--accent);
+      }
+
+      th .th-inner {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .sort-arrow {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 2px;
+        opacity: 0.3;
+        transition: opacity 0.2s;
+      }
+      th.sorted .sort-arrow {
+        opacity: 1;
+      }
+      .sort-arrow svg {
+        display: block;
+      }
+
+      /* TBODY */
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: rgba(0, 212, 168, 0.04);
+      }
+
+      td {
+        padding: 18px 20px;
+        vertical-align: middle;
+      }
+
+      /* RANK */
+      .rank {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--muted2);
+        font-weight: 500;
+      }
+
+      /* MODEL NAME CELL */
+      .model-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .model-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .model-name {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 0.95rem;
+        line-height: 1.3;
+      }
+      .model-org {
+        font-size: 0.75rem;
+        color: var(--muted);
+        font-weight: 400;
+        margin-top: 1px;
+      }
+
+      /* PRICE CELLS */
+      .price-val {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+      .price-val.low {
+        color: #6feab4;
+      }
+      .price-val.mid {
+        color: #ffd166;
+      }
+      .price-val.high {
+        color: #ff9f7c;
+      }
+
+      /* CACHE */
+      .cache-val {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      /* CONTEXT */
+      .ctx-pill {
+        display: inline-block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-weight: 500;
+      }
+      .ctx-pill.ctx-1m {
+        background: rgba(0, 212, 168, 0.12);
+        color: var(--accent);
+        border: 1px solid rgba(0, 212, 168, 0.3);
+      }
+      .ctx-pill.ctx-256k {
+        background: rgba(79, 159, 255, 0.1);
+        color: var(--accent2);
+        border: 1px solid rgba(79, 159, 255, 0.25);
+      }
+      .ctx-pill.ctx-200k {
+        background: rgba(255, 209, 102, 0.08);
+        color: var(--gold);
+        border: 1px solid rgba(255, 209, 102, 0.2);
+      }
+
+      /* LICENSE */
+      .license-tag {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.7rem;
+        padding: 3px 9px;
+        border-radius: 4px;
+      }
+      .license-tag.open {
+        background: rgba(111, 234, 180, 0.1);
+        color: #6feab4;
+        border: 1px solid rgba(111, 234, 180, 0.25);
+      }
+      .license-tag.prop {
+        background: rgba(255, 107, 107, 0.08);
+        color: #ff9f7c;
+        border: 1px solid rgba(255, 107, 107, 0.18);
+      }
+
+      /* RELEASE DATE */
+      .date-val {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+
+      /* NOTES */
+      .note-text {
+        font-size: 0.78rem;
+        color: var(--muted);
+        max-width: 240px;
+        line-height: 1.5;
+      }
+      .note-text strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* ── FOOTER ── */
+      .footer-note {
+        margin-top: 36px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px 40px;
+        justify-content: space-between;
+        align-items: flex-start;
+        animation: fadeUp 0.7s 0.5s ease both;
+      }
+
+      .legend {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .disclaimer {
+        font-size: 0.75rem;
+        color: var(--muted2);
+        max-width: 480px;
+        line-height: 1.6;
+      }
+      .disclaimer a {
+        color: var(--muted);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* ── PRICE BAR ── */
+      .price-bar-wrap {
+        position: relative;
+      }
+      .price-bar {
+        height: 3px;
+        border-radius: 99px;
+        margin-top: 5px;
+        opacity: 0.55;
+      }
+
+      /* NO-RESULTS */
+      .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--muted2);
+        font-size: 0.88rem;
+      }
+
+      /* ── ANIMATIONS ── */
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      tbody tr {
+        animation: rowIn 0.4s ease both;
+      }
+      @keyframes rowIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ── CONTROLS RIGHT ── */
+      .controls-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .calc-btn {
+        background: var(--surface2);
+        border: 1px solid var(--border-light);
+        color: var(--accent);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78rem;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.04em;
+      }
+      .calc-btn:hover {
+        background: rgba(0, 212, 168, 0.1);
+        border-color: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      /* ── CALCULATOR MODAL ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.2s ease;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 680px;
+        width: 90%;
+        max-height: 85vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .modal-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.6rem;
+        color: var(--text);
+      }
+
+      .modal-close {
+        background: none;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 1.2rem;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--text);
+        border-color: var(--border-light);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .calc-form {
+        display: grid;
+        gap: 20px;
+        margin-bottom: 28px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .form-label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .form-input {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.92rem;
+        padding: 10px 14px;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .form-input:focus {
+        border-color: var(--accent);
+      }
+      .form-input::placeholder {
+        color: var(--muted2);
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .range-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .range-input {
+        flex: 1;
+        accent-color: var(--accent);
+        height: 4px;
+      }
+
+      .range-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+        color: var(--accent);
+        min-width: 48px;
+        text-align: right;
+      }
+
+      .calc-result {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .result-title {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.67rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+
+      .result-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+
+      .result-table th {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .result-table td {
+        padding: 10px 10px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+
+      .result-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .result-cost {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      .no-models-msg {
+        text-align: center;
+        padding: 20px;
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.82rem;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 900px) {
+        th,
+        td {
+          padding: 14px 14px;
+        }
+        .note-text {
+          display: none;
+        }
+      }
+      @media (max-width: 640px) {
+        .wrapper {
+          padding: 40px 16px 80px;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+        td.hide-sm,
+        th.hide-sm {
+          display: none;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .modal {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- HEADER -->
+      <header>
+        <div class="eyebrow">AI Intelligence Report</div>
+        <h1>Model Pricing<br /><em>Comparison</em></h1>
+        <p class="subtitle">
+          API token costs for the leading frontier open-weight and proprietary
+          models — all prices in USD per million tokens.
+        </p>
+        <div class="meta-row">
+          <span class="meta-badge">📅 Updated July 2026</span>
+          <span class="meta-badge">🔢 14 Models</span>
+          <span class="meta-badge">💱 USD / 1M Tokens</span>
+        </div>
+      </header>
+
+      <!-- SUMMARY CARDS -->
+      <div class="summary-grid">
+        <div class="card">
+          <div class="card-label">Cheapest Input</div>
+          <div class="card-value">$0.0660</div>
+          <div class="card-sub">Hunyuan HY3 Preview / 262K ctx</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Most Expensive Input</div>
+          <div class="card-value high gold">$5.0000</div>
+          <div class="card-sub">Claude Opus 4.8 / 1M ctx</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Best Context Window</div>
+          <div class="card-value blue">1M tok</div>
+          <div class="card-sub">9 of 14 models offer 1M ctx</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Open-Weight Models</div>
+          <div class="card-value">9 / 14</div>
+          <div class="card-sub">MIT, Apache 2.0 or open license</div>
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="controls">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input
+            type="search"
+            id="search"
+            placeholder="Filter models…"
+            autocomplete="off"
+          />
+        </div>
+        <div class="controls-right">
+          <div class="sort-hint">
+            Click any <span>column header</span> to sort ↑↓
+          </div>
+          <button class="calc-btn" id="calcBtn" onclick="openCalculator()">
+            📊 Cost Calculator
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-wrap">
+        <table id="priceTable" aria-label="AI Model Pricing Comparison">
+          <thead>
+            <tr>
+              <th data-col="rank" class="sorted asc" style="width: 48px">
+                <div class="th-inner">
+                  #
+                  <span class="sort-arrow">
+                    <svg width="8" height="5" viewBox="0 0 8 5">
+                      <path d="M4 0L8 5H0z" fill="currentColor" />
+                    </svg>
+                  </span>
+                </div>
+              </th>
+              <th data-col="model">
+                <div class="th-inner">
+                  Model
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="input">
+                <div class="th-inner">
+                  Input $/M
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="output">
+                <div class="th-inner">
+                  Output $/M
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="cache" class="hide-sm">
+                <div class="th-inner">
+                  Cache Hit $/M
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="context">
+                <div class="th-inner">
+                  Context
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="license" class="hide-sm">
+                <div class="th-inner">
+                  License
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="released" class="hide-sm">
+                <div class="th-inner">
+                  Released
+                  <span class="sort-arrow"
+                    ><svg width="7" height="10" viewBox="0 0 7 10">
+                      <path
+                        d="M3.5 0L7 4H0zM3.5 10L0 6h7z"
+                        fill="currentColor"
+                      /></svg
+                  ></span>
+                </div>
+              </th>
+              <th data-col="notes" class="hide-sm" style="width: 200px">
+                <div class="th-inner">Notes</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+        <div class="no-results" id="noResults" style="display: none">
+          No models match your filter.
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer-note">
+        <div>
+          <div class="legend">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #6feab4"></span>Low
+              price tier
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #ffd166"></span>Mid
+              price tier
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #ff9f7c"></span>High
+              price tier
+            </div>
+          </div>
+        </div>
+        <div class="disclaimer">
+          Prices are per million tokens (USD) sourced from official APIs,
+          OpenRouter, and Artificial Analysis as of July 2026. MiniMax M3 prices
+          updated to standard rate ($0.30/$1.20). Always verify at provider docs
+          before committing to production budgets.
+        </div>
+      </div>
+    </div>
+    <!-- /wrapper -->
+
+    <!-- COST CALCULATOR MODAL -->
+    <div class="modal-overlay" id="calcModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Cost Calculator</h2>
+          <button class="modal-close" onclick="closeCalculator()">✕</button>
+        </div>
+
+        <div class="calc-form">
+          <div class="form-group">
+            <label class="form-label" for="calcTokens"
+              >Total Tokens Usage (in millions)</label
+            >
+            <input
+              type="number"
+              id="calcTokens"
+              class="form-input"
+              placeholder="e.g. 1 = 1M, 10 = 10M"
+              min="0.01"
+              step="0.01"
+              value="1"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label
+                class="form-label"
+                for="inputPct"
+                style="display:flex;justify-content:space-between;align-items:center;"
+              >Input % (default 30%):
+                <span
+                  style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:500;"
+                  id="inputPctVal">30%</span
+                ></label
+              >
+              <div class="range-wrap">
+                <input
+                  type="range"
+                  id="inputPct"
+                  class="range-input"
+                  min="0"
+                  max="100"
+                  step="5"
+                  value="30"
+                  oninput="updateInputPct(this.value)"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label
+                class="form-label"
+                for="outputPct"
+                style="display:flex;justify-content:space-between;align-items:center;"
+              >Output % (default 70%):
+                <span
+                  style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:500;"
+                  id="outputPctVal">70%</span
+                ></label
+              >
+              <div class="range-wrap">
+                <input
+                  type="range"
+                  id="outputPct"
+                  class="range-input"
+                  min="0"
+                  max="100"
+                  step="5"
+                  value="70"
+                  oninput="updateOutputPct(this.value)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="filterModel"
+              >Filter Model (optional)</label
+            >
+            <input
+              type="text"
+              id="filterModel"
+              class="form-input"
+              placeholder="Type to filter models…"
+              oninput="calculateCosts()"
+            />
+          </div>
+        </div>
+
+        <div class="calc-result">
+          <div class="result-title">Estimated Costs (USD)</div>
+          <div id="calcResults"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const MODELS = [
+        {
+          rank: 1,
+          model: "Hunyuan HY3 Preview",
+          org: "Tencent",
+          input: 0.066,
+          output: 0.26,
+          cache: 0.029,
+          contextRaw: 262144,
+          context: "262K",
+          contextClass: "ctx-256k",
+          license: "Open-Weight",
+          licenseClass: "open",
+          released: "Apr 22, 2026",
+          releasedSort: "2026-04-22",
+          color: "#a78bfa",
+          notes:
+            "295B MoE, 21B active, 192 experts. SWE-Bench 74.4%, GPQA 87.2%. Hy Community License.",
+        },
+        {
+          rank: 2,
+          model: "Step 3.7 Flash",
+          org: "StepFun",
+          input: 0.2,
+          output: 1.15,
+          cache: 0.04,
+          contextRaw: 262144,
+          context: "256K",
+          contextClass: "ctx-256k",
+          license: "Apache 2.0",
+          licenseClass: "open",
+          released: "May 29, 2026",
+          releasedSort: "2026-05-29",
+          color: "#f472b6",
+          notes:
+            "198B MoE (196B lang + 1.8B vision), 11B active. Native multimodal. SWE-Bench Verified 56.3%. 400 tok/s. Open weights, Advisor Mode.",
+        },
+        {
+          rank: 3,
+          model: "MiniMax M3",
+          org: "MiniMax",
+          input: 0.3,
+          output: 1.2,
+          cache: 0.06,
+          contextRaw: 1048576,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "Open-Weight",
+          licenseClass: "open",
+          released: "Jun 1, 2026",
+          releasedSort: "2026-06-01",
+          color: "#38bdf8",
+          notes:
+            "MSA sparse attention. 59% SWE-Bench Pro. Multimodal. Standard rate: $0.30/$1.20 per 1M tokens on OpenRouter.",
+        },
+        {
+          rank: 4,
+          model: "Qwen 3.7 Plus",
+          org: "Alibaba",
+          input: 0.32,
+          output: 1.28,
+          cache: 0.064,
+          contextRaw: 1000000,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "Proprietary",
+          licenseClass: "prop",
+          released: "Jun 1, 2026",
+          releasedSort: "2026-06-01",
+          color: "#ffd166",
+          notes:
+            "Multimodal (text + image + video). 1M ctx. 256K thinking tokens. API-only, no open weights. Cache reads $0.064/M.",
+        },
+        {
+          rank: 5,
+          model: "MiMo V2.5-Pro",
+          org: "Xiaomi",
+          input: 0.435,
+          output: 0.87,
+          cache: 0.0036,
+          contextRaw: 1048576,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "MIT",
+          licenseClass: "open",
+          released: "Apr 22, 2026",
+          releasedSort: "2026-04-22",
+          color: "#ff6b9d",
+          notes:
+            "1.02T total / 42B active. Permanent price cut effective May 27, 2026. Up to 99% savings from prior rate. Multimodal. 5–8x Token Plan quota increase.",
+        },
+        {
+          rank: 6,
+          model: "DeepSeek V4 Pro",
+          org: "DeepSeek",
+          input: 0.435,
+          output: 0.87,
+          cache: 0.003625,
+          contextRaw: 1048576,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "MIT",
+          licenseClass: "open",
+          released: "Apr 24, 2026",
+          releasedSort: "2026-04-24",
+          color: "#c084fc",
+          notes:
+            "1.6T MoE, 49B active. 1M context, 384K max output. Available via DeepSeek official API (primary) and providers.",
+        },
+        {
+          rank: 7,
+          model: "Kimi K2.6",
+          org: "Moonshot AI",
+          input: 0.55,
+          output: 3.2,
+          cache: 0.11,
+          contextRaw: 262144,
+          context: "262K",
+          contextClass: "ctx-256k",
+          license: "MIT",
+          licenseClass: "open",
+          released: "Apr 20, 2026",
+          releasedSort: "2026-04-20",
+          color: "#00d4a8",
+          notes:
+            "1T MoE, 32B active params. Agent Swarm up to 300 sub-agents. Multimodal (text + image + video).",
+        },
+        {
+          rank: 8,
+          model: "Kimi K2.7",
+          org: "Moonshot AI",
+          input: 0.74,
+          output: 3.5,
+          cache: 0.15,
+          contextRaw: 262144,
+          context: "262K",
+          contextClass: "ctx-256k",
+          license: "MIT",
+          licenseClass: "open",
+          released: "Jun 15, 2026",
+          releasedSort: "2026-06-15",
+          color: "#10b981",
+          notes:
+            "1T MoE architecture. Enhanced reasoning and agentic capabilities over K2.6. Multimodal (text + image + video).",
+        },
+        {
+          rank: 9,
+          model: "GLM-5.2",
+          org: "Z.AI",
+          input: 0.93,
+          output: 3.0,
+          cache: 0.18,
+          contextRaw: 1048576,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "MIT",
+          licenseClass: "open",
+          released: "May 15, 2026",
+          releasedSort: "2026-05-15",
+          color: "#3b82f6",
+          notes:
+            "Z.ai flagship open-weight model. 1M context window. Advanced agentic coding and long-horizon task execution.",
+        },
+        {
+          rank: 10,
+          model: "GLM-5.1",
+          org: "Z.AI",
+          input: 0.975,
+          output: 4.3,
+          cache: 0.182,
+          contextRaw: 202752,
+          context: "203K",
+          contextClass: "ctx-200k",
+          license: "MIT",
+          licenseClass: "open",
+          released: "Apr 7, 2026",
+          releasedSort: "2026-04-07",
+          color: "#4f9fff",
+          notes:
+            "754B MoE, 40B active. 8+ hour autonomous task sessions. Top SWE-bench Pro scorer.",
+        },
+        {
+          rank: 11,
+          model: "Qwen 3.7 Max",
+          org: "Alibaba",
+          input: 1.25,
+          output: 3.75,
+          cache: 0.25,
+          contextRaw: 1000000,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "Proprietary",
+          licenseClass: "prop",
+          released: "May 20, 2026",
+          releasedSort: "2026-05-20",
+          color: "#ff9f7c",
+          notes:
+            "Text-only flagship. 56.6 AAII score (#1 Chinese model). 35+ hour autonomous sessions. Closed-weight.",
+        },
+        {
+          rank: 12,
+          model: "Claude Sonnet 5",
+          org: "Anthropic",
+          input: 2.0,
+          output: 10.0,
+          cache: 0.2,
+          contextRaw: 1000000,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "Proprietary",
+          licenseClass: "prop",
+          released: "Jun 20, 2026",
+          releasedSort: "2026-06-20",
+          color: "#e879f9",
+          notes:
+            "Next-gen Sonnet. 1M ctx. Multimodal (text + image + file). Frontier performance across coding, agents, and professional work.",
+        },
+        {
+          rank: 13,
+          model: "Claude Sonnet 4.6",
+          org: "Anthropic",
+          input: 3.0,
+          output: 15.0,
+          cache: 0.3,
+          contextRaw: 1000000,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "Proprietary",
+          licenseClass: "prop",
+          released: "Feb 17, 2026",
+          releasedSort: "2026-02-17",
+          color: "#d946ef",
+          notes:
+            "Most capable Sonnet-class model. Excels at iterative development, complex codebase navigation, end-to-end project management.",
+        },
+        {
+          rank: 14,
+          model: "Claude Opus 4.8",
+          org: "Anthropic",
+          input: 5.0,
+          output: 25.0,
+          cache: 0.5,
+          contextRaw: 1000000,
+          context: "1M",
+          contextClass: "ctx-1m",
+          license: "Proprietary",
+          licenseClass: "prop",
+          released: "May 1, 2026",
+          releasedSort: "2026-05-01",
+          color: "#a855f7",
+          notes:
+            "Anthropic's strongest model for coding and long-running professional tasks. Built for agents across entire workflows.",
+        },
+      ];
+
+      /* Compute min/max for bar scaling */
+      const inputs = MODELS.map((m) => m.input);
+      const outputs = MODELS.map((m) => m.output);
+      const maxInput = Math.max(...inputs);
+      const maxOutput = Math.max(...outputs);
+
+      function priceClass(val, arr) {
+        const max = Math.max(...arr);
+        const min = Math.min(...arr);
+        const mid = (max + min) / 2;
+        if (val <= min + (mid - min) * 0.6) return "low";
+        if (val <= mid + (max - mid) * 0.5) return "mid";
+        return "high";
+      }
+
+      function barColor(cls) {
+        return cls === "low"
+          ? "#6feab4"
+          : cls === "mid"
+            ? "#ffd166"
+            : "#ff9f7c";
+      }
+
+      function formatPrice(n) {
+        return n.toFixed(4);
+      }
+
+      let currentSort = { col: "rank", dir: "asc" };
+      let filterText = "";
+
+      function renderTable() {
+        let data = [...MODELS];
+
+        /* Filter */
+        if (filterText) {
+          const q = filterText.toLowerCase();
+          data = data.filter(
+            (m) =>
+              m.model.toLowerCase().includes(q) ||
+              m.org.toLowerCase().includes(q) ||
+              m.license.toLowerCase().includes(q) ||
+              m.context.toLowerCase().includes(q),
+          );
+        }
+
+        /* Sort */
+        const sortMap = {
+          rank: (m) => m.rank,
+          model: (m) => m.model.toLowerCase(),
+          input: (m) => m.input,
+          output: (m) => m.output,
+          cache: (m) => m.cache,
+          context: (m) => m.contextRaw,
+          license: (m) => m.license,
+          released: (m) => m.releasedSort,
+        };
+
+        if (sortMap[currentSort.col]) {
+          data.sort((a, b) => {
+            const va = sortMap[currentSort.col](a);
+            const vb = sortMap[currentSort.col](b);
+            if (va < vb) return currentSort.dir === "asc" ? -1 : 1;
+            if (va > vb) return currentSort.dir === "asc" ? 1 : -1;
+            return 0;
+          });
+        }
+
+        const tbody = document.getElementById("tableBody");
+        const noRes = document.getElementById("noResults");
+
+        if (data.length === 0) {
+          tbody.innerHTML = "";
+          noRes.style.display = "block";
+          return;
+        }
+        noRes.style.display = "none";
+
+        const rowNums = data.map((_, i) => i + 1);
+
+        tbody.innerHTML = data
+          .map((m, i) => {
+            const inpClass = priceClass(m.input, inputs);
+            const outClass = priceClass(m.output, outputs);
+            const inpPct = ((m.input / maxInput) * 100).toFixed(1);
+            const outPct = ((m.output / maxOutput) * 100).toFixed(1);
+
+            return `
+      <tr>
+        <td><span class="rank">${i + 1}</span></td>
+        <td>
+          <div class="model-cell">
+            <div class="model-dot" style="background:${m.color}"></div>
+            <div>
+              <div class="model-name">${m.model}</div>
+              <div class="model-org">${m.org}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="price-bar-wrap">
+            <span class="price-val ${inpClass}">$${formatPrice(m.input)}</span>
+            <div class="price-bar" style="width:${inpPct}%; background:${barColor(inpClass)}"></div>
+          </div>
+        </td>
+        <td>
+          <div class="price-bar-wrap">
+            <span class="price-val ${outClass}">$${formatPrice(m.output)}</span>
+            <div class="price-bar" style="width:${outPct}%; background:${barColor(outClass)}"></div>
+          </div>
+        </td>
+        <td class="hide-sm"><span class="cache-val">$${formatPrice(m.cache)}</span></td>
+        <td><span class="ctx-pill ${m.contextClass}">${m.context}</span></td>
+        <td class="hide-sm"><span class="license-tag ${m.licenseClass}">${m.license}</span></td>
+        <td class="hide-sm"><span class="date-val">${m.released}</span></td>
+        <td class="hide-sm"><div class="note-text">${m.notes}</div></td>
+      </tr>`;
+          })
+          .join("");
+      }
+
+      /* Sort headers */
+      document.querySelectorAll("th[data-col]").forEach((th) => {
+        th.addEventListener("click", () => {
+          const col = th.dataset.col;
+          if (col === "notes") return;
+          if (currentSort.col === col) {
+            currentSort.dir = currentSort.dir === "asc" ? "desc" : "asc";
+          } else {
+            currentSort.col = col;
+            currentSort.dir = "asc";
+          }
+          document
+            .querySelectorAll("th")
+            .forEach((t) => t.classList.remove("sorted", "asc", "desc"));
+          th.classList.add("sorted", currentSort.dir);
+          renderTable();
+        });
+      });
+
+      /* Search */
+      document.getElementById("search").addEventListener("input", (e) => {
+        filterText = e.target.value.trim();
+        renderTable();
+      });
+
+      /* Init */
+      renderTable();
+
+      /* ── COST CALCULATOR ── */
+      function openCalculator() {
+        document.getElementById("calcModal").classList.add("active");
+        calculateCosts();
+      }
+
+      function closeCalculator() {
+        document.getElementById("calcModal").classList.remove("active");
+      }
+
+      /* Close modal on overlay click */
+      document.getElementById("calcModal").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeCalculator();
+      });
+
+      /* Close modal on Escape key */
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeCalculator();
+      });
+
+      function updateInputPct(val) {
+        const pct = Math.min(100, Math.max(0, parseInt(val) || 0));
+        document.getElementById("inputPct").value = pct;
+        document.getElementById("inputPctVal").textContent = pct + "%";
+        document.getElementById("outputPct").value = 100 - pct;
+        document.getElementById("outputPctVal").textContent = 100 - pct + "%";
+        calculateCosts();
+      }
+
+      function updateOutputPct(val) {
+        const pct = Math.min(100, Math.max(0, parseInt(val) || 0));
+        document.getElementById("outputPct").value = pct;
+        document.getElementById("outputPctVal").textContent = pct + "%";
+        document.getElementById("inputPct").value = 100 - pct;
+        document.getElementById("inputPctVal").textContent = 100 - pct + "%";
+        calculateCosts();
+      }
+
+      function calculateCosts() {
+        const tokens =
+          (parseFloat(document.getElementById("calcTokens").value) || 0) * 1000000;
+        const inputPct =
+          parseInt(document.getElementById("inputPct").value) || 0;
+        const outputPct = 100 - inputPct;
+        const filterTxt = (
+          document.getElementById("filterModel").value || ""
+        ).toLowerCase();
+
+        if (tokens <= 0) {
+          document.getElementById("calcResults").innerHTML =
+            '<div class="no-models-msg">Enter a token amount to calculate costs.</div>';
+          return;
+        }
+
+        const inputTokens = tokens * (inputPct / 100);
+        const outputTokens = tokens * (outputPct / 100);
+
+        let data = MODELS.filter((m) => {
+          if (!filterTxt) return true;
+          return (
+            m.model.toLowerCase().includes(filterTxt) ||
+            m.org.toLowerCase().includes(filterTxt)
+          );
+        });
+
+        if (data.length === 0) {
+          document.getElementById("calcResults").innerHTML =
+            '<div class="no-models-msg">No models match your filter.</div>';
+          return;
+        }
+
+        const rows = data
+          .map((m) => {
+            const inputCost = (inputTokens / 1000000) * m.input;
+            const outputCost = (outputTokens / 1000000) * m.output;
+            const totalCost = inputCost + outputCost;
+            return `<tr>
+        <td><span class="model-dot" style="background:${m.color};display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;"></span>${m.model}</td>
+        <td class="result-cost">$${totalCost.toFixed(2)}</td>
+        <td style="color:var(--muted);font-size:.78rem;">$${inputCost.toFixed(4)} in / $${outputCost.toFixed(4)} out</td>
+      </tr>`;
+          })
+          .join("");
+
+        document.getElementById("calcResults").innerHTML = `
+      <table class="result-table">
+        <thead><tr><th>Model</th><th>Total Cost (USD)</th><th style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;">Breakdown</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+       <div style="margin-top:12px;font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+         ${tokens.toLocaleString()} tokens · ${inputPct}% input (${inputTokens.toLocaleString()}) · ${outputPct}% output (${outputTokens.toLocaleString()})
+       </div>
+       <div style="margin-top:16px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.75rem;color:var(--muted2);line-height:1.6;">
+         <strong style="color:var(--muted);">Note:</strong> Cost estimation is based on input and output tokens. Real-world costs may vary depending on cached input usage. This calculation provides a realistic cost reflection by combining input and output token pricing at current rates.
+       </div>`;
+      }
+
+      /* Recalculate on token input change */
+      document
+        .getElementById("calcTokens")
+        .addEventListener("input", calculateCosts);
+    </script>
+  </body>
+</html>

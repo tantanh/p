@@ -1,0 +1,1920 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Model Evaluation Field Report — № 26·06·08</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=IBM+Plex+Mono:ital,wght@0,300..700;1,300..700&family=Caveat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0e1016;
+        --bg-2: #141720;
+        --bg-3: #1a1d26;
+        --bg-4: #21242e;
+        --surface: #181b24;
+        --border: rgba(201, 168, 76, 0.12);
+        --border-strong: rgba(201, 168, 76, 0.3);
+        --text: #dbd6c8;
+        --text-2: #a09a8e;
+        --text-3: #686358;
+        --text-4: #44413a;
+        --brass: #d4b04e;
+        --brass-dim: #a08438;
+        --brass-glow: rgba(212, 176, 78, 0.08);
+        --patina: #3d9e78;
+        --patina-dim: #2e7a5c;
+        --patina-bg: rgba(61, 158, 120, 0.08);
+        --steel: #5e8ad4;
+        --steel-dim: #4a6ea8;
+        --steel-bg: rgba(94, 138, 212, 0.08);
+        --rust: #d05a48;
+        --rust-dim: #a84638;
+        --rust-bg: rgba(208, 90, 72, 0.08);
+        --amber: #d4a030;
+        --amber-dim: #a87e24;
+        --amber-bg: rgba(212, 160, 48, 0.08);
+        --violet: #9478d0;
+        --violet-bg: rgba(148, 120, 208, 0.08);
+      }
+
+      html {
+        font-size: 15px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      body {
+        font-family: "DM Sans", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 12% 3%,
+            rgba(212, 176, 78, 0.035) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 88% 97%,
+            rgba(94, 138, 212, 0.025) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(61, 158, 120, 0.01) 0%,
+            transparent 70%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        opacity: 0.35;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        background-size: 180px;
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: overlay;
+      }
+
+      .serif {
+        font-family: "Instrument Serif", Georgia, serif;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+      .hand {
+        font-family: "Caveat", cursive;
+        font-weight: 500;
+      }
+
+      .sheet {
+        max-width: 1360px;
+        margin: 0 auto;
+        padding: 2.5rem 2.5rem 4rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-14deg);
+        font-family: "Instrument Serif", serif;
+        font-size: 22rem;
+        font-weight: 400;
+        font-style: italic;
+        color: rgba(212, 176, 78, 0.018);
+        pointer-events: none;
+        z-index: 0;
+        letter-spacing: -0.04em;
+        line-height: 0.85;
+        white-space: nowrap;
+        user-select: none;
+      }
+
+      /* ========== MASTHEAD ========== */
+      .masthead {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: end;
+        gap: 2rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1.5px solid var(--brass);
+        position: relative;
+        z-index: 1;
+      }
+      .masthead-left {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      .masthead-left .dept {
+        color: var(--brass);
+        font-weight: 600;
+      }
+      .masthead-center {
+        text-align: center;
+      }
+      .masthead-center .num {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 3.6rem;
+        font-weight: 400;
+        line-height: 0.9;
+        color: var(--text);
+        letter-spacing: -0.03em;
+      }
+      .masthead-center .num em {
+        color: var(--brass);
+      }
+      .masthead-center .label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        color: var(--text-3);
+        margin-top: 0.6rem;
+      }
+      .masthead-right {
+        text-align: right;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      .seal {
+        position: absolute;
+        top: -0.85rem;
+        right: 0;
+        width: 96px;
+        height: 96px;
+        border: 1.5px solid var(--brass);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(7deg);
+        color: var(--brass);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        text-align: center;
+        line-height: 1.3;
+        padding: 0.5rem;
+        opacity: 0.6;
+        animation: seal-breathe 6s ease-in-out infinite;
+      }
+      .seal::before {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border: 1px solid var(--brass);
+        border-radius: 50%;
+        opacity: 0.4;
+      }
+      @keyframes seal-breathe {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 0.75;
+        }
+      }
+
+      /* Title block */
+      .title-block {
+        margin-top: 2.5rem;
+        margin-bottom: 1.75rem;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 3rem;
+        align-items: end;
+        position: relative;
+        z-index: 1;
+      }
+      .title-block h1 {
+        font-family: "Instrument Serif", serif;
+        font-size: 4rem;
+        font-weight: 400;
+        line-height: 0.93;
+        letter-spacing: -0.035em;
+        color: var(--text);
+      }
+      .title-block h1 em {
+        font-style: italic;
+        color: var(--brass);
+      }
+      .title-block .lede {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 1.08rem;
+        line-height: 1.6;
+        color: var(--text-2);
+        border-left: 2px solid var(--brass-dim);
+        padding-left: 1.25rem;
+      }
+      .title-block .lede strong {
+        font-style: normal;
+        font-weight: 600;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .annot {
+        position: absolute;
+        font-family: "Caveat", cursive;
+        color: var(--brass);
+        font-size: 1.2rem;
+        font-weight: 500;
+        line-height: 1.1;
+        pointer-events: none;
+        transform-origin: center;
+      }
+      .annot-1 {
+        top: 0.2rem;
+        right: -2.5rem;
+        transform: rotate(-5deg);
+        text-align: center;
+      }
+      .annot-1::after {
+        content: "";
+        display: block;
+        margin: 3px auto 0;
+        width: 64px;
+        height: 6px;
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 6'><path d='M2 4 Q 16 1, 32 3 T 62 2' stroke='%23d4b04e' stroke-width='1.2' fill='none' stroke-linecap='round'/></svg>")
+          no-repeat;
+      }
+
+      /* Metadata strip */
+      .meta-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--border-strong);
+        border-bottom: 1px solid var(--border-strong);
+        padding: 0.9rem 0;
+        margin-bottom: 3.5rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-2);
+        position: relative;
+        z-index: 1;
+      }
+      .meta-strip > div {
+        padding: 0 1rem;
+        border-right: 1px solid var(--border);
+      }
+      .meta-strip > div:first-child {
+        padding-left: 0;
+      }
+      .meta-strip > div:last-child {
+        border-right: none;
+      }
+      .meta-strip .k {
+        display: block;
+        font-size: 0.52rem;
+        color: var(--text-3);
+        letter-spacing: 0.2em;
+        margin-bottom: 4px;
+      }
+      .meta-strip .v {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .meta-strip .v em {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--brass);
+      }
+
+      /* ========== SECTIONS ========== */
+      .section {
+        position: relative;
+        margin-bottom: 4.5rem;
+        z-index: 1;
+      }
+      .section-head {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: end;
+        gap: 1.25rem;
+        margin-bottom: 1.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-strong);
+      }
+      .section-num {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 2.6rem;
+        font-weight: 400;
+        color: var(--brass);
+        line-height: 1;
+      }
+      .section-title {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.65rem;
+        font-weight: 400;
+        line-height: 1.1;
+        color: var(--text);
+        letter-spacing: -0.01em;
+      }
+      .section-title em {
+        font-style: italic;
+        color: var(--text-3);
+      }
+      .section-meta {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--text-3);
+        text-align: right;
+        line-height: 1.5;
+      }
+      .section-meta strong {
+        color: var(--text-2);
+      }
+
+      /* Two-up roster layout */
+      .roster-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      .roster-card {
+        background: var(--bg-2);
+        border: 1px solid var(--border-strong);
+        position: relative;
+        padding: 1.5rem 1.5rem 1.25rem;
+        transition: border-color 0.3s ease;
+      }
+      .roster-card:hover {
+        border-color: var(--brass-dim);
+      }
+      .roster-card::before {
+        content: "";
+        position: absolute;
+        top: 7px;
+        left: 7px;
+        right: 7px;
+        bottom: 7px;
+        border: 1px solid var(--border);
+        pointer-events: none;
+      }
+      .roster-card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px dashed var(--border);
+      }
+      .roster-card-title {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 1.1rem;
+        color: var(--text);
+      }
+      .roster-card-title strong {
+        font-style: normal;
+        font-weight: 600;
+        color: var(--brass);
+      }
+      .roster-card-sub {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--text-3);
+      }
+      .roster-card-note {
+        position: absolute;
+        top: -0.6rem;
+        right: 1.25rem;
+        background: var(--bg);
+        padding: 0 0.5rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--brass-dim);
+      }
+
+      .roster-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78rem;
+      }
+      .roster-table th {
+        text-align: left;
+        padding: 6px 8px 8px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.52rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--text-3);
+        font-weight: 600;
+        border-bottom: 1px solid var(--border-strong);
+      }
+      .roster-table th.col-main {
+        color: var(--patina);
+      }
+      .roster-table th.col-alt1 {
+        color: var(--amber);
+      }
+      .roster-table th.col-alt2 {
+        color: var(--rust);
+      }
+      .roster-table td {
+        padding: 7px 8px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+        transition: background 0.15s ease;
+      }
+      .roster-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .roster-table tbody tr:hover td {
+        background: var(--brass-glow);
+      }
+      .roster-table .agent {
+        font-weight: 600;
+        font-size: 0.78rem;
+        color: var(--text);
+        white-space: nowrap;
+      }
+      .roster-table .agent .num {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        color: var(--text-4);
+        font-weight: 400;
+        margin-right: 0.5rem;
+      }
+      .roster-table .model {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        color: var(--text);
+      }
+      .roster-table .model .tag {
+        display: inline-block;
+        font-size: 0.52rem;
+        font-weight: 600;
+        margin-left: 4px;
+        padding: 0 4px;
+        border-radius: 2px;
+        vertical-align: 1px;
+        letter-spacing: 0.05em;
+      }
+      .roster-table .model .tag-pending {
+        color: var(--amber);
+        background: var(--amber-bg);
+        border: 1px solid var(--amber-dim);
+      }
+      .roster-table .model .tag-verified {
+        color: var(--patina);
+        background: var(--patina-bg);
+        border: 1px solid var(--patina-dim);
+      }
+
+      .roster-annot {
+        position: absolute;
+        font-family: "Caveat", cursive;
+        color: var(--steel);
+        font-size: 1rem;
+        line-height: 1.1;
+        pointer-events: none;
+        max-width: 120px;
+      }
+      .roster-annot.r1 {
+        left: -3.5rem;
+        top: 18%;
+        transform: rotate(-4deg);
+      }
+      .roster-annot.r2 {
+        right: -3.25rem;
+        top: 30%;
+        transform: rotate(3deg);
+        text-align: right;
+      }
+
+      /* ========== FULL METRICS TABLE ========== */
+      .metrics-frame {
+        border: 1px solid var(--border-strong);
+        background: var(--bg-2);
+        position: relative;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .metrics-frame::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        border: 1px solid var(--border);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      table.metrics {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 1100px;
+        font-size: 0.78rem;
+        position: relative;
+      }
+      .metrics thead th {
+        text-align: left;
+        padding: 10px 12px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-2);
+        font-weight: 600;
+        border-bottom: 1.5px solid var(--brass-dim);
+        background: var(--bg-3);
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+      .metrics thead th .sub {
+        display: block;
+        font-size: 0.52rem;
+        color: var(--text-4);
+        letter-spacing: 0.05em;
+        font-weight: 400;
+        margin-top: 2px;
+        text-transform: none;
+      }
+      .metrics tbody td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        vertical-align: middle;
+        white-space: nowrap;
+        font-size: 0.78rem;
+        transition: background 0.15s ease;
+      }
+      .metrics tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .metrics tbody tr:hover td {
+        background: var(--brass-glow);
+      }
+      .metrics .divider td {
+        background: var(--bg-3);
+        border-top: 1.5px solid var(--brass-dim);
+        border-bottom: 1.5px solid var(--brass-dim);
+        padding: 7px 12px;
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 0.88rem;
+        color: var(--text);
+      }
+      .metrics .divider .label {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+      }
+      .metrics .divider .roman {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.65rem;
+        font-style: normal;
+        color: var(--brass);
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+      .metrics .divider .count {
+        margin-left: auto;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        color: var(--text-3);
+        font-style: normal;
+        letter-spacing: 0.1em;
+      }
+
+      .model-cell {
+        font-weight: 600;
+        color: var(--text);
+      }
+      .model-cell .num {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        color: var(--text-4);
+        font-weight: 400;
+        margin-right: 0.5rem;
+      }
+      .model-cell .tag {
+        display: inline-block;
+        font-size: 0.52rem;
+        font-weight: 700;
+        margin-left: 5px;
+        padding: 1px 5px;
+        letter-spacing: 0.06em;
+        vertical-align: 2px;
+        border-radius: 1px;
+      }
+      .tag-new {
+        background: var(--patina);
+        color: var(--bg);
+      }
+      .tag-verified {
+        background: var(--steel);
+        color: var(--bg);
+      }
+
+      .role {
+        display: inline-block;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.56rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 2px 7px;
+        border-radius: 2px;
+        border: 1px solid currentColor;
+      }
+      .r-opus {
+        color: var(--violet);
+        background: var(--violet-bg);
+      }
+      .r-sonnet {
+        color: var(--steel);
+        background: var(--steel-bg);
+      }
+      .r-main {
+        color: var(--patina);
+        background: var(--patina-bg);
+      }
+      .r-alt1 {
+        color: var(--amber);
+        background: var(--amber-bg);
+      }
+      .r-alt2 {
+        color: var(--rust);
+        background: var(--rust-bg);
+      }
+      .r-watch {
+        color: var(--text-3);
+        background: rgba(104, 99, 88, 0.08);
+      }
+      .r-old {
+        color: var(--text-4);
+        background: rgba(68, 65, 58, 0.08);
+      }
+
+      .ts-pass {
+        color: var(--patina);
+        font-weight: 600;
+      }
+      .ts-pass::before {
+        content: "✓ ";
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .ts-fail {
+        color: var(--rust);
+        font-weight: 600;
+      }
+      .ts-fail::before {
+        content: "✕ ";
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .ts-warn {
+        color: var(--amber);
+        font-weight: 600;
+      }
+      .ts-warn::before {
+        content: "◐ ";
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .score {
+        font-family: "IBM Plex Mono", monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.78rem;
+      }
+      .score-a {
+        color: var(--patina);
+        font-weight: 700;
+      }
+      .score-b {
+        color: var(--steel);
+        font-weight: 600;
+      }
+      .score-c {
+        color: var(--amber);
+      }
+      .score-d {
+        color: var(--rust);
+      }
+      .score-none {
+        color: var(--text-4);
+      }
+
+      .cost {
+        font-family: "IBM Plex Mono", monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.72rem;
+      }
+      .cost-low {
+        color: var(--patina);
+      }
+      .cost-mid {
+        color: var(--steel);
+      }
+      .cost-high {
+        color: var(--rust);
+      }
+
+      .yes {
+        color: var(--patina);
+        font-weight: 500;
+      }
+      .yes::before {
+        content: "+ ";
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .no {
+        color: var(--text-4);
+      }
+      .no::before {
+        content: "— ";
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .key-note {
+        font-size: 0.74rem;
+        color: var(--text-2);
+        white-space: normal;
+        max-width: 280px;
+        line-height: 1.5;
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+      }
+      .key-note strong {
+        font-weight: 600;
+        font-style: normal;
+        color: var(--brass);
+        font-family: "DM Sans", sans-serif;
+      }
+
+      /* ========== LEGEND / FOOTER ========== */
+      .legend-block {
+        margin-top: 2rem;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 2rem;
+        padding: 1.5rem;
+        border: 1px solid var(--border-strong);
+        background: var(--bg-2);
+        position: relative;
+      }
+      .legend-block::before {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        bottom: 6px;
+        border: 1px solid var(--border);
+        pointer-events: none;
+      }
+      .legend-block h3 {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 1.1rem;
+        font-weight: 400;
+        margin-bottom: 0.85rem;
+        color: var(--text);
+      }
+      .legend-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 1.5rem;
+        font-size: 0.78rem;
+      }
+      .legend-grid .item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .swatch {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 1px solid var(--text-3);
+        flex-shrink: 0;
+        border-radius: 1px;
+      }
+      .swatch.a {
+        background: var(--patina);
+      }
+      .swatch.b {
+        background: var(--steel);
+      }
+      .swatch.c {
+        background: var(--amber);
+      }
+      .swatch.d {
+        background: var(--rust);
+      }
+      .swatch.none {
+        background: var(--bg-4);
+      }
+
+      .footnotes {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 0.78rem;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .footnotes p {
+        margin-bottom: 0.4rem;
+        padding-left: 1.5rem;
+        text-indent: -1.5rem;
+      }
+      .footnotes p::before {
+        content: attr(data-num);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        font-style: normal;
+        color: var(--brass);
+        margin-right: 0.5rem;
+        vertical-align: 1px;
+      }
+
+      /* Signature row */
+      .signoff {
+        margin-top: 2.5rem;
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 2rem;
+        padding-top: 1.25rem;
+        border-top: 1.5px solid var(--brass);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-2);
+      }
+      .signoff .sigil {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        font-size: 1.5rem;
+        text-transform: none;
+        letter-spacing: -0.01em;
+        color: var(--text);
+        line-height: 1.1;
+      }
+      .signoff .sigil em {
+        color: var(--brass);
+      }
+      .signoff .col {
+        border-top: 1px solid var(--border-strong);
+        padding-top: 0.5rem;
+      }
+      .signoff .col .k {
+        color: var(--text-3);
+        font-size: 0.58rem;
+        margin-bottom: 2px;
+      }
+      .signoff .col .v {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .signoff .stamp-mark {
+        display: inline-block;
+        padding: 4px 10px;
+        border: 1.5px solid var(--patina);
+        color: var(--patina);
+        font-weight: 700;
+        transform: rotate(-2deg);
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+      }
+
+      .page-foot {
+        margin-top: 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.58rem;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--text-4);
+      }
+      .page-foot .center {
+        font-family: "Instrument Serif", serif;
+        font-style: italic;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 0.85rem;
+        color: var(--brass);
+      }
+
+      /* ========== ANIMATIONS ========== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+          transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal.d1 {
+        transition-delay: 0.06s;
+      }
+      .reveal.d2 {
+        transition-delay: 0.12s;
+      }
+      .reveal.d3 {
+        transition-delay: 0.18s;
+      }
+      .reveal.d4 {
+        transition-delay: 0.24s;
+      }
+      .reveal.d5 {
+        transition-delay: 0.3s;
+      }
+
+      @media (max-width: 1000px) {
+        .roster-pair {
+          grid-template-columns: 1fr;
+        }
+        .legend-block {
+          grid-template-columns: 1fr;
+        }
+        .title-block {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        .title-block h1 {
+          font-size: 2.75rem;
+        }
+        .meta-strip {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.75rem 0;
+        }
+        .meta-strip > div {
+          padding: 0 0.5rem;
+        }
+        .signoff {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        .annot,
+        .roster-annot {
+          display: none;
+        }
+        .sheet {
+          padding: 1.5rem 1.25rem 2.5rem;
+        }
+        .masthead {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+        .masthead-left,
+        .masthead-right {
+          text-align: center;
+        }
+        .seal {
+          right: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="watermark" aria-hidden="true">REPORT</div>
+
+    <div class="sheet">
+      <header class="masthead reveal">
+        <div class="masthead-left">
+          <span class="dept">Model Evaluation Division</span><br />
+          Kilo Code · Open Source<br />
+          Agent Roster Operations
+        </div>
+        <div class="masthead-center">
+          <div class="num">№ <em>26·06·08</em></div>
+          <div class="label">Field Report</div>
+        </div>
+        <div class="masthead-right">
+          Classification:
+          <span style="color: var(--brass); font-weight: 600">OPEN</span><br />
+          Volume 08 · June 2026<br />
+          Edition
+          <em
+            style="
+              font-family: &quot;Instrument Serif&quot;, serif;
+              font-style: italic;
+              text-transform: none;
+              letter-spacing: 0;
+            "
+            >rev. 1</em
+          >
+        </div>
+        <div class="seal" aria-hidden="true">For<br />Public<br />Release</div>
+      </header>
+
+      <div class="title-block reveal d1">
+        <div style="position: relative">
+          <h1>
+            The <em>Chinese Stack</em> is no longer a fallback. It is the
+            roster.
+          </h1>
+          <div class="annot annot-1">
+            on cost-per-correct<br />the gap has reversed
+          </div>
+        </div>
+        <p class="lede">
+          A field evaluation of <strong>15 language models</strong> across the
+          agent roster — covering benchmarks, deployment roles, and the 18× cost
+          gap now observed between the cheapest credible coder and the previous
+          frontier default.
+        </p>
+      </div>
+
+      <div class="meta-strip reveal d2">
+        <div>
+          <span class="k">Subject</span>
+          <span class="v">Agent Roster <em>· June</em></span>
+        </div>
+        <div>
+          <span class="k">Models Surveyed</span>
+          <span class="v">15 (8 active, 4 legacy, 3 watchlist)</span>
+        </div>
+        <div>
+          <span class="k">Benchmarks</span>
+          <span class="v">SWE-Pro / Verified / Terminal-Bench</span>
+        </div>
+        <div>
+          <span class="k">Effective</span>
+          <span class="v">25 June 2026</span>
+        </div>
+      </div>
+
+      <section class="section reveal d3">
+        <div class="section-head">
+          <div class="section-num">§ 01</div>
+          <div>
+            <h2 class="section-title">
+              Roster Assignments <em>— who is on call</em>
+            </h2>
+          </div>
+          <div class="section-meta">
+            <strong>2 tables</strong><br />
+            Expanded + Lean
+          </div>
+        </div>
+
+        <div class="roster-pair">
+          <div class="roster-card" style="position: relative">
+            <div class="roster-card-note">TABLE I</div>
+            <div class="roster-card-head">
+              <div class="roster-card-title">
+                <strong>Expanded Roster</strong> — 3 models per column
+              </div>
+              <div class="roster-card-sub">12 agents</div>
+            </div>
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th style="width: 32%">Agent / Fallback</th>
+                  <th class="col-main">Main</th>
+                  <th class="col-alt1">Alt 1</th>
+                  <th class="col-alt2">Alt 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="agent"><span class="num">01</span>Plan</td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">02</span>Code</td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">03</span>Ask</td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">
+                    Kimi K2.7-Code<span class="tag tag-pending">⏳</span>
+                  </td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">04</span>Debug</td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">05</span>Review</td>
+                  <td class="model">Qwen 3.7 Max</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">
+                    MiniMax M3<span class="tag tag-verified">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">06</span>Code Simplifier
+                  </td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">07</span>Documentation
+                  </td>
+                  <td class="model">Qwen 3.7 Max</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">08</span>Backend Specialist
+                  </td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">09</span>Frontend Specialist
+                  </td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">
+                    MiniMax M3<span class="tag tag-verified">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">10</span>DevOps</td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">11</span>Opus 4.8 fallback
+                  </td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">12</span>Sonnet 4.6 fallback
+                  </td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="roster-annot r1">
+              expanded<br />includes a<br />third fallback<br />for every slot
+            </div>
+          </div>
+
+          <div class="roster-card" style="position: relative">
+            <div class="roster-card-note">TABLE II</div>
+            <div class="roster-card-head">
+              <div class="roster-card-title">
+                <strong>Lean Roster</strong> — 2 models per column
+              </div>
+              <div class="roster-card-sub">12 agents · minimal</div>
+            </div>
+            <table class="roster-table">
+              <thead>
+                <tr>
+                  <th style="width: 32%">Agent / Fallback</th>
+                  <th class="col-main">Main</th>
+                  <th class="col-alt1">Alt 1</th>
+                  <th class="col-alt2">Alt 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="agent"><span class="num">01</span>Plan</td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">02</span>Code</td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">03</span>Ask</td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">04</span>Debug</td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">05</span>Review</td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">06</span>Code Simplifier
+                  </td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">07</span>Documentation
+                  </td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">08</span>Backend Specialist
+                  </td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">09</span>Frontend Specialist
+                  </td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent"><span class="num">10</span>DevOps</td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">11</span>Opus 4.8 fallback
+                  </td>
+                  <td class="model">Kimi K2.6</td>
+                  <td class="model">MiMo V2.5-Pro</td>
+                  <td class="model">DeepSeek V4 Pro</td>
+                </tr>
+                <tr>
+                  <td class="agent">
+                    <span class="num">12</span>Sonnet 4.6 fallback
+                  </td>
+                  <td class="model">GLM-5.2</td>
+                  <td class="model">Qwen 3.7 Plus</td>
+                  <td class="model">Hy3</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="roster-annot r2">
+              lean cuts<br />MiniMax M3<br />+ K2.7-Code<br />= −2 models
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal d4">
+        <div class="section-head">
+          <div class="section-num">§ 02</div>
+          <div>
+            <h2 class="section-title">
+              Benchmark Data <em>— the full ledger</em>
+            </h2>
+          </div>
+          <div class="section-meta">
+            <strong>15 rows</strong><br />
+            Updated with K2.7-Code, GLM-5.2, MiniMax M3
+          </div>
+        </div>
+
+        <div class="metrics-frame">
+          <table class="metrics">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Role</th>
+                <th>TS build<span class="sub">Kilo audit</span></th>
+                <th>SWE-bench Pro<span class="sub">agentic</span></th>
+                <th>SWE-bench Verified<span class="sub">human-closed</span></th>
+                <th>Terminal-Bench<span class="sub">2.0</span></th>
+                <th>Context</th>
+                <th>Vision</th>
+                <th>Open weights</th>
+                <th>Input $/1M</th>
+                <th>Output $/1M</th>
+                <th>Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="divider">
+                <td colspan="11">
+                  <div class="label">
+                    <span class="roman">I.</span>
+                    Claude — Opus tier
+                    <span class="count">3 models</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">001</span>Claude Opus 4.8
+                </td>
+                <td><span class="role r-opus">Opus</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">69.2%</span></td>
+                <td><span class="score score-a">88.6%</span></td>
+                <td><span class="score score-a">74.6–85%</span></td>
+                <td>200K</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-high">$5.00</td>
+                <td class="cost cost-high">$25.00</td>
+                <td class="key-note">
+                  Now the fallback target. <strong>4× lower</strong> code flaw
+                  miss rate vs 4.7
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">002</span>Claude Opus 4.7
+                </td>
+                <td><span class="role r-old">Replaced</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">64.3%</span></td>
+                <td><span class="score score-a">87.6%</span></td>
+                <td><span class="score score-b">66.1%</span></td>
+                <td>200K</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-high">$5.00</td>
+                <td class="cost cost-high">$25.00</td>
+                <td class="key-note">Superseded by Opus 4.8 in this session</td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">003</span>Claude Opus 4.6
+                </td>
+                <td><span class="role r-old">Legacy</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-b">53.4%</span></td>
+                <td><span class="score score-b">80.8%</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td>200K</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-high">$5.00</td>
+                <td class="cost cost-high">$25.00</td>
+                <td class="key-note">
+                  Original baseline this stack was designed around
+                </td>
+              </tr>
+
+              <tr class="divider">
+                <td colspan="11">
+                  <div class="label">
+                    <span class="roman">II.</span>
+                    Claude — Sonnet tier
+                    <span class="count">2 models</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">004</span>Claude Sonnet 4.6
+                </td>
+                <td><span class="role r-sonnet">Sonnet</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-b">79.6%</span></td>
+                <td><span class="score score-c">59.1%</span></td>
+                <td>1M</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-mid">$3.00</td>
+                <td class="cost cost-high">$15.00</td>
+                <td class="key-note">
+                  <strong>70% fewer tokens</strong> vs Sonnet 4.5 in agentic
+                  loops
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">005</span>Claude Sonnet 4.5
+                </td>
+                <td><span class="role r-old">Legacy</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-d">45.9%</span></td>
+                <td><span class="score score-b">77.2%</span></td>
+                <td><span class="score score-c">50.0%</span></td>
+                <td>200K</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-mid">$3.00</td>
+                <td class="cost cost-high">$15.00</td>
+                <td class="key-note">30hr+ autonomous runs confirmed</td>
+              </tr>
+
+              <tr class="divider">
+                <td colspan="11">
+                  <div class="label">
+                    <span class="roman">III.</span>
+                    Roster — Main models
+                    <span class="count">4 models</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">006</span>Kimi K2.6
+                </td>
+                <td><span class="role r-main">Main</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">58.6%</span></td>
+                <td><span class="score score-b">80.2%</span></td>
+                <td><span class="score score-b">66.7%</span></td>
+                <td>256K</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-low">$0.60</td>
+                <td class="cost cost-low">$2.50</td>
+                <td class="key-note">
+                  4000+ tool calls/13hr stability.
+                  <strong>GPQA-Diamond 90.5</strong>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">007</span>GLM-5.2<span class="tag tag-new"
+                    >NEW</span
+                  >
+                </td>
+                <td><span class="role r-main">Main</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">62.1%</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-a">81.0%</span></td>
+                <td>1M</td>
+                <td class="no">—</td>
+                <td class="yes">Yes (MIT)</td>
+                <td class="cost cost-mid">$1.40</td>
+                <td class="cost cost-mid">$4.40</td>
+                <td class="key-note">
+                  Code Arena #2, Design Arena #1. Same price as 5.1, big upgrade
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell"><span class="num">008</span>GLM-5.1</td>
+                <td><span class="role r-old">Replaced</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">58.4%</span></td>
+                <td><span class="score score-b">~78%</span></td>
+                <td><span class="score score-c">62.0%</span></td>
+                <td>200K</td>
+                <td class="no">—</td>
+                <td class="yes">Yes (MIT)</td>
+                <td class="cost cost-mid">$1.40</td>
+                <td class="cost cost-mid">$4.40</td>
+                <td class="key-note">Superseded by GLM-5.2 in this session</td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">009</span>Qwen 3.7 Max
+                </td>
+                <td><span class="role r-main">Main (v1)</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">60.6%</span></td>
+                <td><span class="score score-a">80.4%</span></td>
+                <td><span class="score score-a">69.7%</span></td>
+                <td>1M</td>
+                <td class="no">No</td>
+                <td class="no">—</td>
+                <td class="cost cost-mid">$2.50</td>
+                <td class="cost cost-high">$7.50</td>
+                <td class="key-note">
+                  Text-only. Now second-highest SWE-bench Pro behind GLM-5.2
+                </td>
+              </tr>
+
+              <tr class="divider">
+                <td colspan="11">
+                  <div class="label">
+                    <span class="roman">IV.</span>
+                    Roster — Alt 1 models
+                    <span class="count">4 models</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">010</span>MiMo V2.5-Pro
+                </td>
+                <td><span class="role r-alt1">Alt 1</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-a">57.2%</span></td>
+                <td><span class="score score-b">78.9%</span></td>
+                <td><span class="score score-b">68.4%*</span></td>
+                <td>1M*</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
+                <td class="cost cost-mid">$1.00</td>
+                <td class="cost cost-mid">$3.00</td>
+                <td class="key-note">
+                  1M ctx = 4× price uplift ($4/$12). *Vendor Terminal-Bench
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">011</span>Qwen 3.7 Plus
+                </td>
+                <td><span class="role r-alt1">Alt 1</span></td>
+                <td><span class="ts-warn">Builds*</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-b">78.8%</span></td>
+                <td><span class="score score-a">70.3%</span></td>
+                <td>1M</td>
+                <td class="yes">Yes</td>
+                <td class="no">—</td>
+                <td class="cost cost-low">$0.40</td>
+                <td class="cost cost-low">$1.60</td>
+                <td class="key-note">
+                  *Builds, less idiomatic JSX.
+                  <strong>ScreenSpot Pro 79%</strong>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">012</span>Kimi K2.7-Code<span
+                    class="tag tag-new"
+                    >NEW</span
+                  >
+                </td>
+                <td><span class="role r-alt1">Alt 1 (v1)</span></td>
+                <td><span class="ts-warn">Contested</span></td>
+                <td><span class="score score-none">—‡</span></td>
+                <td><span class="score score-none">—‡</span></td>
+                <td><span class="score score-none">—‡</span></td>
+                <td>256K</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes (Mod. MIT)</td>
+                <td class="cost cost-low">$1.14</td>
+                <td class="cost cost-mid">$4.80</td>
+                <td class="key-note">
+                  ‡Vendor-only (MCPMark 81.1 vs Opus 4.8's 76.4). Practitioners
+                  report gains don't replicate on real repos.
+                  <strong>30% fewer reasoning tokens</strong> than K2.6
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">013</span>DeepSeek V4 Flash
+                </td>
+                <td><span class="role r-old">Demoted (v1)</span></td>
+                <td><span class="ts-warn">Unverified</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-b">79.0%</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td>1M</td>
+                <td class="no">—</td>
+                <td class="yes">Yes</td>
+                <td class="cost cost-low">$0.14</td>
+                <td class="cost cost-low">$0.28</td>
+                <td class="key-note">
+                  Cheapest in table. Replaced by Kimi K2.7-Code for Ask this
+                  round
+                </td>
+              </tr>
+
+              <tr class="divider">
+                <td colspan="11">
+                  <div class="label">
+                    <span class="roman">V.</span>
+                    Roster — Alt 2 models
+                    <span class="count">4 models</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">014</span>DeepSeek V4 Pro
+                </td>
+                <td><span class="role r-alt2">Alt 2</span></td>
+                <td><span class="ts-fail">Failed</span></td>
+                <td><span class="score score-b">~55%</span></td>
+                <td><span class="score score-a">80.6%</span></td>
+                <td><span class="score score-d">44.0%</span></td>
+                <td>1M</td>
+                <td class="no">—</td>
+                <td class="yes">Yes</td>
+                <td class="cost cost-low">$0.435</td>
+                <td class="cost cost-low">$0.87</td>
+                <td class="key-note">
+                  TS build failed in Kilo's own test. Reasoning-only agents only
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">015</span>Hy3 (Hunyuan 3)
+                </td>
+                <td><span class="role r-alt2">Alt 2</span></td>
+                <td><span class="ts-pass">Pass</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-c">74.4%</span></td>
+                <td><span class="score score-c">54.4%</span></td>
+                <td>256K</td>
+                <td class="no">—</td>
+                <td class="yes">Yes</td>
+                <td class="cost cost-low">~$0.17</td>
+                <td class="cost cost-low">Free*</td>
+                <td class="key-note">
+                  *Free in Kilo Code currently. 99.99% production uptime
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">016</span>MiniMax M3<span
+                    class="tag tag-verified"
+                    >VERIFIED</span
+                  >
+                </td>
+                <td><span class="role r-alt2">Alt 2 (v1)</span></td>
+                <td><span class="ts-pass">Pass†</span></td>
+                <td><span class="score score-a">59.0%‡</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-b">66.0%‡</span></td>
+                <td>1M</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes</td>
+                <td class="cost cost-low">$0.30</td>
+                <td class="cost cost-low">$1.20</td>
+                <td class="key-note">
+                  †Kilo's own audit: found <strong>13/17</strong> planted TS
+                  bugs for $0.07, tying Opus 4.8 at
+                  <strong>18× less cost</strong>. Now in Table 1 for
+                  Review/Frontend
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">017</span>Step 3.7 Flash
+                </td>
+                <td><span class="role r-old">Demoted (v1)</span></td>
+                <td><span class="ts-warn">Untested</span></td>
+                <td><span class="score score-b">56.3%</span></td>
+                <td><span class="score score-b">76.5%‡</span></td>
+                <td><span class="score score-c">59.5%</span></td>
+                <td>256K</td>
+                <td class="yes">Yes</td>
+                <td class="yes">Yes (Apache 2.0)</td>
+                <td class="cost cost-low">$0.20</td>
+                <td class="cost cost-low">$1.15</td>
+                <td class="key-note">
+                  Replaced by MiniMax M3 — weaker, less recent verification
+                </td>
+              </tr>
+
+              <tr class="divider">
+                <td colspan="11">
+                  <div class="label">
+                    <span class="roman">VI.</span>
+                    Watchlist — not in roster
+                    <span class="count">1 model</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="model-cell">
+                  <span class="num">018</span>Nemotron 3 Super
+                </td>
+                <td><span class="role r-watch">Not a fit</span></td>
+                <td><span class="ts-warn">Untested</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td><span class="score score-c">60.5%</span></td>
+                <td><span class="score score-none">—</span></td>
+                <td>128K</td>
+                <td class="no">—</td>
+                <td class="yes">Yes (NVIDIA)</td>
+                <td class="cost cost-low">Self-host</td>
+                <td class="cost cost-low">Self-host</td>
+                <td class="key-note">
+                  Best US open-weight model. Still trails the Chinese stack here
+                  on every metric
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section reveal d5">
+        <div class="section-head">
+          <div class="section-num">§ 03</div>
+          <div>
+            <h2 class="section-title">
+              Legend &amp; <em>methodological notes</em>
+            </h2>
+          </div>
+          <div class="section-meta">
+            <strong>Definitions</strong><br />
+            Audit details
+          </div>
+        </div>
+
+        <div class="legend-block">
+          <div>
+            <h3>Score tier definitions</h3>
+            <div class="legend-grid">
+              <div class="item">
+                <span class="swatch a"></span>
+                <span
+                  ><strong style="color: var(--patina)">Green</strong> · top
+                  tier (≥58% Pro / ≥80% Verified)</span
+                >
+              </div>
+              <div class="item">
+                <span class="swatch b"></span>
+                <span
+                  ><strong style="color: var(--steel)">Blue</strong> · strong
+                  (50–57% Pro / 75–79% Verified)</span
+                >
+              </div>
+              <div class="item">
+                <span class="swatch c"></span>
+                <span
+                  ><strong style="color: var(--amber)">Amber</strong> · adequate
+                  (40–49% / 70–74%)</span
+                >
+              </div>
+              <div class="item">
+                <span class="swatch d"></span>
+                <span
+                  ><strong style="color: var(--rust)">Red</strong> · limited
+                  (below 40% / below 70%)</span
+                >
+              </div>
+              <div class="item">
+                <span class="swatch none"></span>
+                <span
+                  ><strong style="color: var(--text-4)">—</strong> · no data
+                  published</span
+                >
+              </div>
+              <div class="item">
+                <span
+                  class="swatch none"
+                  style="background: var(--bg); border-style: dashed"
+                ></span>
+                <span>vendor-reported metrics marked <strong>‡</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="footnotes">
+            <p data-num="*">
+              Vendor-reported only. Not independently reproduced on standard
+              benchmark suites.
+            </p>
+            <p data-num="†">
+              Independently run by Kilo Code's own audit harness (17 planted TS
+              bugs, blind grading).
+            </p>
+            <p data-num="‡">
+              Vendor-reported, pending independent reproduction.
+            </p>
+            <p data-num="§">
+              Cost figures use list price on 25 June 2026; cache &amp; batch
+              discounts not applied.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="signoff">
+        <div>
+          <div class="sigil">
+            <em>Model Evaluation Division</em><br />
+            Kilo Code · Open Source
+          </div>
+        </div>
+        <div class="col">
+          <div class="k">Compiled by</div>
+          <div class="v">Kilo · v0.34.1</div>
+          <div class="v" style="margin-top: 6px">
+            <i>Created with Qwen3.7 Plus</i>
+          </div>
+        </div>
+        <div class="col">
+          <div class="k">Released</div>
+          <div class="v"><span class="stamp-mark">RELEASED</span></div>
+        </div>
+      </footer>
+
+      <div class="page-foot">
+        <span>Field Report · 26·06·08</span>
+        <span class="center">— end of document —</span>
+        <span>Page 1 of 1</span>
+      </div>
+    </div>
+
+    <script>
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -40px 0px" },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
