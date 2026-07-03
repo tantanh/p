@@ -239,7 +239,7 @@
         transform: translateY(-50%);
         color: var(--muted);
         pointer-events: none;
-        font-size: 0.9rem;
+        font-size: 1.4rem;
       }
       #search {
         width: 100%;
@@ -631,6 +631,21 @@
         overflow-y: auto;
         animation: slideUp 0.3s ease;
         box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-light) transparent;
+      }
+      .modal::-webkit-scrollbar {
+        width: 6px;
+      }
+      .modal::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .modal::-webkit-scrollbar-thumb {
+        background: var(--border-light);
+        border-radius: 3px;
+      }
+      .modal::-webkit-scrollbar-thumb:hover {
+        background: var(--muted);
       }
 
       @keyframes slideUp {
@@ -1062,11 +1077,20 @@
               <label
                 class="form-label"
                 for="inputPct"
-                style="display:flex;justify-content:space-between;align-items:center;"
-              >Input % (default 30%):
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+                >Input % (default 90%):
                 <span
-                  style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:500;"
-                  id="inputPctVal">30%</span
+                  style="
+                    color: var(--accent);
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 500;
+                  "
+                  id="inputPctVal"
+                  >90%</span
                 ></label
               >
               <div class="range-wrap">
@@ -1077,7 +1101,7 @@
                   min="0"
                   max="100"
                   step="5"
-                  value="30"
+                  value="90"
                   oninput="updateInputPct(this.value)"
                 />
               </div>
@@ -1086,11 +1110,20 @@
               <label
                 class="form-label"
                 for="outputPct"
-                style="display:flex;justify-content:space-between;align-items:center;"
-              >Output % (default 70%):
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+                >Output % (default 10%):
                 <span
-                  style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:500;"
-                  id="outputPctVal">70%</span
+                  style="
+                    color: var(--accent);
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 500;
+                  "
+                  id="outputPctVal"
+                  >10%</span
                 ></label
               >
               <div class="range-wrap">
@@ -1101,7 +1134,7 @@
                   min="0"
                   max="100"
                   step="5"
-                  value="70"
+                  value="10"
                   oninput="updateOutputPct(this.value)"
                 />
               </div>
@@ -1573,7 +1606,8 @@
 
       function calculateCosts() {
         const tokens =
-          (parseFloat(document.getElementById("calcTokens").value) || 0) * 1000000;
+          (parseFloat(document.getElementById("calcTokens").value) || 0) *
+          1000000;
         const inputPct =
           parseInt(document.getElementById("inputPct").value) || 0;
         const outputPct = 100 - inputPct;
