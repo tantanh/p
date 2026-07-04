@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass — Vitrum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --glass-bg: rgba(255,255,255,0.09);
+      --glass-border: rgba(255,255,255,0.32);
+      --glass-shadow: 0 8px 64px rgba(0,0,0,0.28), 0 1.5px 0 rgba(255,255,255,0.18) inset;
+      --radius: 28px;
+    }
+
+    html, body { min-height: 100vh; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+    body { background: #050d1a; position: relative; }
+
+    /* Aurora */
+    .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .aurora::before, .aurora::after, .aurora span {
+      position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.65;
+    }
+    .aurora::before {
+      content: '';
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse, #0affb2 0%, #0066ff 55%, transparent 80%);
+      top: -200px; left: -180px;
+      animation: drift1 18s ease-in-out infinite alternate;
+    }
+    .aurora::after {
+      content: '';
+      width: 800px; height: 650px;
+      background: radial-gradient(ellipse, #ff2d78 0%, #7b2fff 55%, transparent 80%);
+      bottom: -180px; right: -150px;
+      animation: drift2 22s ease-in-out infinite alternate;
+    }
+    .aurora span {
+      content: '';
+      width: 600px; height: 500px;
+      background: radial-gradient(ellipse, #ffb347 0%, #ff4ecd 60%, transparent 85%);
+      top: 35%; left: 35%;
+      animation: drift3 26s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(120px,80px) scale(1.15); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-100px,-70px) scale(1.1); } }
+    @keyframes drift3 { from { transform: translate(0,0) scale(1); } to { transform: translate(-80px,60px) scale(1.2); } }
+
+    /* Floating orbs */
+    .orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .orb {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%,
+        rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 50%, transparent 70%);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+      animation: floatorb linear infinite;
+    }
+    .orb::after {
+      content: ''; position: absolute;
+      top: 14%; left: 18%; width: 28%; height: 18%;
+      background: rgba(255,255,255,0.45); border-radius: 50%;
+      filter: blur(6px); transform: rotate(-30deg);
+    }
+    .orb:nth-child(1) { width:120px; height:120px; top:12%; left:8%;  animation-duration:20s; animation-delay:0s; }
+    .orb:nth-child(2) { width: 72px; height: 72px; top:55%; left:82%; animation-duration:15s; animation-delay:-6s; }
+    .orb:nth-child(3) { width: 96px; height: 96px; top:78%; left:18%; animation-duration:25s; animation-delay:-11s; }
+    .orb:nth-child(4) { width: 52px; height: 52px; top:30%; left:90%; animation-duration:18s; animation-delay:-3s; }
+    .orb:nth-child(5) { width:160px; height:160px; top:65%; left:55%; animation-duration:30s; animation-delay:-18s; }
+
+    @keyframes floatorb {
+      0%   { transform: translateY(0px)   rotate(0deg);  }
+      33%  { transform: translateY(-22px) rotate(4deg);  }
+      66%  { transform: translateY(12px)  rotate(-3deg); }
+      100% { transform: translateY(0px)   rotate(0deg);  }
+    }
+
+    /* Layout */
+    .page { position: relative; z-index: 1; min-height: 100vh; padding: 0 5vw; }
+
+    /* Glass base */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(32px) saturate(1.6) brightness(1.08);
+      -webkit-backdrop-filter: blur(32px) saturate(1.6) brightness(1.08);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: var(--radius);
+      position: relative; overflow: hidden;
+    }
+    /* Specular highlight */
+    .glass::before {
+      content: ''; position: absolute; inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 40%,
+        rgba(255,255,255,0.00) 60%, rgba(255,255,255,0.08) 100%);
+      pointer-events: none; z-index: 1;
+    }
+    /* Iridescent chromatic edge */
+    .glass::after {
+      content: ''; position: absolute; inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(110deg,
+        rgba(0,255,200,0.18) 0%, rgba(120,80,255,0.12) 30%,
+        rgba(255,60,120,0.10) 60%, rgba(255,200,0,0.08) 100%);
+      mask-image: linear-gradient(160deg, white 0%, transparent 55%);
+      -webkit-mask-image: linear-gradient(160deg, white 0%, transparent 55%);
+      pointer-events: none; z-index: 2;
+      animation: iridescent 6s ease-in-out infinite alternate;
+    }
+    @keyframes iridescent {
+      0%   { opacity: 0.7; filter: hue-rotate(0deg);   }
+      50%  { opacity: 1;   filter: hue-rotate(40deg);  }
+      100% { opacity: 0.6; filter: hue-rotate(-30deg); }
+    }
+    .glass-inner { position: relative; z-index: 3; }
+
+    /* Nav */
+    nav { display: flex; align-items: center; justify-content: center; padding: 28px 0 20px; }
+    .nav-glass {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 50px;
+      padding: 12px 32px; display: flex; align-items: center; gap: 36px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.18) inset;
+      position: relative; overflow: hidden;
+    }
+    .nav-glass::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+      border-radius: 50px 50px 0 0; pointer-events: none;
+    }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: #fff; letter-spacing: -0.02em; white-space: nowrap; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta {
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; padding: 8px 22px; border-radius: 50px; font-size: 0.82rem;
+      font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; letter-spacing: 0.03em;
+    }
+    .nav-cta:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+
+    /* Hero */
+    .hero { display: flex; flex-direction: column; align-items: center; gap: 56px; padding: 72px 0 80px; text-align: center; }
+    .hero-label { display: inline-block; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 18px; }
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(3rem, 7vw, 5.5rem); color: #fff; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 22px; }
+    h1 em {
+      font-style: italic;
+      background: linear-gradient(120deg, #0affb2, #7b6fff, #ff2d78);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub { color: rgba(255,255,255,0.52); font-size: 1.05rem; line-height: 1.7; max-width: 520px; margin: 0 auto; }
+
+    /* Tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 700px; }
+    .tag {
+      padding: 8px 20px; border-radius: 50px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.7); font-size: 0.8rem; letter-spacing: 0.04em;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      transition: background 0.2s, color 0.2s, transform 0.15s; cursor: default;
+    }
+    .tag:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
+
+    /* Section */
+    section { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 40px 0; }
+    .section-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.32); }
+
+    /* Cards */
+    .cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; width: 100%; max-width: 980px; }
+    .card { padding: 36px 32px; cursor: default; transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s; }
+    .card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 80px rgba(0,0,0,0.35), 0 1.5px 0 rgba(255,255,255,0.22) inset; }
+    .card-icon {
+      width: 48px; height: 48px; border-radius: 14px; margin-bottom: 22px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .card h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: #fff; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .card p { color: rgba(255,255,255,0.5); font-size: 0.875rem; line-height: 1.65; }
+
+    /* Feature wide */
+    .feature-wide { max-width: 980px; width: 100%; padding: 52px 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .feature-left h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem,3.5vw,2.8rem); color: #fff; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 18px; }
+    .feature-left p { color: rgba(255,255,255,0.5); line-height: 1.7; font-size: 0.92rem; }
+    .feature-right { display: flex; flex-direction: column; gap: 14px; }
+    .stat-row {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 20px; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; transition: background 0.2s;
+    }
+    .stat-row:hover { background: rgba(255,255,255,0.11); }
+    .stat-val { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: #fff; min-width: 72px; letter-spacing: -0.04em; }
+    .stat-label { color: rgba(255,255,255,0.48); font-size: 0.82rem; line-height: 1.4; }
+
+    /* CTA */
+    .cta-block { text-align: center; padding: 64px 48px; max-width: 620px; width: 100%; }
+    .cta-block h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem,4vw,3.2rem); color: #fff; margin-bottom: 16px; letter-spacing: -0.03em; }
+    .cta-block p { color: rgba(255,255,255,0.48); margin-bottom: 36px; line-height: 1.65; }
+    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 14px 42px; border-radius: 50px;
+      background: rgba(255,255,255,0.92); color: #0a0a1a;
+      font-weight: 500; font-size: 0.9rem; letter-spacing: 0.02em;
+      cursor: pointer; border: none; transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(255,255,255,0.2); font-family: inherit;
+    }
+    .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255,255,255,0.3); }
+    .btn-ghost {
+      padding: 14px 42px; border-radius: 50px; background: transparent;
+      color: rgba(255,255,255,0.72); font-weight: 400; font-size: 0.9rem;
+      letter-spacing: 0.02em; cursor: pointer; border: 1px solid rgba(255,255,255,0.22);
+      transition: all 0.2s; font-family: inherit;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.4); }
+
+    /* Footer */
+    footer { text-align: center; padding: 32px 0 48px; color: rgba(255,255,255,0.22); font-size: 0.78rem; letter-spacing: 0.06em; }
+
+    /* Responsive */
+    @media (max-width: 780px) {
+      .cards { grid-template-columns: 1fr; }
+      .feature-wide { grid-template-columns: 1fr; padding: 36px 28px; }
+      .nav-links { display: none; }
+      .nav-glass { gap: 18px; padding: 10px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="aurora"><span></span></div>
+
+  <div class="orbs">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <div class="page">
+
+    <nav>
+      <div class="nav-glass">
+        <span class="logo">Vitrum</span>
+        <ul class="nav-links">
+          <li><a href="#">Surface</a></li>
+          <li><a href="#">Refract</a></li>
+          <li><a href="#">Depth</a></li>
+          <li><a href="#">Light</a></li>
+        </ul>
+        <button class="nav-cta">Get started</button>
+      </div>
+    </nav>
+
+    <main>
+
+      <!-- Hero -->
+      <section class="hero">
+        <div>
+          <span class="hero-label">Liquid Glass &mdash; 2026</span>
+          <h1>Light bends<br/><em>through glass</em></h1>
+          <p class="hero-sub">
+            A surface that doesn&rsquo;t just blur what&rsquo;s behind it &mdash; it refracts,
+            distorts, and breathes light back at you. Glass that feels physically real.
+          </p>
+        </div>
+        <div class="tags">
+          <span class="tag">Refraction</span>
+          <span class="tag">Caustics</span>
+          <span class="tag">Iridescence</span>
+          <span class="tag">Chromatic aberration</span>
+          <span class="tag">Depth layers</span>
+          <span class="tag">Specular highlight</span>
+          <span class="tag">Translucency</span>
+          <span class="tag">Backdrop blur</span>
+        </div>
+      </section>
+
+      <!-- Cards -->
+      <section>
+        <span class="section-label">Material properties</span>
+        <div class="cards">
+          <div class="glass card">
+            <div class="glass-inner">
+              <div class="card-icon">&#10022;</div>
+              <h3>Specular surface</h3>
+              <p>A sharp highlight grazes the top edge, simulating a light source striking curved glass from above-left.</p>
+            </div>
+          </div>
+          <div class="glass card">
+            <div class="glass-inner">
+              <div class="card-icon">&#9680;</div>
+              <h3>Chromatic rim</h3>
+              <p>The iridescent border shifts hue continuously &mdash; cyan to violet to rose &mdash; as light refracts through the glass edge.</p>
+            </div>
+          </div>
+          <div class="glass card">
+            <div class="glass-inner">
+              <div class="card-icon">&#11835;</div>
+              <h3>Depth blur</h3>
+              <p>Backdrop-filter saturates and brightens the scene behind, creating a physical sense of translucent depth.</p>
+            </div>
+          </div>
+          <div class="glass card">
+            <div class="glass-inner">
+              <div class="card-icon">&#11044;</div>
+              <h3>Caustic scatter</h3>
+              <p>Light passing through glass casts irregular bright patches on the surface behind &mdash; simulated with layered gradients.</p>
+            </div>
+          </div>
+          <div class="glass card">
+            <div class="glass-inner">
+              <div class="card-icon">&#10021;</div>
+              <h3>Liquid motion</h3>
+              <p>The aurora beneath drifts continuously, so the glass reads as fluid &mdash; always changing what it refracts.</p>
+            </div>
+          </div>
+          <div class="glass card">
+            <div class="glass-inner">
+              <div class="card-icon">&#9670;</div>
+              <h3>Inner glow</h3>
+              <p>A subtle inset box-shadow at the top edge gives the impression of light trapped just inside the glass surface.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature wide -->
+      <section>
+        <span class="section-label">Physics simulation</span>
+        <div class="glass feature-wide">
+          <div class="feature-left glass-inner">
+            <h2>Real light,<br/>simulated glass</h2>
+            <p>
+              Every property maps to a physical optical phenomenon.
+              Backdrop-filter handles transmission and absorption. CSS gradients
+              approximate specular and caustic behaviour. The result reads as
+              material &mdash; not decorative.
+            </p>
+          </div>
+          <div class="feature-right glass-inner">
+            <div class="stat-row">
+              <span class="stat-val">32px</span>
+              <span class="stat-label">Backdrop blur radius<br/>simulating glass thickness</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-val">1.6&times;</span>
+              <span class="stat-label">Saturation boost<br/>behind the glass surface</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-val">6s</span>
+              <span class="stat-label">Iridescent cycle duration<br/>per hue-rotation pass</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-val">360&deg;</span>
+              <span class="stat-label">Hue rotation range<br/>across chromatic cycle</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section>
+        <div class="glass cta-block">
+          <div class="glass-inner">
+            <h2>Hold the light</h2>
+            <p>Glass that bends the world behind it. Build interfaces that feel physically present, not just visually pretty.</p>
+            <div class="btn-row">
+              <button class="btn-primary">Start building</button>
+              <button class="btn-ghost">Learn more</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      &copy; 2026 Vitrum &mdash; Liquid Glass showcase &mdash; CSS only, no canvas, no WebGL
+    </footer>
+
+  </div>
+
+</body>
+</html>
