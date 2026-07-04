@@ -870,6 +870,40 @@
         font-weight: 400;
         margin-top: 2px;
       }
+      .effort-chip {
+        display: inline-block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 9px;
+        font-weight: 600;
+        padding: 1px 6px;
+        border-radius: 2px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-left: 8px;
+        vertical-align: middle;
+        position: relative;
+        top: -1px;
+      }
+      .chip-effort-xhigh {
+        background: rgba(123, 95, 201, 0.18);
+        color: #b8a4e8;
+        border: 1px solid rgba(123, 95, 201, 0.4);
+      }
+      .chip-effort-high {
+        background: rgba(201, 242, 77, 0.12);
+        color: var(--phosphor);
+        border: 1px solid rgba(201, 242, 77, 0.3);
+      }
+      .chip-effort-medium {
+        background: rgba(111, 180, 212, 0.12);
+        color: var(--blue);
+        border: 1px solid rgba(111, 180, 212, 0.3);
+      }
+      .chip-effort-low {
+        background: rgba(189, 184, 169, 0.1);
+        color: var(--bone-dim);
+        border: 1px solid rgba(189, 184, 169, 0.25);
+      }
       .tier-why {
         font-family: "Newsreader", serif;
         font-size: 13px;
@@ -1182,7 +1216,7 @@
             </div>
             <div class="tier-col" id="tier-sonnet">
               <div class="tier-col-head">
-                <span class="role r-sonnet">Sonnet 4.6</span
+                <span class="role r-sonnet">Sonnet 5</span
                 ><span class="tier-col-label">Execution-heavy</span>
               </div>
               <div class="tier-list"></div>
@@ -1314,7 +1348,7 @@
         { name: "Frontend Specialist", kind: "UI / JSX" },
         { name: "DevOps", kind: "infra / CI" },
         { name: "Opus 4.8 fallback", kind: "tier shadow" },
-        { name: "Sonnet 4.6 fallback", kind: "tier shadow" },
+        { name: "Sonnet 5 fallback", kind: "tier shadow" },
       ];
 
       // ===== Data: Roster tables 1 and 2 =====
@@ -1398,46 +1432,46 @@
       const ROSTER_T4 = [
         [
           0,
-          "Opus 4.8",
-          "Architecture decisions are exactly where the Kilo test showed models diverge most — worth the premium",
+          "Opus 4.8", "Xhigh",
+          "Architectural judgment — Anthropic's own guidance for Opus 4.8 starts at Xhigh for coding/agentic work",
         ],
         [
           1,
-          "Sonnet 4.6",
-          "Routine generation against a clear spec; Sonnet's 1M context and lower cost fit",
+          "Sonnet 5", "Medium",
+          "Anthropic states medium now matches what used to require Sonnet 4.6 at high — same quality, lower cost",
         ],
-        [2, "Sonnet 4.6", "Lightweight Q&A, no frontier reasoning needed"],
+        [2, "Sonnet 5", "Low", "Lightweight Q&A is exactly the \"chat, non-coding\" case low effort is built for"],
         [
           3,
-          "Opus 4.8",
-          "Diagnosing root cause is a judgment task, same family as Plan",
+          "Opus 4.8", "Xhigh",
+          "Root-cause diagnosis is judgment work; gap to Sonnet 5 narrows but doesn't close cheaply",
         ],
         [
           4,
-          "Opus 4.8",
-          "4× lower code flaw miss rate vs 4.7 matters most where review quality is the entire point",
+          "Opus 4.8", "Xhigh",
+          "Catching subtle flaws is where Opus 4.8's accuracy edge still earns its cost",
         ],
         [
           5,
-          "Sonnet 4.6",
-          "Refactoring within existing constraints, not open-ended judgment",
+          "Sonnet 5", "Medium",
+          "Refactoring within known constraints — cost-optimal tier",
         ],
         [
           6,
-          "Sonnet 4.6",
-          "Prose generation, well within Sonnet's range, cost-conscious",
+          "Sonnet 5", "Low",
+          "Prose generation, non-coding — no benefit from deeper reasoning",
         ],
         [
           7,
-          "Opus 4.8",
-          "Schema/auth/licensing trade-offs are judgment calls with long-term cost if wrong",
+          "Opus 4.8", "Xhigh",
+          "Schema/auth/licensing trade-offs carry long-term cost if wrong",
         ],
         [
           8,
-          "Sonnet 4.6",
-          "Pattern-based UI implementation, mechanical relative to backend decisions",
+          "Sonnet 5", "Medium",
+          "Pattern-based UI implementation",
         ],
-        [9, "Sonnet 4.6", "Structured, bounded tasks (Dockerfiles, CI YAML)"],
+        [9, "Sonnet 5", "Medium", "Structured, bounded tasks; escalate to Xhigh only for complex pipeline redesigns"],
       ];
 
       // ===== Data: Full ledger =====
@@ -1496,8 +1530,25 @@
 
         { kind: "section", label: "Claude — Sonnet tier" },
         {
-          name: "Claude Sonnet 4.6",
+          name: "Claude Sonnet 5",
+          badge: "new",
           role: "sonnet",
+          ts: "pass",
+          pro: ["a", "63.2%"],
+          verified: null,
+          terminal: null,
+          ctx: "1M",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["mid", "$2.00"],
+          costOut: ["high", "$10.00"],
+          note: "Intro pricing until Aug 31 ($2/$10), then $3/$15. Xhigh effort can exceed Opus 4.8 cost — win is at low/medium",
+        },
+        {
+          name: "Claude Sonnet 4.6",
+          role: "replaced",
           ts: "pass",
           pro: null,
           verified: ["b", "79.6%"],
@@ -1509,23 +1560,7 @@
           openT: "—",
           costIn: ["mid", "$3.00"],
           costOut: ["high", "$15.00"],
-          note: "70% fewer tokens vs Sonnet 4.5 in agentic loops",
-        },
-        {
-          name: "Claude Sonnet 4.5",
-          role: "legacy",
-          ts: "pass",
-          pro: ["c", "45.9%"],
-          verified: ["b", "77.2%"],
-          terminal: ["c", "50.0%"],
-          ctx: "200K",
-          visionC: "yes",
-          visionT: "Yes",
-          openC: "no",
-          openT: "—",
-          costIn: ["mid", "$3.00"],
-          costOut: ["high", "$15.00"],
-          note: "30hr+ autonomous runs confirmed",
+          note: "Superseded by Sonnet 5 in this session",
         },
 
         { kind: "section", label: "Roster — Main models" },
@@ -1830,12 +1865,21 @@
           `<thead><tr>${head}</tr></thead><tbody>${body}</tbody>`;
       }
 
+      function renderEffortChip(effort) {
+        const cls =
+          effort === "Xhigh" ? "chip-effort-xhigh"
+          : effort === "High" ? "chip-effort-high"
+          : effort === "Medium" ? "chip-effort-medium"
+          : "chip-effort-low";
+        return `<span class="effort-chip ${cls}">${esc(effort)}</span>`;
+      }
+
       function renderClaudeTiers(rows) {
         const opusList = document.querySelector("#tier-opus .tier-list");
         const sonnetList = document.querySelector("#tier-sonnet .tier-list");
-        for (const [idx, model, rationale] of rows) {
+        for (const [idx, model, effort, rationale] of rows) {
           const a = AGENTS[idx];
-          const html = `<div class="tier-item"><div class="tier-agent">${esc(a.name)}<span class="tier-kind">${esc(a.kind)}</span></div><div class="tier-why">${esc(rationale)}</div></div>`;
+          const html = `<div class="tier-item"><div class="tier-agent">${esc(a.name)}${renderEffortChip(effort)}<span class="tier-kind">${esc(a.kind)}</span></div><div class="tier-why">${esc(rationale)}</div></div>`;
           if (model.startsWith("Opus"))
             opusList.insertAdjacentHTML("beforeend", html);
           else sonnetList.insertAdjacentHTML("beforeend", html);
