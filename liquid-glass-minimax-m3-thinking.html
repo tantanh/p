@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass — Vitreous</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Serif:ital@0;1&family=Geist:wght@300..700&family=Geist+Mono:wght@300..600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --g-bg: rgba(255,255,255,0.055);
+      --g-bg-strong: rgba(255,255,255,0.085);
+      --g-bg-soft: rgba(255,255,255,0.035);
+      --g-edge: rgba(255,255,255,0.22);
+      --g-edge-bright: rgba(255,255,255,0.45);
+      --g-spec: rgba(255,255,255,0.55);
+      --g-shadow: 0 24px 60px -20px rgba(8,8,40,0.55), 0 8px 24px -8px rgba(8,8,40,0.35);
+      --g-blur: blur(34px) saturate(200%);
+      --g-blur-strong: blur(48px) saturate(220%);
+      --g-blur-soft: blur(22px) saturate(170%);
+      --ink-1: rgba(255,255,255,0.96);
+      --ink-2: rgba(255,255,255,0.72);
+      --ink-3: rgba(255,255,255,0.5);
+      --ink-4: rgba(255,255,255,0.32);
+      --r-card: 28px;
+      --r-pill: 999px;
+    }
+
+    html,body{min-height:100vh;overflow-x:hidden;background:#07060f;color:var(--ink-1);font-family:'Geist',-apple-system,sans-serif;font-feature-settings:"ss01","cv11";-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    body{position:relative;line-height:1.45}
+
+    /* ============== BACKDROP NEBULA ============== */
+    .nebula{position:fixed;inset:-10%;z-index:-2;overflow:hidden;background:radial-gradient(ellipse at 30% 20%,#1f1240 0%,#11081f 45%,#070414 90%)}
+    .blob{position:absolute;border-radius:50%;filter:blur(110px);mix-blend-mode:screen;opacity:1;will-change:transform}
+    .b1{width:60vw;height:60vw;left:-12%;top:-15%;background:radial-gradient(circle,#7c3aed 0%,transparent 60%);animation:drift1 22s ease-in-out infinite alternate}
+    .b2{width:55vw;height:55vw;right:-15%;top:5%;background:radial-gradient(circle,#ec4899 0%,transparent 60%);animation:drift2 26s ease-in-out infinite alternate}
+    .b3{width:50vw;height:50vw;left:25%;top:40%;background:radial-gradient(circle,#06b6d4 0%,transparent 60%);animation:drift3 30s ease-in-out infinite alternate}
+    .b4{width:38vw;height:38vw;right:10%;bottom:-10%;background:radial-gradient(circle,#f59e0b 0%,transparent 60%);opacity:.6;animation:drift4 24s ease-in-out infinite alternate}
+    .b5{width:30vw;height:30vw;left:50%;top:-10%;background:radial-gradient(circle,#3b82f6 0%,transparent 60%);opacity:.5;animation:drift5 28s ease-in-out infinite alternate}
+    @keyframes drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(8%,6%) scale(1.15)}}
+    @keyframes drift2{from{transform:translate(0,0) scale(1)}to{transform:translate(-10%,8%) scale(1.2)}}
+    @keyframes drift3{from{transform:translate(0,0) scale(1)}to{transform:translate(6%,-8%) scale(.9)}}
+    @keyframes drift4{from{transform:translate(0,0) scale(1)}to{transform:translate(-8%,-5%) scale(1.1)}}
+    @keyframes drift5{from{transform:translate(0,0) scale(1)}to{transform:translate(5%,10%) scale(.85)}}
+
+    /* film grain */
+    .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+    /* ============== GLASS PRIMITIVE ============== */
+    .glass{position:relative;background:var(--g-bg);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-radius:var(--r-card);box-shadow:var(--g-shadow),inset 0 1px 0 var(--g-edge-bright),inset 0 -1px 0 rgba(0,0,0,0.15);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s,background .4s}
+    .glass.strong{background:var(--g-bg-strong);-webkit-backdrop-filter:var(--g-blur-strong);backdrop-filter:var(--g-blur-strong)}
+    .glass.soft{background:var(--g-bg-soft);-webkit-backdrop-filter:var(--g-blur-soft);backdrop-filter:var(--g-blur-soft)}
+
+    /* iridescent conic edge */
+    .glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:conic-gradient(from 180deg at 50% 50%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.55) 60deg,rgba(124,58,237,.45) 120deg,rgba(236,72,153,.4) 200deg,rgba(6,182,212,.4) 280deg,rgba(255,255,255,.6) 340deg,rgba(255,255,255,0) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.85}
+    .glass.no-edge::before{display:none}
+
+    /* top specular highlight */
+    .glass::after{content:"";position:absolute;inset:1px 1px auto 1px;height:55%;border-radius:inherit;border-radius:var(--r-card) var(--r-card) 60% 60%/var(--r-card) var(--r-card) 200% 200%;background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.04) 38%,rgba(255,255,255,0) 100%);pointer-events:none;mix-blend-mode:overlay}
+
+    /* shimmer sweep */
+    .shimmer{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+    .shimmer::before{content:"";position:absolute;top:0;left:-150%;width:80%;height:100%;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,0.22) 46%,rgba(255,255,255,0.45) 50%,rgba(255,255,255,0.22) 54%,transparent 70%);transform:skewX(-20deg);animation:shimmer 7s ease-in-out infinite}
+    @keyframes shimmer{0%,88%,100%{left:-150%}92%,96%{left:150%}}
+
+    /* ============== LAYOUT ============== */
+    .shell{max-width:1440px;margin:0 auto;padding:24px;min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:24px}
+
+    /* status bar */
+    .status{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;font-size:13px;letter-spacing:.02em}
+    .status .left, .status .right{display:flex;align-items:center;gap:18px;color:var(--ink-2)}
+    .status .right svg{display:block}
+    .dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#06b6d4,#7c3aed);box-shadow:0 0 12px #06b6d4}
+
+    /* main grid */
+    main{display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:auto 1fr;gap:24px}
+    .col-l{grid-column:1;display:grid;grid-template-rows:auto 1fr;gap:24px;min-width:0}
+    .col-r{grid-column:2;display:grid;grid-template-rows:auto 1fr;gap:24px;min-width:0}
+
+    /* hero */
+    .hero{padding:56px 56px 48px;display:grid;grid-template-rows:auto 1fr auto;gap:32px;overflow:hidden;isolation:isolate}
+    .eyebrow{display:flex;align-items:center;gap:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3)}
+    .eyebrow .bar{width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--ink-3),transparent)}
+    .wordmark{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(78px,11vw,168px);line-height:.88;letter-spacing:-.04em;position:relative;display:flex;flex-direction:column;gap:0}
+    .wordmark .row1{color:var(--ink-1);font-style:italic;text-shadow:0 8px 40px rgba(124,58,237,.3);display:block}
+    .wordmark .row1+.row1{margin-top:-.08em}
+    .wordmark .row2{align-self:flex-end;font-family:'Fraunces',serif;font-weight:300;font-size:clamp(13px,1.05vw,18px);letter-spacing:.42em;text-transform:uppercase;color:var(--ink-2);font-style:normal;margin-top:28px;padding-right:.42em;white-space:nowrap;display:inline-flex;align-items:center;gap:.9em}
+    .wordmark .row2::before{content:"";width:48px;height:1px;background:linear-gradient(90deg,var(--ink-3),transparent);display:inline-block;margin-right:.9em}
+    .wordmark em{font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;background:linear-gradient(135deg,#fff 0%,#f0c8ff 40%,#c8a4ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-top:28px;border-top:1px solid rgba(255,255,255,0.08)}
+    .meta-item{display:flex;flex-direction:column;gap:6px}
+    .meta-item .k{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+    .meta-item .v{font-size:20px;font-weight:400;letter-spacing:-.01em}
+    .meta-item .v .small{font-size:12px;color:var(--ink-3);margin-left:6px}
+
+    /* now playing */
+    .now{padding:26px;display:grid;grid-template-columns:148px 1fr;grid-template-rows:auto auto 1fr;gap:20px 22px;position:relative}
+    .art{grid-row:1/4;width:148px;height:148px;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 18px 40px -10px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.3);background:linear-gradient(135deg,#1a0a2e 0%,#4a1a5e 30%,#ec4899 60%,#f59e0b 100%)}
+    .art::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,0.5),transparent 40%),radial-gradient(circle at 70% 80%,rgba(0,0,0,0.4),transparent 50%)}
+    .art::after{content:"";position:absolute;inset:8px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:linear-gradient(135deg,transparent,rgba(255,255,255,0.06))}
+    .art-eq{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:flex-end;gap:3px;height:36px;z-index:2}
+    .art-eq i{width:3px;background:#fff;border-radius:2px;animation:eq 1.2s ease-in-out infinite;opacity:.95}
+    .art-eq i:nth-child(1){height:40%;animation-delay:0s}
+    .art-eq i:nth-child(2){height:80%;animation-delay:.15s}
+    .art-eq i:nth-child(3){height:55%;animation-delay:.3s}
+    .art-eq i:nth-child(4){height:95%;animation-delay:.45s}
+    .art-eq i:nth-child(5){height:60%;animation-delay:.6s}
+    .art-eq i:nth-child(6){height:75%;animation-delay:.75s}
+    .art-eq i:nth-child(7){height:45%;animation-delay:.9s}
+    @keyframes eq{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+    .np-header{display:flex;justify-content:space-between;align-items:center}
+    .np-tag{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:8px}
+    .np-tag .pulse{width:6px;height:6px;border-radius:50%;background:#ec4899;box-shadow:0 0 10px #ec4899;animation:pulse 1.6s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+    .np-actions{display:flex;gap:6px}
+    .np-actions button{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:var(--ink-2);cursor:pointer;display:grid;place-items:center;transition:all .3s}
+    .np-actions button:hover{background:rgba(255,255,255,0.12);color:var(--ink-1);transform:translateY(-1px)}
+    .np-title{font-family:'Instrument Serif',serif;font-size:30px;line-height:1.05;letter-spacing:-.01em;color:var(--ink-1);font-style:italic}
+    .np-artist{color:var(--ink-2);font-size:14px;margin-top:4px}
+    .np-controls{display:flex;flex-direction:column;gap:14px;align-self:end}
+    .progress{height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;position:relative}
+    .progress::after{content:"";position:absolute;inset:0;width:38%;background:linear-gradient(90deg,#fff,#f0c8ff);border-radius:inherit;box-shadow:0 0 12px rgba(255,255,255,0.4)}
+    .progress-row{display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.08em}
+    .ctrl-row{display:flex;justify-content:space-between;align-items:center}
+    .ctrl-row .play{width:42px;height:42px;border-radius:50%;background:#fff;color:#0a0817;display:grid;place-items:center;box-shadow:0 8px 24px rgba(255,255,255,0.3);transition:transform .3s}
+    .ctrl-row .play:hover{transform:scale(1.06)}
+    .ctrl-row .btn{width:36px;height:36px;border-radius:50%;color:var(--ink-2);display:grid;place-items:center;transition:color .3s,background .3s}
+    .ctrl-row .btn:hover{color:var(--ink-1);background:rgba(255,255,255,0.06)}
+
+    /* secondary row (3 small cards) */
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;min-width:0}
+
+    .weather{padding:22px;display:flex;flex-direction:column;gap:18px;min-width:0}
+    .w-top{display:flex;justify-content:space-between;align-items:flex-start}
+    .w-temp{font-family:'Instrument Serif',serif;font-size:54px;line-height:1;letter-spacing:-.03em}
+    .w-temp sup{font-size:20px;vertical-align:top;margin-left:2px;color:var(--ink-2)}
+    .w-sun{position:relative;width:48px;height:48px;display:grid;place-items:center}
+    .w-sun .core{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle,#fff 0%,#fde68a 50%,#f59e0b 100%);box-shadow:0 0 24px #fde68a,0 0 8px #fff}
+    .w-sun .rays{position:absolute;inset:0;animation:spin 18s linear infinite}
+    .w-sun .rays i{position:absolute;left:50%;top:50%;width:2px;height:8px;background:linear-gradient(#fff,transparent);border-radius:1px;transform-origin:1px 24px}
+    .w-sun .rays i:nth-child(1){transform:translate(-50%,-50%) rotate(0deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(2){transform:translate(-50%,-50%) rotate(45deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(3){transform:translate(-50%,-50%) rotate(90deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(4){transform:translate(-50%,-50%) rotate(135deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(5){transform:translate(-50%,-50%) rotate(180deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(6){transform:translate(-50%,-50%) rotate(225deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(7){transform:translate(-50%,-50%) rotate(270deg) translateY(-18px)}
+    .w-sun .rays i:nth-child(8){transform:translate(-50%,-50%) rotate(315deg) translateY(-18px)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .w-cond{font-size:13px;color:var(--ink-2)}
+    .w-loc{font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase}
+    .w-hourly{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);gap:6px}
+    .w-hourly div{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+    .w-hourly .h{font-family:'Geist Mono',monospace;font-size:9px;color:var(--ink-3)}
+    .w-hourly .d{width:4px;height:14px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.3));border-radius:99px}
+    .w-hourly div:nth-child(1) .d{height:8px;opacity:.6}
+    .w-hourly div:nth-child(2) .d{height:11px;opacity:.7}
+    .w-hourly div:nth-child(3) .d{height:18px;opacity:.9}
+    .w-hourly div:nth-child(4) .d{height:14px;opacity:1;background:linear-gradient(180deg,#fde68a,#f59e0b)}
+    .w-hourly div:nth-child(5) .d{height:10px;opacity:.7}
+    .w-hourly .t{font-size:10px;color:var(--ink-2)}
+
+    /* focus timer */
+    .focus{padding:22px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden;min-width:0}
+    .focus .ring{position:relative;width:100%;aspect-ratio:1;max-height:170px;align-self:center}
+    .focus svg{width:100%;height:100%;transform:rotate(-90deg)}
+    .focus .ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+    .focus .ring .track{stroke:rgba(255,255,255,0.08)}
+    .focus .ring .bar{stroke:url(#g-ring);stroke-dasharray:377;stroke-dashoffset:113;filter:drop-shadow(0 0 8px rgba(124,58,237,0.6))}
+    .focus .center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+    .focus .center .t{font-family:'Instrument Serif',serif;font-size:38px;line-height:1;letter-spacing:-.02em;font-style:italic}
+    .focus .center .l{font-family:'Geist Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.2em;text-transform:uppercase;margin-top:4px}
+    .focus .label{display:flex;justify-content:space-between;align-items:center}
+    .focus .label .name{font-size:13px}
+    .focus .label .badge{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:rgba(124,58,237,0.18);color:#d8b4fe;border:1px solid rgba(124,58,237,0.3)}
+    .focus .stats{display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-3)}
+    .focus .stats span b{color:var(--ink-1);font-weight:500;margin-right:4px}
+
+    /* activity */
+    .activity{padding:22px;display:flex;flex-direction:column;gap:18px;min-width:0}
+    .act-head{display:flex;justify-content:space-between;align-items:flex-start}
+    .act-head h3{font-size:13px;font-weight:500}
+    .act-head .sub{font-family:'Geist Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase}
+    .rings{display:flex;justify-content:space-around;align-items:center;flex:1;min-height:130px}
+    .rings .r{position:relative;display:grid;place-items:center}
+    .rings .r svg{transform:rotate(-90deg);overflow:visible}
+    .rings .r circle{fill:none;stroke-width:7;stroke-linecap:round}
+    .rings .r .tr{stroke:rgba(255,255,255,0.08)}
+    .rings .r .b1{stroke:url(#g1);stroke-dasharray:220;stroke-dashoffset:33;filter:drop-shadow(0 0 6px rgba(236,72,153,0.6))}
+    .rings .r .b2{stroke:url(#g2);stroke-dasharray:176;stroke-dashoffset:35;filter:drop-shadow(0 0 6px rgba(6,182,212,0.6))}
+    .rings .r .b3{stroke:url(#g3);stroke-dasharray:138;stroke-dashoffset:48;filter:drop-shadow(0 0 6px rgba(245,158,11,0.6))}
+    .rings .r .ctr{position:absolute;text-align:center;width:max-content}
+    .rings .r .pct{font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-1);font-weight:500}
+    .rings .r .lab{font-family:'Geist Mono',monospace;font-size:8px;color:var(--ink-3);letter-spacing:.15em;text-transform:uppercase;margin-top:2px}
+    .r1{width:96px;height:96px}
+    .r2{width:78px;height:78px}
+    .r3{width:60px;height:60px}
+    .act-foot{display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-3);padding-top:12px;border-top:1px solid rgba(255,255,255,0.08)}
+    .act-foot span b{color:var(--ink-1);font-weight:500}
+
+    /* horizontal dock (in control bar) */
+    .dock{display:flex;flex-direction:row;gap:8px;align-items:center;height:46px;padding:0 14px;border-left:1px solid rgba(255,255,255,0.08);border-right:1px solid rgba(255,255,255,0.08);margin:0 2px;flex-shrink:0}
+    .dock .app{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;cursor:pointer;position:relative;transition:transform .35s cubic-bezier(.2,.8,.2,1);flex-shrink:0}
+    .dock .app:hover{transform:translateY(-5px) scale(1.1)}
+    .dock .app::after{content:attr(data-name);position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-2);background:rgba(20,20,40,0.9);padding:4px 8px;border-radius:6px;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap}
+    .dock .app:hover::after{opacity:1;transform:translateX(-50%) translateY(0)}
+    .d-app{background:linear-gradient(135deg,#7c3aed,#ec4899);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 4px 14px rgba(124,58,237,0.5)}
+    .d-msg{background:linear-gradient(135deg,#06b6d4,#3b82f6);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 4px 14px rgba(6,182,212,0.5)}
+    .d-music{background:linear-gradient(135deg,#ef4444,#f59e0b);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 4px 14px rgba(239,68,68,0.5)}
+    .d-photo{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 4px 14px rgba(16,185,129,0.5)}
+    .d-mail{background:linear-gradient(135deg,#3b82f6,#7c3aed);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 4px 14px rgba(59,130,246,0.5)}
+    .d-set{background:linear-gradient(135deg,#6b7280,#1f2937);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),0 4px 14px rgba(31,41,55,0.5)}
+
+    /* schedule / system info */
+    .system{padding:26px;display:flex;flex-direction:column;gap:18px;min-width:0}
+    .sys-head{display:flex;justify-content:space-between;align-items:flex-end}
+    .sys-head .title{font-family:'Instrument Serif',serif;font-size:26px;font-style:italic;line-height:1}
+    .sys-head .date{font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.2em;text-transform:uppercase;text-align:right;line-height:1.4}
+    .sys-head .date b{display:block;color:var(--ink-1);font-size:14px;font-family:'Geist',sans-serif;letter-spacing:0;text-transform:none;margin-bottom:3px;font-weight:500}
+    .schedule{display:flex;flex-direction:column;gap:12px;flex:1;justify-content:center}
+    .ev{display:grid;grid-template-columns:60px 1fr auto;gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);transition:background .3s,transform .3s}
+    .ev:hover{background:rgba(255,255,255,0.08);transform:translateX(4px)}
+    .ev .t{font-family:'Geist Mono',monospace;font-size:11px;color:var(--ink-2);letter-spacing:.05em}
+    .ev .n{font-size:13px;font-weight:500;line-height:1.3}
+    .ev .n small{display:block;font-size:11px;color:var(--ink-3);font-weight:400;margin-top:2px}
+    .ev .tag{font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 8px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);color:var(--ink-2)}
+    .ev.now{background:linear-gradient(90deg,rgba(124,58,237,0.18),rgba(236,72,153,0.12));border-color:rgba(236,72,153,0.3)}
+    .ev.now .tag{background:#ec4899;color:#fff;border-color:transparent}
+
+    /* control bar (full-width) */
+    .controlbar{padding:16px 24px;display:flex;align-items:center;gap:24px;min-height:78px}
+    .cb-group{display:flex;align-items:center;gap:12px;flex-shrink:0}
+    .cb-group .lbl{font-family:'Geist Mono',monospace;font-size:10px;color:var(--ink-3);letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+    .cb-divider{width:1px;height:34px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.14),transparent);flex-shrink:0}
+    .seg{display:flex;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:99px;padding:3px;gap:2px}
+    .seg button{padding:5px 12px;border-radius:99px;font-size:11px;color:var(--ink-2);background:transparent;border:0;cursor:pointer;font-family:inherit;transition:all .3s}
+    .seg button.on{background:rgba(255,255,255,0.15);color:var(--ink-1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2)}
+    .slider{flex:1;display:flex;align-items:center;gap:10px;min-width:120px;max-width:340px}
+    .slider .ic{width:18px;height:18px;color:var(--ink-3);flex-shrink:0}
+    .slider .track{flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;position:relative;overflow:hidden}
+    .slider .track::after{content:"";position:absolute;left:0;top:0;bottom:0;width:62%;background:linear-gradient(90deg,#fff,#c8a4ff);border-radius:inherit;box-shadow:0 0 12px rgba(255,255,255,0.4)}
+    .slider .track .knob{position:absolute;left:62%;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.6)}
+    .toggle{width:42px;height:24px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);border-radius:99px;position:relative;cursor:pointer;transition:all .3s;flex-shrink:0}
+    .toggle::after{content:"";position:absolute;left:2px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:#fff;transition:all .35s cubic-bezier(.2,.8,.2,1);box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+    .toggle.on{background:linear-gradient(135deg,#7c3aed,#ec4899);border-color:transparent}
+    .toggle.on::after{left:calc(100% - 20px)}
+
+    /* swatches */
+    .swatches{display:flex;align-items:center;gap:8px}
+    .swatch{width:24px;height:24px;border-radius:8px;cursor:pointer;position:relative;transition:transform .3s;flex-shrink:0}
+    .swatch:hover{transform:translateY(-4px) scale(1.12)}
+    .swatch::after{content:attr(data-name);position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-2);background:rgba(20,20,40,0.9);padding:4px 8px;border-radius:6px;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap}
+    .swatch:hover::after{opacity:1;transform:translateX(-50%) translateY(0)}
+    .s1{background:linear-gradient(135deg,#7c3aed,#ec4899);box-shadow:0 4px 12px rgba(124,58,237,0.4)}
+    .s2{background:linear-gradient(135deg,#06b6d4,#3b82f6);box-shadow:0 4px 12px rgba(6,182,212,0.4)}
+    .s3{background:linear-gradient(135deg,#f59e0b,#ef4444);box-shadow:0 4px 12px rgba(245,158,11,0.4)}
+    .s4{background:linear-gradient(135deg,#10b981,#06b6d4);box-shadow:0 4px 12px rgba(16,185,129,0.4)}
+    .s5{background:linear-gradient(135deg,#d8b4fe,#f0c8ff);box-shadow:0 4px 12px rgba(216,180,254,0.4)}
+
+    .cb-spacer{flex:1}
+
+    /* footer marquee */
+    .footer{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;align-items:center;padding:0 8px}
+    .footer .left{display:flex;align-items:center;gap:12px}
+    .footer .left .lk{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
+    .footer .right{display:flex;align-items:center;gap:16px}
+    .footer .ticker{display:flex;gap:24px;overflow:hidden;max-width:50%}
+    .footer .ticker div{white-space:nowrap;animation:tick 28s linear infinite}
+    .footer .ticker div b{color:var(--ink-1);font-weight:500;margin-left:6px}
+    @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    /* responsive */
+    @media (max-width: 1100px){
+      main{grid-template-columns:1fr}
+      .col-r{grid-column:1;grid-template-rows:auto}
+      .dock{flex-wrap:wrap;justify-content:flex-start}
+      .dock .app::after{display:none}
+    }
+    @media (max-width: 900px){
+      .controlbar{flex-wrap:wrap;gap:14px;min-height:auto;padding:14px 18px}
+      .cb-divider{display:none}
+      .cb-group{flex:1 1 auto;min-width:0}
+      .slider{max-width:none}
+    }
+    @media (max-width: 700px){
+      .row3{grid-template-columns:1fr}
+      .hero{padding:36px 28px}
+      .now{grid-template-columns:1fr}
+      .art{width:100%;height:160px}
+    }
+
+    /* reveal animation */
+    .reveal{opacity:0;transform:translateY(18px) scale(.985);animation:reveal .9s cubic-bezier(.2,.8,.2,1) forwards}
+    @keyframes reveal{to{opacity:1;transform:translateY(0) scale(1)}}
+    .reveal:nth-child(1){animation-delay:.05s}
+    .reveal:nth-child(2){animation-delay:.15s}
+    .reveal:nth-child(3){animation-delay:.25s}
+    .reveal:nth-child(4){animation-delay:.35s}
+    .reveal:nth-child(5){animation-delay:.45s}
+    .reveal:nth-child(6){animation-delay:.55s}
+    .reveal:nth-child(7){animation-delay:.65s}
+    .reveal:nth-child(8){animation-delay:.75s}
+  </style>
+</head>
+<body>
+  <!-- Backdrop -->
+  <div class="nebula" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+    <div class="blob b5"></div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- SVG defs (gradients) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="g-ring" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#7c3aed"/>
+        <stop offset="50%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#06b6d4"/>
+      </linearGradient>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ec4899"/>
+        <stop offset="100%" stop-color="#f59e0b"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#06b6d4"/>
+        <stop offset="100%" stop-color="#3b82f6"/>
+      </linearGradient>
+      <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#06b6d4"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="shell">
+    <!-- status bar -->
+    <header class="status glass no-edge reveal" style="border-radius:18px;padding:14px 22px">
+      <div class="left">
+        <span class="dot"></span>
+        <span style="font-family:'Geist Mono',monospace">VITREOUS&nbsp;OS&nbsp;·&nbsp;v26.0</span>
+      </div>
+      <div class="right">
+        <span style="font-family:'Geist Mono',monospace">9:41</span>
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M1 8.5 Q3 5.5 5 8.5 T9 8.5 T13 8.5 T17 8.5" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".8"/><circle cx="13" cy="8.5" r="1.5" fill="currentColor"/></svg>
+        <svg width="22" height="11" viewBox="0 0 22 11" fill="none"><rect x="0.5" y="0.5" width="18" height="10" rx="2.5" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="13" height="7" rx="1.5" fill="currentColor"/><rect x="19.5" y="3.5" width="1.5" height="4" rx="0.5" fill="currentColor" opacity=".5"/></svg>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT COLUMN -->
+      <div class="col-l">
+        <!-- HERO -->
+        <section class="hero glass strong reveal">
+          <div class="shimmer"></div>
+          <div class="eyebrow">
+            <span class="bar"></span>
+            <span>Material Specification</span>
+            <span style="color:var(--ink-2)">·</span>
+            <span>Edition 01</span>
+            <span class="bar"></span>
+          </div>
+          <h1 class="wordmark">
+            <span class="row1">Liquid</span>
+            <span class="row1"><em>Glass</em></span>
+            <span class="row2">Vitreous&nbsp;·&nbsp;2026</span>
+          </h1>
+          <div class="hero-meta">
+            <div class="meta-item">
+              <span class="k">Density</span>
+              <span class="v">0.92<span class="small">g/cm³</span></span>
+            </div>
+            <div class="meta-item">
+              <span class="k">Refraction</span>
+              <span class="v">1.48<span class="small">η</span></span>
+            </div>
+            <div class="meta-item">
+              <span class="k">Surface</span>
+              <span class="v">28<sup>°</sup><span class="small">rough</span></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ROW 3 -->
+        <section class="row3">
+          <div class="weather glass reveal">
+            <div class="w-top">
+              <div>
+                <div class="w-loc">Cupertino · 32.2°N</div>
+                <div class="w-temp">72<sup>°F</sup></div>
+                <div class="w-cond">Mostly clear · feels 74°</div>
+              </div>
+              <div class="w-sun" aria-hidden="true">
+                <div class="rays"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="core"></div>
+              </div>
+            </div>
+            <div class="w-hourly">
+              <div><span class="h">10a</span><span class="d"></span><span class="t">68°</span></div>
+              <div><span class="h">12p</span><span class="d"></span><span class="t">71°</span></div>
+              <div><span class="h">2p</span><span class="d"></span><span class="t">73°</span></div>
+              <div><span class="h">4p</span><span class="d"></span><span class="t">74°</span></div>
+              <div><span class="h">6p</span><span class="d"></span><span class="t">70°</span></div>
+            </div>
+          </div>
+
+          <div class="focus glass reveal">
+            <div class="label">
+              <span class="name">Deep Focus</span>
+              <span class="badge">Active</span>
+            </div>
+            <div class="ring">
+              <svg viewBox="0 0 130 130">
+                <circle class="track" cx="65" cy="65" r="60"/>
+                <circle class="bar" cx="65" cy="65" r="60"/>
+              </svg>
+              <div class="center">
+                <div>
+                  <div class="t">17:42</div>
+                  <div class="l">remaining</div>
+                </div>
+              </div>
+            </div>
+            <div class="stats">
+              <span><b>4</b>sessions</span>
+              <span><b>2h 11m</b>focused</span>
+              <span><b>92%</b>goal</span>
+            </div>
+          </div>
+
+          <div class="activity glass reveal">
+            <div class="act-head">
+              <div>
+                <h3>Activity</h3>
+                <div class="sub" style="margin-top:3px">Today</div>
+              </div>
+              <div class="sub">+18%</div>
+            </div>
+            <div class="rings">
+              <div class="r r1">
+                <svg viewBox="0 0 100 100">
+                  <circle class="tr" cx="50" cy="50" r="35"/>
+                  <circle class="b1" cx="50" cy="50" r="35"/>
+                </svg>
+                <div class="ctr">
+                  <div class="pct">85%</div>
+                  <div class="lab">Move</div>
+                </div>
+              </div>
+              <div class="r r2">
+                <svg viewBox="0 0 100 100">
+                  <circle class="tr" cx="50" cy="50" r="28"/>
+                  <circle class="b2" cx="50" cy="50" r="28"/>
+                </svg>
+                <div class="ctr">
+                  <div class="pct">80%</div>
+                  <div class="lab">Exercise</div>
+                </div>
+              </div>
+              <div class="r r3">
+                <svg viewBox="0 0 100 100">
+                  <circle class="tr" cx="50" cy="50" r="22"/>
+                  <circle class="b3" cx="50" cy="50" r="22"/>
+                </svg>
+                <div class="ctr">
+                  <div class="pct">65%</div>
+                  <div class="lab">Stand</div>
+                </div>
+              </div>
+            </div>
+            <div class="act-foot">
+              <span><b>487</b>cal</span>
+              <span><b>32</b>min</span>
+              <span><b>9</b>hrs</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-r">
+        <section class="now glass strong reveal">
+          <div class="shimmer"></div>
+          <div class="art" aria-hidden="true">
+            <div class="art-eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="np-header">
+            <div class="np-tag"><span class="pulse"></span>Now Playing</div>
+            <div class="np-actions">
+              <button aria-label="Share">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              </button>
+              <button aria-label="More">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="np-title">Vitreous Drift</div>
+            <div class="np-artist">Holo Frequencies · <span style="color:var(--ink-3)">Liquid Sessions</span></div>
+          </div>
+          <div class="np-controls">
+            <div class="progress"></div>
+            <div class="progress-row">
+              <span>1:24</span>
+              <span>3:47</span>
+            </div>
+            <div class="ctrl-row">
+              <button class="btn" aria-label="Shuffle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              </button>
+              <button class="btn" aria-label="Previous">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12l8.5 6V6z"/></svg>
+              </button>
+              <button class="play" aria-label="Play">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <button class="btn" aria-label="Next">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+              </button>
+              <button class="btn" aria-label="Repeat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="system glass reveal">
+          <div class="sys-head">
+            <div class="title">Schedule</div>
+            <div class="date"><b>Friday</b>05 · July · 2026</div>
+          </div>
+          <div class="schedule">
+            <div class="ev">
+              <span class="t">9:30</span>
+              <span class="n">Design Critique<small>Vitreous material review with Park & Lin</small></span>
+              <span class="tag">Crit</span>
+            </div>
+            <div class="ev">
+              <span class="t">11:00</span>
+              <span class="n">Spec Lock<small>Refractive indices, surface roughness tolerances</small></span>
+              <span class="tag">Focus</span>
+            </div>
+            <div class="ev">
+              <span class="t">13:30</span>
+              <span class="n">Lunch ·<small>The Liquid Counter, Hayes Valley</small></span>
+              <span class="tag">Break</span>
+            </div>
+            <div class="ev">
+              <span class="t">15:00</span>
+              <span class="n">Build & Compile<small>Engine room — shader passes, blur kernels</small></span>
+              <span class="tag">Dev</span>
+            </div>
+            <div class="ev">
+              <span class="t">18:00</span>
+              <span class="n">Sunset Walk<small>Steep Ravine — bring wind shell</small></span>
+              <span class="tag">Off</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- BOTTOM -->
+    <div class="controlbar glass reveal">
+      <div class="cb-group">
+        <span class="lbl">Theme</span>
+        <div class="seg" role="tablist">
+          <button class="on">Light</button>
+          <button>Dark</button>
+          <button>Auto</button>
+        </div>
+      </div>
+      <div class="cb-divider"></div>
+      <div class="cb-group" style="flex:1;min-width:0">
+        <span class="lbl">Blur</span>
+        <div class="slider">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
+          <div class="track"><span class="knob"></span></div>
+        </div>
+      </div>
+      <div class="cb-divider"></div>
+      <div class="cb-group">
+        <span class="lbl">Tints</span>
+        <div class="swatches">
+          <div class="swatch s1" data-name="Magma"></div>
+          <div class="swatch s2" data-name="Glacier"></div>
+          <div class="swatch s3" data-name="Ember"></div>
+          <div class="swatch s4" data-name="Verdant"></div>
+          <div class="swatch s5" data-name="Pearl"></div>
+        </div>
+      </div>
+      <div class="dock">
+        <div class="app d-app" data-name="Liquid" aria-label="Liquid">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="app d-msg" data-name="Messages" aria-label="Messages">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.05 2 11c0 2.86 1.5 5.4 3.83 7.05L4.5 22l4.27-1.85c1.05.21 2.13.35 3.23.35 5.52 0 10-4.05 10-9S17.52 2 12 2z"/></svg>
+        </div>
+        <div class="app d-music" data-name="Music" aria-label="Music">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <div class="app d-photo" data-name="Photos" aria-label="Photos">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="app d-mail" data-name="Mail" aria-label="Mail">
+          <svg width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        </div>
+        <div class="app d-set" data-name="Settings" aria-label="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- footer marquee -->
+    <div class="footer">
+      <div class="left">
+        <span class="lk">⌘&nbsp;K ·&nbsp;Command</span>
+        <span class="lk">©&nbsp;Vitreous&nbsp;Lab · MMXXVI</span>
+      </div>
+      <div class="right">
+        <div class="ticker">
+          <div>iOS&nbsp;26&nbsp;·&nbsp;macOS&nbsp;26&nbsp;·&nbsp;visionOS&nbsp;3&nbsp;·&nbsp;watchOS&nbsp;26&nbsp;<b>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</b>iOS&nbsp;26&nbsp;·&nbsp;macOS&nbsp;26&nbsp;·&nbsp;visionOS&nbsp;3&nbsp;·&nbsp;watchOS&nbsp;26&nbsp;<b>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;</b></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="dot"></span>
+          <span>Live</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // segmented control
+    document.querySelectorAll('.seg').forEach(g => {
+      g.querySelectorAll('button').forEach(b => {
+        b.addEventListener('click', () => {
+          g.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+          b.classList.add('on');
+        });
+      });
+    });
+
+    // toggle
+    document.querySelectorAll('.toggle').forEach(t => {
+      t.addEventListener('click', () => t.classList.toggle('on'));
+    });
+
+    // slider drag (visual only)
+    document.querySelectorAll('.slider .track').forEach(track => {
+      const knob = track.querySelector('.knob');
+      const setFromX = (clientX) => {
+        const r = track.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+        knob.style.left = (pct * 100) + '%';
+        const after = track.querySelector('::after'); // can't query, use child
+        track.style.setProperty('--fill', (pct * 100) + '%');
+        // update ::after via background gradient on the track
+        track.style.background = `linear-gradient(90deg, #fff 0%, #c8a4ff ${pct * 100}%, rgba(255,255,255,0.08) ${pct * 100}%, rgba(255,255,255,0.08) 100%)`;
+        track.style.boxShadow = 'none';
+      };
+      let drag = false;
+      track.addEventListener('mousedown', e => { drag = true; setFromX(e.clientX); });
+      window.addEventListener('mousemove', e => { if (drag) setFromX(e.clientX); });
+      window.addEventListener('mouseup', () => drag = false);
+    });
+
+    // parallax tilt on glass cards
+    document.querySelectorAll('.glass').forEach(card => {
+      let raf = null;
+      const onMove = (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          card.style.transform = `perspective(1200px) rotateX(${(-y * 3).toFixed(2)}deg) rotateY(${(x * 3).toFixed(2)}deg) translateY(-2px)`;
+        });
+      };
+      const onLeave = () => {
+        cancelAnimationFrame(raf);
+        card.style.transform = '';
+      };
+      card.addEventListener('mousemove', onMove);
+      card.addEventListener('mouseleave', onLeave);
+    });
+
+    // schedule "Live" badge advance
+    const evs = document.querySelectorAll('.ev');
+    evs.forEach(e => e.dataset.tag = e.querySelector('.tag').textContent);
+    let idx = 0;
+    setInterval(() => {
+      evs.forEach((e, i) => {
+        const isNow = i === idx;
+        e.classList.toggle('now', isNow);
+        e.querySelector('.tag').textContent = isNow ? 'Live' : e.dataset.tag;
+      });
+      idx = (idx + 1) % evs.length;
+    }, 5000);
+  </script>
+</body>
+</html>
