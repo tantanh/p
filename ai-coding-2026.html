@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Model Stack · June 2026 Roster v05</title>
+    <title>AI Model Stack · July 2026 Roster v06</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap");
 
@@ -705,6 +705,9 @@
       table.ledger .cost-high {
         color: var(--red);
       }
+      table.ledger .cost-none {
+        color: var(--bone-faint);
+      }
 
       table.ledger .yes {
         color: var(--phosphor);
@@ -966,31 +969,31 @@
       <!-- ========== MASTHEAD ========== -->
       <header class="masthead">
         <div class="eyebrow">
-          <span class="dot"></span> Roster Revision · v05 · Internal Dossier
+          <span class="dot"></span>           Roster Revision · v06 · Internal Dossier
         </div>
         <h1 class="title">The Chinese<br />Model <em>Stack</em>.</h1>
         <p class="subtitle">
           A working roster for a Claude-based coding agent — built, audited, and
           superseded in the open, now routing through open-weight Chinese models
-          at a fraction of Opus pricing.
+          at a fraction of Opus pricing. Fable 5 and Mythos reshape the ceiling.
         </p>
 
         <div class="meta-row">
           <div class="meta-item">
             <span class="meta-label">Cycle</span
-            ><span class="meta-val">June 2026 · R05</span>
+            ><span class="meta-val">July 2026 · R06</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Supersedes</span
-            ><span class="meta-val">R04 (Opus 4.7 / GLM-5.1)</span>
+            ><span class="meta-val">R05 (GLM-5.2 / Kimi K2.7-Code)</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Headline change</span
-            ><span class="meta-val live">GLM-5.2 + Kimi K2.7-Code</span>
+            ><span class="meta-val live">Claude Fable 5 + pricing sync</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Scope</span
-            ><span class="meta-val">12 agents · 15 models · 3 tables</span>
+            ><span class="meta-val">12 agents · 18 models · 4 tables</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Status</span
@@ -1019,7 +1022,10 @@
               resilience for autonomous long-horizon runs.
               <strong>Table 2 (Lean)</strong> collapses to the models that
               actually fire in practice, trimming carry-weight and token spend
-              where a third fallback was never invoked.
+              where a third fallback was never invoked. R06 adds
+              <strong>Claude Fable 5</strong> (SWE-bench Verified 95.0%) and
+              <strong>Mythos Preview</strong> to the ledger and syncs all
+              pricing to cheapest-provider data.
             </p>
             <p>
               Every benchmark figure below is either
@@ -1045,49 +1051,40 @@
             </h2>
           </div>
           <p class="section-note">
-            Each card maps to a row delta between R04 and R05. See the matrices
+            Each card maps to a row delta between R05 and R06. See the matrices
             below for the full column-level picture.
           </p>
         </div>
 
         <div class="changed-grid">
           <div class="changed-card">
-            <div class="card-num">Δ 01 / PROMOTION</div>
-            <h3 class="card-head"><em>GLM-5.2</em> enters<br />as a Main.</h3>
+            <div class="card-num">Δ 01 / NEW CEILING</div>
+            <h3 class="card-head"><em>Claude Fable 5</em><br />redefines the top.</h3>
             <p class="card-body">
-              Open-weight (MIT), same price as 5.1, and a real jump:
-              <span class="pill">CODE</span>Arena #2, Design Arena #1.
-              Terminal-Bench 81.0%. Now owns
-              <strong style="color: var(--bone)">Code, Ask, Frontend</strong>
-              outright and takes the Sonnet-fallback column.
+              SWE-bench Verified 95.0%, Pro 80.0% — both #1.
+              <span class="pill">ABOVE-OPUS</span>At $10/$50 it's 2× Opus pricing,
+              but the gap is real. Mythos Preview (same weights, unsafeguarded)
+              sits at 93.9% Verified.
             </p>
           </div>
           <div class="changed-card">
-            <div class="card-num">Δ 02 / CONTESTED</div>
-            <h3 class="card-head">
-              <em>Kimi K2.7-Code</em>,<br />held to Alt 1.
-            </h3>
+            <div class="card-num">Δ 02 / PRICING SYNC</div>
+            <h3 class="card-head"><em>Six models</em>,<br />price corrected.</h3>
             <p class="card-body">
-              Vendor MCPMark of 81.1 edges Opus 4.8's 76.4 — but practitioners
-              report the gain
-              <strong style="color: var(--bone)"
-                >doesn't replicate on real repos</strong
-              >. Lands only in the Expanded <em>Ask</em> column with a contested
-              TS-build flag, pending independent reproduction.
+              Sonnet 5 intro pricing ended ($3/$15). Kimi K2.6, GLM-5.2,
+              Qwen 3.7 Max, MiMo V2.5-Pro, Qwen 3.7 Plus all repriced via
+              cheapest-provider data from llm-stats.com. GLM-5.2 drops to
+              <strong style="color: var(--bone)">$0.95/$3.00</strong> via DeepInfra.
             </p>
           </div>
           <div class="changed-card">
             <div class="card-num">Δ 03 / VERIFIED</div>
-            <h3 class="card-head"><em>MiniMax M3</em><br />earns its seat.</h3>
+            <h3 class="card-head"><em>Sonnet 5</em><br />earns 85.2%.</h3>
             <p class="card-body">
-              Kilo's own audit found
-              <strong style="color: var(--bone)"
-                >13 of 17 planted TS bugs for $0.07</strong
-              >
-              — tying Opus 4.8 at 18× less cost. Promoted into Table 1 for
-              <span class="pill">REVIEW</span
-              ><span class="pill">FRONTEND</span>, displacing the weaker Step
-              3.7 Flash.
+              SWE-bench Verified score now confirmed at
+              <strong style="color: var(--bone)">85.2%</strong> — #5 overall,
+              closing the gap to Opus 4.7 (87.6%). Context 1M confirmed.
+              Still trails Opus on the hardest agentic benchmarks.
             </p>
           </div>
         </div>
@@ -1308,8 +1305,8 @@
 
         <div class="colophon">
           <span>Designed by GLM-5.2 (High)</span>
-          <span class="mark">R05</span>
-          <span>June 2026</span>
+          <span class="mark">R06</span>
+          <span>July 2026</span>
         </div>
       </section>
     </div>
@@ -1499,7 +1496,7 @@
           pro: ["a", "69.2%"],
           verified: ["a", "88.6%"],
           terminal: ["a", "74.6–85%"],
-          ctx: "200K",
+          ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
@@ -1515,7 +1512,7 @@
           pro: ["a", "64.3%"],
           verified: ["a", "87.6%"],
           terminal: ["b", "66.1%"],
-          ctx: "200K",
+          ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
@@ -1531,7 +1528,7 @@
           pro: ["b", "53.4%"],
           verified: ["a", "80.8%"],
           terminal: null,
-          ctx: "200K",
+          ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
@@ -1539,6 +1536,39 @@
           costIn: ["high", "$5.00"],
           costOut: ["high", "$25.00"],
           note: "Original baseline this stack was designed around",
+        },
+        {
+          name: "Claude Fable 5",
+          badge: "new",
+          role: "opus",
+          ts: "pass",
+          pro: ["a", "80.0%"],
+          verified: ["a", "95.0%"],
+          terminal: null,
+          ctx: "1M",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["high", "$10.00"],
+          costOut: ["high", "$50.00"],
+          note: "Above-Opus tier. Same weights as Mythos 5 (unsafeguarded). SWE-bench Pro #1 at 80.0%",
+        },
+        {
+          name: "Claude Mythos Preview",
+          role: "opus",
+          ts: "pass",
+          pro: ["a", "77.8%"],
+          verified: ["a", "93.9%"],
+          terminal: null,
+          ctx: "—",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["none", "—"],
+          costOut: ["none", "—"],
+          note: "Preview-only; same weights as Fable 5 but unsafeguarded. Pricing TBD",
         },
 
         { kind: "section", label: "Claude — Sonnet tier" },
@@ -1548,16 +1578,16 @@
           role: "sonnet",
           ts: "pass",
           pro: ["a", "63.2%"],
-          verified: null,
+          verified: ["a", "85.2%"],
           terminal: null,
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
           openT: "—",
-          costIn: ["mid", "$2.00"],
-          costOut: ["high", "$10.00"],
-          note: "Intro pricing until Aug 31 ($2/$10), then $3/$15. Xhigh effort can exceed Opus 4.8 cost — win is at low/medium",
+          costIn: ["mid", "$3.00"],
+          costOut: ["high", "$15.00"],
+          note: "Intro pricing ended ($3/$15). Xhigh effort can exceed Opus 4.8 cost — win is at low/medium",
         },
         {
           name: "Claude Sonnet 4.6",
@@ -1566,7 +1596,7 @@
           pro: null,
           verified: ["b", "79.6%"],
           terminal: ["c", "59.1%"],
-          ctx: "1M",
+          ctx: "200K",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
@@ -1584,13 +1614,13 @@
           pro: ["a", "58.6%"],
           verified: ["a", "80.2%"],
           terminal: ["b", "66.7%"],
-          ctx: "256K",
+          ctx: "262K",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
           openT: "—",
-          costIn: ["low", "$0.60"],
-          costOut: ["low", "$2.50"],
+          costIn: ["low", "$0.75"],
+          costOut: ["low", "$3.50"],
           note: "4000+ tool calls / 13hr stability. GPQA-Diamond 90.5",
         },
         {
@@ -1606,8 +1636,8 @@
           visionT: "—",
           openC: "yes",
           openT: "Yes (MIT)",
-          costIn: ["mid", "$1.40"],
-          costOut: ["mid", "$4.40"],
+          costIn: ["low", "$0.95"],
+          costOut: ["mid", "$3.00"],
           note: "Code Arena #2 (independent), Design Arena #1. Same price as 5.1, big upgrade",
         },
         {
@@ -1638,8 +1668,8 @@
           visionT: "No",
           openC: "no",
           openT: "—",
-          costIn: ["mid", "$2.50"],
-          costOut: ["high", "$7.50"],
+          costIn: ["low", "$1.25"],
+          costOut: ["mid", "$3.75"],
           note: "Text-only. Now second-highest SWE-bench Pro behind GLM-5.2",
         },
 
@@ -1656,8 +1686,8 @@
           visionT: "Yes",
           openC: "yes",
           openT: "Yes",
-          costIn: ["mid", "$1.00"],
-          costOut: ["mid", "$3.00"],
+          costIn: ["low", "$0.43"],
+          costOut: ["low", "$0.87"],
           note: "1M ctx = 4× price uplift ($4/$12). *Vendor Terminal-Bench",
         },
         {
@@ -1666,15 +1696,15 @@
           ts: "warn",
           tsLabel: "Builds*",
           pro: null,
-          verified: ["b", "78.8%"],
+          verified: ["b", "77.7%"],
           terminal: ["a", "70.3%"],
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
           openT: "—",
-          costIn: ["low", "$0.40"],
-          costOut: ["low", "$1.60"],
+          costIn: ["low", "$0.32"],
+          costOut: ["low", "$1.28"],
           note: "*Builds, less idiomatic JSX. ScreenSpot Pro 79%",
         },
         {
@@ -1708,8 +1738,8 @@
           visionT: "—",
           openC: "yes",
           openT: "Yes",
-          costIn: ["low", "$0.14"],
-          costOut: ["low", "$0.28"],
+          costIn: ["low", "$0.10"],
+          costOut: ["low", "$0.20"],
           note: "Cheapest in table. Replaced by Kimi K2.7-Code for Ask this round",
         },
 
@@ -1718,7 +1748,7 @@
           name: "DeepSeek V4 Pro",
           role: "alt2",
           ts: "fail",
-          pro: ["b", "~55%"],
+          pro: ["b", "55.4%"],
           verified: ["a", "80.6%"],
           terminal: ["d", "44.0%"],
           ctx: "1M",
@@ -1753,7 +1783,7 @@
           ts: "pass",
           tsLabel: "Pass†",
           pro: ["a", "59.0%‡"],
-          verified: null,
+          verified: ["a", "80.5%"],
           terminal: ["b", "66.0%‡"],
           ctx: "1M",
           visionC: "yes",
@@ -1780,6 +1810,25 @@
           costIn: ["low", "$0.20"],
           costOut: ["low", "$1.15"],
           note: "Replaced by MiniMax M3 — weaker, less recent verification",
+        },
+
+        { kind: "section", label: "OpenAI — Frontier" },
+        {
+          name: "GPT-5.5",
+          badge: "new",
+          role: "watch",
+          ts: "pass",
+          pro: ["a", "58.6%"],
+          verified: null,
+          terminal: null,
+          ctx: "1.1M",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["high", "$5.00"],
+          costOut: ["high", "$30.00"],
+          note: "OpenAI frontier. Longest context (1.1M). Not in Chinese-model roster — listed for comparison",
         },
 
         { kind: "section", label: "Watchlist — not in roster" },
