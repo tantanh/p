@@ -232,15 +232,6 @@
         min-width: 220px;
         max-width: 340px;
       }
-      .search-icon {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--muted);
-        pointer-events: none;
-        font-size: 1.4rem;
-      }
       #search {
         width: 100%;
         background: var(--surface);
@@ -248,7 +239,7 @@
         color: var(--text);
         font-family: "Figtree", sans-serif;
         font-size: 0.9rem;
-        padding: 10px 14px 10px 40px;
+        padding: 10px 14px 10px 14px;
         border-radius: 8px;
         outline: none;
         transition: border-color 0.2s;
@@ -889,7 +880,6 @@
       <!-- CONTROLS -->
       <div class="controls">
         <div class="search-wrap">
-          <span class="search-icon">⌕</span>
           <input
             type="search"
             id="search"
