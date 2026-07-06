@@ -533,9 +533,46 @@
       }
       .ledger-wrap {
         overflow-x: auto;
+        overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         margin-top: 36px;
         border: 1px solid var(--line);
+        max-height: 75vh;
+      }
+
+      /* ── custom scrollbars ── */
+      .ledger-wrap::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .ledger-wrap::-webkit-scrollbar-track {
+        border-radius: 0;
+        background: var(--ink-2);
+      }
+      .ledger-wrap::-webkit-scrollbar-track:vertical {
+        border-left: 1px solid var(--line);
+      }
+      .ledger-wrap::-webkit-scrollbar-track:horizontal {
+        border-top: 1px solid var(--line);
+      }
+      .ledger-wrap::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background: var(--bone-faint);
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+      .ledger-wrap::-webkit-scrollbar-thumb:hover {
+        background: var(--bone-dim);
+        background-clip: content-box;
+      }
+      .ledger-wrap::-webkit-scrollbar-corner {
+        background: var(--ink-2);
+        border: 1px solid var(--line);
+      }
+      /* Firefox */
+      .ledger-wrap {
+        scrollbar-width: thin;
+        scrollbar-color: var(--bone-faint) var(--ink-2);
       }
       table.ledger {
         border-collapse: collapse;
@@ -557,16 +594,28 @@
         background: var(--ink-2);
         position: sticky;
         top: 0;
+        z-index: 1;
       }
       table.ledger th:first-child {
         min-width: 170px;
+        left: 0;
+        z-index: 2;
       }
       table.ledger td {
         padding: 12px;
         border-bottom: 1px solid var(--line);
-        color: var(--bone-dim);
+        color: var(--bone-faint);
         vertical-align: middle;
         white-space: nowrap;
+      }
+      table.ledger tbody tr:not(.divider-row) td:first-child {
+        position: sticky;
+        left: 0;
+        background: var(--ink);
+        z-index: 1;
+      }
+      table.ledger tbody tr:not(.divider-row):hover td:first-child {
+        background: rgba(201, 242, 77, 0.03);
       }
       table.ledger tbody tr {
         transition: background 0.2s;
