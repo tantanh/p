@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liquid Glass Dola Seed 2.0 Pro High</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              base: "#0f1118",
+              glass: "rgba(255, 255, 255, 0.07)",
+              glassStrong: "rgba(255, 255, 255, 0.12)",
+              accent: "#7c98b3",
+              accentSoft: "#a5b8c9",
+            },
+            fontFamily: {
+              display: ["Cormorant Garamond", "serif"],
+              body: ["Plus Jakarta Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .noise {
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+          opacity: 0.05;
+          pointer-events: none;
+        }
+
+        .liquid-glass {
+          backdrop-filter: blur(12px);
+          background:
+            radial-gradient(
+              1200px 600px at 50% 0%,
+              rgba(124, 152, 179, 0.1),
+              transparent 60%
+            ),
+            var(--tw-color-glass);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+            0 8px 32px rgba(0, 0, 0, 0.18);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          transition: all 0.8s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .liquid-glass:hover {
+          backdrop-filter: blur(18px);
+          background:
+            radial-gradient(
+              1000px 500px at 50% -20%,
+              rgba(165, 184, 201, 0.18),
+              transparent 60%
+            ),
+            var(--tw-color-glassStrong);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+            0 16px 64px rgba(0, 0, 0, 0.22);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          transform: translateY(-2px);
+        }
+
+        .ripple {
+          position: absolute;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transform: translate(-50%, -50%) scale(0);
+          animation: ripple 5s cubic-bezier(0.2, 0, 0, 1) forwards;
+          pointer-events: none;
+        }
+      }
+
+      @keyframes liquid-flow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(12);
+          opacity: 0;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      * {
+        cursor: none;
+      }
+
+      body {
+        overflow-x: hidden;
+        background-color: theme("colors.base");
+      }
+
+      .custom-cursor {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(6px);
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transition: all 0.12s ease-out;
+        mix-blend-mode: difference;
+      }
+
+      @media (hover: hover) {
+        a:hover ~ .custom-cursor,
+        button:hover ~ .custom-cursor,
+        .liquid-glass:hover ~ .custom-cursor {
+          transform: scale(1.6);
+          border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+      }
+    </style>
+  </head>
+  <body class="font-body text-white/80 antialiased min-h-screen">
+    <!-- Liquid background -->
+    <div class="fixed inset-0 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-base via-[#131722] to-[#11151d]"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-[#293544]/20 via-transparent to-[#473a55]/10 animate-[liquid-flow_45s_ease-in-out_infinite] bg-[length:400%_400%]"
+      ></div>
+      <div class="absolute inset-0 noise"></div>
+    </div>
+
+    <!-- Ripple container -->
+    <div
+      id="ripple-container"
+      class="fixed inset-0 pointer-events-none z-10"
+    ></div>
+
+    <!-- Page content -->
+    <main
+      class="relative z-20 min-h-screen px-6 py-24 md:py-32 max-w-6xl mx-auto"
+    >
+      <div class="grid gap-12">
+        <!-- Hero -->
+        <div
+          class="space-y-8 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_both]"
+        >
+          <h1
+            class="font-display text-[clamp(3rem,10vw,6rem)] font-light leading-[0.9] text-white/90"
+          >
+            Liquid Glass
+          </h1>
+          <p class="text-xl md:text-2xl font-light max-w-2xl text-white/60">
+            An interface that behaves like the surface of perfectly still water.
+            Soft, viscous, and alive.
+          </p>
+        </div>
+
+        <!-- Glass cards -->
+        <div class="grid md:grid-cols-3 gap-6">
+          <div
+            class="liquid-glass rounded-2xl p-8 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.2s_both] md:col-span-2"
+          >
+            <h3 class="font-display text-3xl mb-4 text-white/90">
+              Surface Tension
+            </h3>
+            <p class="text-white/60 leading-relaxed mb-6">
+              Each element rests on the liquid surface, distorting it gently.
+              Light refracts through the glass, creating soft gradients and
+              subtle depth. Nothing is flat, nothing is static.
+            </p>
+            <button class="liquid-glass px-6 py-3 rounded-full text-white/80">
+              Explore the surface
+            </button>
+          </div>
+
+          <div
+            class="liquid-glass rounded-2xl p-8 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.3s_both] animate-[float_7s_ease-in-out_infinite_1s]"
+          >
+            <div
+              class="w-full aspect-square rounded-xl liquid-glass mb-4"
+            ></div>
+            <p class="text-sm text-white/50">Floating object</p>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-6">
+          <div
+            class="liquid-glass rounded-2xl p-6 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.4s_both]"
+          >
+            <p class="text-white/50">Depth 1</p>
+          </div>
+          <div
+            class="liquid-glass rounded-2xl p-6 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.5s_both]"
+          >
+            <p class="text-white/50">Depth 2</p>
+          </div>
+          <div
+            class="liquid-glass rounded-2xl p-6 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.6s_both]"
+          >
+            <p class="text-white/50">Depth 3</p>
+          </div>
+          <div
+            class="liquid-glass rounded-2xl p-6 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.7s_both]"
+          >
+            <p class="text-white/50">Depth 4</p>
+          </div>
+        </div>
+
+        <div
+          class="liquid-glass rounded-2xl p-10 animate-[fade-in_1.2s_cubic-bezier(0.2,0,0,1)_0.8s_both] mt-8"
+        >
+          <h3 class="font-display text-2xl mb-3 text-white/90">Interaction</h3>
+          <p class="text-white/60 leading-relaxed">
+            Click anywhere on the surface to create ripples that propagate
+            across the entire interface. All motion is deliberately slow,
+            viscous, and calm. This is not the sharp, snappy motion of digital
+            interfaces. This is the motion of physical matter.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Custom cursor -->
+    <div class="custom-cursor"></div>
+
+    <script>
+      // Ripple effect
+      document.addEventListener("click", (e) => {
+        const ripple = document.createElement("div");
+        ripple.classList.add("ripple");
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+        ripple.style.width = "150px";
+        ripple.style.height = "150px";
+
+        document.getElementById("ripple-container").appendChild(ripple);
+
+        setTimeout(() => {
+          ripple.remove();
+        }, 5000);
+      });
+
+      // Custom cursor
+      const cursor = document.querySelector(".custom-cursor");
+      let mouseX = 0,
+        mouseY = 0;
+      let cursorX = 0,
+        cursorY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+
+        cursor.style.left = `${cursorX - 12}px`;
+        cursor.style.top = `${cursorY - 12}px`;
+
+        requestAnimationFrame(animateCursor);
+      }
+
+      animateCursor();
+    </script>
+  </body>
+</html>
