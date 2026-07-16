@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Model Stack · July 2026 Roster v06</title>
+    <title>AI Model Stack · July 2026 Roster v07</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap");
 
@@ -1018,7 +1018,7 @@
       <!-- ========== MASTHEAD ========== -->
       <header class="masthead">
         <div class="eyebrow">
-          <span class="dot"></span> Roster Revision · v06 · Internal Dossier
+          <span class="dot"></span> Roster Revision · v07 · Internal Dossier
         </div>
         <h1 class="title">The Chinese<br />Model <em>Stack</em>.</h1>
         <p class="subtitle">
@@ -1030,7 +1030,7 @@
         <div class="meta-row">
           <div class="meta-item">
             <span class="meta-label">Cycle</span
-            ><span class="meta-val">July 2026 · R06</span>
+            ><span class="meta-val">July 2026 · R07</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Supersedes</span
@@ -1042,7 +1042,7 @@
           </div>
           <div class="meta-item">
             <span class="meta-label">Scope</span
-            ><span class="meta-val">12 agents · 18 models · 4 tables</span>
+            ><span class="meta-val">12 agents · 19 models · 4 tables</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Status</span
@@ -1071,10 +1071,10 @@
               resilience for autonomous long-horizon runs.
               <strong>Table 2 (Lean)</strong> collapses to the models that
               actually fire in practice, trimming carry-weight and token spend
-              where a third fallback was never invoked. R06 adds
-              <strong>Claude Fable 5</strong> (SWE-bench Verified 95.0%) and
-              <strong>Mythos Preview</strong> to the ledger and syncs all
-              pricing to cheapest-provider data.
+              where a third fallback was never invoked. R07 adds
+              <strong>Grok 4.5</strong> (SWE-bench Pro 64.7%, Terminal-Bench
+              83.3%) to the watchlist and refreshes benchmark data across all
+              models with the latest July 2026 results.
             </p>
             <p>
               Every benchmark figure below is either
@@ -1096,49 +1096,47 @@
           <div>
             <div class="section-eyebrow">01 — What moved this cycle</div>
             <h2 class="section-title">
-              Three <em>decisions</em>,<br />one ledger.
+              One <em>addition</em>,<br />updated data.
             </h2>
           </div>
           <p class="section-note">
-            Each card maps to a row delta between R05 and R06. See the matrices
+            Each card maps to a row delta between R06 and R07. See the matrices
             below for the full column-level picture.
           </p>
         </div>
 
         <div class="changed-grid">
           <div class="changed-card">
-            <div class="card-num">Δ 01 / NEW CEILING</div>
+            <div class="card-num">Δ 01 / NEW FRONTIER</div>
             <h3 class="card-head">
-              <em>Claude Fable 5</em><br />redefines the top.
+              <em>Grok 4.5</em><br />added to watchlist.
             </h3>
             <p class="card-body">
-              SWE-bench Verified 95.0%, Pro 80.0% — both #1.
-              <span class="pill">ABOVE-OPUS</span>At $10/$50 it's 2× Opus
-              pricing, but the gap is real. Mythos Preview (same weights,
-              unsafeguarded) sits at 93.9% Verified.
+              xAI's flagship model joins the roster with strong benchmark data:
+              SWE-bench Pro 64.7%, Terminal-Bench 83.3%. Notable for token
+              efficiency (4.2× fewer output tokens than Opus 4.8) and aggressive
+              pricing at $2/$6 per 1M tokens.
+              <span class="pill">COST-EFFICIENT</span>
             </p>
           </div>
           <div class="changed-card">
-            <div class="card-num">Δ 02 / PRICING SYNC</div>
+            <div class="card-num">Δ 02 / DATA REFRESH</div>
             <h3 class="card-head">
-              <em>Six models</em>,<br />price corrected.
+              <em>Benchmark data</em><br />updated across models.
             </h3>
             <p class="card-body">
-              Sonnet 5 intro pricing ended ($3/$15). Kimi K2.6, GLM-5.2, Qwen
-              3.7 Max, MiMo V2.5-Pro, Qwen 3.7 Plus all repriced via
-              cheapest-provider data from llm-stats.com. GLM-5.2 drops to
-              <strong style="color: var(--bone)">$0.95/$3.00</strong> via
-              DeepInfra.
+              SWE-bench Pro scores refreshed for GPT-5.5 (58.6%), GLM-5.2
+              (62.1%), Kimi K2.6 (58.6%), and Qwen 3.7 Max (60.6%) to reflect
+              latest verified results from July 2026 benchmarks.
             </p>
           </div>
           <div class="changed-card">
-            <div class="card-num">Δ 03 / VERIFIED</div>
-            <h3 class="card-head"><em>Sonnet 5</em><br />earns 85.2%.</h3>
+            <div class="card-num">Δ 03 / VERSION BUMP</div>
+            <h3 class="card-head"><em>Roster v07</em><br />now live.</h3>
             <p class="card-body">
-              SWE-bench Verified score now confirmed at
-              <strong style="color: var(--bone)">85.2%</strong> — #5 overall,
-              closing the gap to Opus 4.7 (87.6%). Context 1M confirmed. Still
-              trails Opus on the hardest agentic benchmarks.
+              Updated to roster version v07 with 19 models tracked across 4
+              tables. Added xAI section to watchlist with Grok 4.5 as the first
+              entry from SpaceXAI's frontier model lineup.
             </p>
           </div>
         </div>
@@ -1362,7 +1360,7 @@
             >Designed by GLM-5.2 (High), Researched by Sonnet 4.6, Sonnet 5, and
             others.</span
           >
-          <span class="mark">R06</span>
+          <span class="mark">R07</span>
           <span>July 2026</span>
         </div>
       </section>
@@ -1695,7 +1693,7 @@
           openT: "Yes (MIT)",
           costIn: ["low", "$0.95"],
           costOut: ["mid", "$3.00"],
-          note: "Code Arena #2 (independent), Design Arena #1. Same price as 5.1, big upgrade",
+          note: "Code Arena #2 (independent), Design Arena #1. SWE-bench Pro 62.1%. Same price as 5.1, big upgrade",
         },
         {
           name: "GLM-5.1",
@@ -1727,7 +1725,7 @@
           openT: "—",
           costIn: ["low", "$1.25"],
           costOut: ["mid", "$3.75"],
-          note: "Text-only. Now second-highest SWE-bench Pro behind GLM-5.2",
+          note: "Text-only. SWE-bench Pro 60.6%. Now second-highest SWE-bench Pro in Chinese stack",
         },
 
         { kind: "section", label: "Roster — Alt 1 models" },
@@ -1888,6 +1886,26 @@
           note: "OpenAI frontier. Longest context (1.1M). Not in Chinese-model roster — listed for comparison",
         },
 
+        { kind: "section", label: "xAI — Frontier" },
+        {
+          name: "Grok 4.5",
+          badge: "new",
+          role: "watch",
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: ["a", "64.7%"],
+          verified: null,
+          terminal: ["a", "83.3%"],
+          ctx: "500K",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["low", "$2.00"],
+          costOut: ["low", "$6.00"],
+          note: "xAI frontier. Strong token efficiency (4.2× fewer output tokens than Opus 4.8 on SWE-bench Pro). Not in Chinese-model roster — listed for comparison",
+        },
+
         { kind: "section", label: "Watchlist — not in roster" },
         {
           name: "Nemotron 3 Super",
@@ -1904,7 +1922,7 @@
           openT: "Yes (NVIDIA)",
           costIn: ["low", "Self-host"],
           costOut: ["low", "Self-host"],
-          note: "Best US open-weight model. Still trails the Chinese stack here on every metric",
+          note: "Best US open-weight model. Still trails the Chinese stack and new frontier models on every metric",
         },
       ];
 
