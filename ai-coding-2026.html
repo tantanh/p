@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Model Stack · July 2026 Roster v07</title>
+    <title>AI Model Stack · July 2026 Roster v08</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap");
 
@@ -1018,31 +1018,32 @@
       <!-- ========== MASTHEAD ========== -->
       <header class="masthead">
         <div class="eyebrow">
-          <span class="dot"></span> Roster Revision · v07 · Internal Dossier
+          <span class="dot"></span> Roster Revision · v08 · Internal Dossier
         </div>
         <h1 class="title">The Chinese<br />Model <em>Stack</em>.</h1>
         <p class="subtitle">
           A working roster for a Claude-based coding agent — built, audited, and
           superseded in the open, now routing through open-weight Chinese models
-          at a fraction of Opus pricing. Fable 5 and Mythos reshape the ceiling.
+          at a fraction of Opus pricing. Grok 4.5 and Laguna S 2.1 join the
+          ledger this cycle.
         </p>
 
         <div class="meta-row">
           <div class="meta-item">
             <span class="meta-label">Cycle</span
-            ><span class="meta-val">July 2026 · R07</span>
+            ><span class="meta-val">July 2026 · R08</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Supersedes</span
-            ><span class="meta-val">R05 (GLM-5.2 / Kimi K2.7-Code)</span>
+            ><span class="meta-val">R07 (Grok 4.5 watchlist)</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Headline change</span
-            ><span class="meta-val live">Claude Fable 5 + pricing sync</span>
+            ><span class="meta-val live">Grok 4.5 roster + Laguna S 2.1</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Scope</span
-            ><span class="meta-val">12 agents · 19 models · 4 tables</span>
+            ><span class="meta-val">12 agents · 20 models · 5 tables</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Status</span
@@ -1065,16 +1066,20 @@
               — and at what cost, with what caveats?
             </p>
             <p>
-              Two rosters are maintained.
+              Three open-model rosters are maintained.
               <strong>Table 1 (Expanded)</strong> keeps three
-              independently-strong models in every fallback column — maximum
-              resilience for autonomous long-horizon runs.
+              independently-strong Chinese models in every fallback column —
+              maximum resilience for autonomous long-horizon runs.
               <strong>Table 2 (Lean)</strong> collapses to the models that
               actually fire in practice, trimming carry-weight and token spend
-              where a third fallback was never invoked. R07 adds
-              <strong>Grok 4.5</strong> (SWE-bench Pro 64.7%, Terminal-Bench
-              83.3%) to the watchlist and refreshes benchmark data across all
-              models with the latest July 2026 results.
+              where a third fallback was never invoked.
+              <strong>Table 5 (Grok 4.5)</strong> is a Lean-shaped matrix with
+              Grok woven in where it earns Main (judgment, debug, DevOps,
+              tier-shadow) and sits as Alt 1 elsewhere — SWE-bench Pro 64.7%,
+              Terminal-Bench 83.3%. R08 also adds
+              <strong>Laguna S 2.1</strong> (Poolside, 118B-A8B) to the ledger
+              and fills previously empty benchmark cells from July 2026
+              scorecards.
             </p>
             <p>
               Every benchmark figure below is either
@@ -1096,47 +1101,50 @@
           <div>
             <div class="section-eyebrow">01 — What moved this cycle</div>
             <h2 class="section-title">
-              One <em>addition</em>,<br />updated data.
+              One <em>roster</em>,<br />one open model.
             </h2>
           </div>
           <p class="section-note">
-            Each card maps to a row delta between R06 and R07. See the matrices
+            Each card maps to a row delta between R07 and R08. See the matrices
             below for the full column-level picture.
           </p>
         </div>
 
         <div class="changed-grid">
           <div class="changed-card">
-            <div class="card-num">Δ 01 / NEW FRONTIER</div>
+            <div class="card-num">Δ 01 / NEW ROSTER</div>
             <h3 class="card-head">
-              <em>Grok 4.5</em><br />added to watchlist.
+              <em>Grok 4.5</em><br />Table 5 is live.
             </h3>
             <p class="card-body">
-              xAI's flagship model joins the roster with strong benchmark data:
-              SWE-bench Pro 64.7%, Terminal-Bench 83.3%. Notable for token
-              efficiency (4.2× fewer output tokens than Opus 4.8) and aggressive
-              pricing at $2/$6 per 1M tokens.
+              xAI's flagship moves from watchlist into a Lean-shaped matrix:
+              Main only where the agent is judgment- or terminal-heavy; Chinese
+              Mains hold Ask / Simplifier / Docs / Frontend / Sonnet-shadow.
+              SWE-bench Pro 64.7%, Terminal-Bench 83.3%, $2/$6.
               <span class="pill">COST-EFFICIENT</span>
             </p>
           </div>
           <div class="changed-card">
-            <div class="card-num">Δ 02 / DATA REFRESH</div>
+            <div class="card-num">Δ 02 / NEW MODEL</div>
             <h3 class="card-head">
-              <em>Benchmark data</em><br />updated across models.
+              <em>Laguna S 2.1</em><br />enters the ledger.
             </h3>
             <p class="card-body">
-              SWE-bench Pro scores refreshed for GPT-5.5 (58.6%), GLM-5.2
-              (62.1%), Kimi K2.6 (58.6%), and Qwen 3.7 Max (60.6%) to reflect
-              latest verified results from July 2026 benchmarks.
+              Poolside's 118B-A8B open coding agent (OpenMDW-1.1): SWE-bench Pro
+              59.4%*, Terminal-Bench 70.2%*, 1M context, text-only. API from
+              ~$0.10/$0.20 per 1M via OpenRouter. Watchlist for now — not yet in
+              Tables 1–2.
             </p>
           </div>
           <div class="changed-card">
-            <div class="card-num">Δ 03 / VERSION BUMP</div>
-            <h3 class="card-head"><em>Roster v07</em><br />now live.</h3>
+            <div class="card-num">Δ 03 / DATA FILL</div>
+            <h3 class="card-head">
+              <em>Empty cells</em><br />filled where sourced.
+            </h3>
             <p class="card-body">
-              Updated to roster version v07 with 19 models tracked across 4
-              tables. Added xAI section to watchlist with Grok 4.5 as the first
-              entry from SpaceXAI's frontier model lineup.
+              Sonnet 4.6 Pro 61.4%, Fable 5 Terminal 88%*, Hy3 Pro 57.9%* (via
+              Poolside scorecard). Ledger now tracks 20 models across 5 tables.
+              Roster version bumped to v08.
             </p>
           </div>
         </div>
@@ -1153,7 +1161,7 @@
             Main fires first; on failure the agent cascades Alt 1 → Alt 2.
             Expanded keeps three strong hands per column; Lean drops the third
             where it never fired. Table 3 maps GLM-5.2 reasoning-mode (Max vs
-            High) to each agent.
+            High) to each agent. Table 5 is Lean + Grok 4.5 mixed by fit.
           </p>
         </div>
 
@@ -1185,6 +1193,15 @@
             data-target="t3"
           >
             Table 3 · GLM-5.2 Modes
+          </button>
+          <button
+            role="tab"
+            aria-selected="false"
+            aria-controls="t5"
+            id="t5-tab"
+            data-target="t5"
+          >
+            Table 5 · Grok 4.5
           </button>
         </div>
 
@@ -1248,6 +1265,27 @@
             <p class="scroll-hint">
               → 11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on
               Kimi K2.6
+            </p>
+          </div>
+
+          <!-- TABLE 5 · GROK 4.5 -->
+          <div
+            class="matrix-panel"
+            id="t5"
+            role="tabpanel"
+            aria-labelledby="t5-tab"
+          >
+            <div class="matrix-scroll">
+              <table class="matrix" id="t5-table">
+                <caption class="sr-only">
+                  Roster 5 (Grok 4.5): Lean-shaped matrix with Grok 4.5 as Main
+                  or Alt 1 by agent fit
+                </caption>
+              </table>
+            </div>
+            <p class="scroll-hint">
+              → 12 agents · Lean shape · Grok Main on 7 agents · Chinese Main
+              on 5 · $2/$6 frontier where it earns the seat
             </p>
           </div>
         </div>
@@ -1360,7 +1398,7 @@
             >Designed by GLM-5.2 (High), Researched by Sonnet 4.6, Sonnet 5, and
             others.</span
           >
-          <span class="mark">R07</span>
+          <span class="mark">R08</span>
           <span>July 2026</span>
         </div>
       </section>
@@ -1442,6 +1480,89 @@
         ["Kimi K2.6", "Qwen 3.7 Plus", "Hy3"],
         ["Kimi K2.6", "MiMo V2.5-Pro", "DeepSeek V4 Pro"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
+      ];
+
+      // ===== Data: Table 5 (Lean + Grok 4.5 by agent fit) =====
+      // Same shape as Table 2 (Lean). Grok 4.5 takes Main only where
+      // frontier coding / terminal / judgment pays off; Chinese Mains hold
+      // volume, prose, and pattern-heavy seats. Grok is always in-column
+      // (Main or Alt 1) so the path can escalate without a third hop.
+      //
+      // Grok Main: Plan, Code, Debug, Review, Backend, DevOps, Opus shadow
+      // Chinese Main: Ask, Simplifier, Docs, Frontend, Sonnet shadow
+      const ROSTER_T5 = [
+        // Plan — strategy / architectural judgment
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          "Kimi K2.6",
+          "MiMo V2.5-Pro",
+        ],
+        // Code — primary write; frontier coding score earns Main
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          { n: "GLM-5.2", b: "NEW" },
+          "Qwen 3.7 Plus",
+        ],
+        // Ask — cheap direct Q&A stays Chinese; Grok escalates hard questions
+        [
+          { n: "GLM-5.2", b: "NEW" },
+          { n: "Grok 4.5", b: "NEW" },
+          "Qwen 3.7 Plus",
+        ],
+        // Debug — Terminal-Bench 83.3% is the fit
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          "Kimi K2.6",
+          "MiMo V2.5-Pro",
+        ],
+        // Review — judgment / subtle flaws
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          { n: "GLM-5.2", b: "NEW" },
+          "MiMo V2.5-Pro",
+        ],
+        // Code Simplifier — long tool-call endurance stays Kimi
+        [
+          "Kimi K2.6",
+          { n: "Grok 4.5", b: "NEW" },
+          "Qwen 3.7 Plus",
+        ],
+        // Documentation — prose volume stays Chinese
+        [
+          { n: "GLM-5.2", b: "NEW" },
+          { n: "Grok 4.5", b: "NEW" },
+          "Qwen 3.7 Plus",
+        ],
+        // Backend Specialist — schema / auth trade-offs
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          "Kimi K2.6",
+          "MiMo V2.5-Pro",
+        ],
+        // Frontend Specialist — GLM Design Arena #1 holds Main
+        [
+          { n: "GLM-5.2", b: "NEW" },
+          { n: "Grok 4.5", b: "NEW" },
+          "Qwen 3.7 Plus",
+        ],
+        // DevOps — terminal / CI agentic fit
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          "Kimi K2.6",
+          "Qwen 3.7 Plus",
+        ],
+        // Opus 4.8 fallback — highest-stakes shadow
+        [
+          { n: "Grok 4.5", b: "NEW" },
+          "Kimi K2.6",
+          "MiMo V2.5-Pro",
+        ],
+        // Sonnet 5 fallback — volume / speed shadow stays Chinese
+        [
+          { n: "GLM-5.2", b: "NEW" },
+          { n: "Grok 4.5", b: "NEW" },
+          "Qwen 3.7 Plus",
+        ],
       ];
 
       // ===== Data: Table 3 (GLM-5.2 mode per agent) =====
@@ -1599,7 +1720,7 @@
           ts: "pass",
           pro: ["a", "80.0%"],
           verified: ["a", "95.0%"],
-          terminal: null,
+          terminal: ["a", "88%*"],
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
@@ -1607,7 +1728,7 @@
           openT: "—",
           costIn: ["high", "$10.00"],
           costOut: ["high", "$50.00"],
-          note: "Above-Opus tier. Same weights as Mythos 5 (unsafeguarded). SWE-bench Pro #1 at 80.0%",
+          note: "Above-Opus tier. Same weights as Mythos 5 (unsafeguarded). SWE-bench Pro #1 at 80.0%. *Terminal via Poolside scorecard",
         },
         {
           name: "Claude Mythos Preview",
@@ -1616,7 +1737,7 @@
           pro: ["a", "77.8%"],
           verified: ["a", "93.9%"],
           terminal: null,
-          ctx: "—",
+          ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
@@ -1648,7 +1769,7 @@
           name: "Claude Sonnet 4.6",
           role: "replaced",
           ts: "pass",
-          pro: null,
+          pro: ["a", "61.4%"],
           verified: ["b", "79.6%"],
           terminal: ["c", "59.1%"],
           ctx: "200K",
@@ -1819,7 +1940,7 @@
           name: "Hy3 (Hunyuan 3)",
           role: "alt2",
           ts: "pass",
-          pro: null,
+          pro: ["b", "57.9%*"],
           verified: ["c", "74.4%"],
           terminal: ["c", "54.4%"],
           ctx: "256K",
@@ -1829,7 +1950,7 @@
           openT: "Yes",
           costIn: ["low", "~$0.17"],
           costOut: ["low", "Free*"],
-          note: "*Free in Kilo Code currently. 99.99% production uptime",
+          note: "*Free in Kilo Code currently. 99.99% production uptime. Pro 57.9%* via Poolside scorecard (295B-A21B)",
         },
         {
           name: "MiniMax M3",
@@ -1886,11 +2007,11 @@
           note: "OpenAI frontier. Longest context (1.1M). Not in Chinese-model roster — listed for comparison",
         },
 
-        { kind: "section", label: "xAI — Frontier" },
+        { kind: "section", label: "xAI — Frontier (Table 5)" },
         {
           name: "Grok 4.5",
           badge: "new",
-          role: "watch",
+          role: "main",
           ts: "warn",
           tsLabel: "Untested",
           pro: ["a", "64.7%"],
@@ -1903,10 +2024,28 @@
           openT: "—",
           costIn: ["low", "$2.00"],
           costOut: ["low", "$6.00"],
-          note: "xAI frontier. Strong token efficiency (4.2× fewer output tokens than Opus 4.8 on SWE-bench Pro). Not in Chinese-model roster — listed for comparison",
+          note: "xAI frontier. Table 5: Main on Plan/Code/Debug/Review/Backend/DevOps/Opus-shadow; Alt 1 on Ask/Simplifier/Docs/Frontend/Sonnet-shadow. Multimodal, 500K ctx",
         },
 
         { kind: "section", label: "Watchlist — not in roster" },
+        {
+          name: "Laguna S 2.1",
+          badge: "new",
+          role: "watch",
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: ["a", "59.4%*"],
+          verified: null,
+          terminal: ["a", "70.2%*"],
+          ctx: "1M",
+          visionC: "no",
+          visionT: "—",
+          openC: "yes",
+          openT: "Yes (OpenMDW)",
+          costIn: ["low", "$0.10"],
+          costOut: ["low", "$0.20"],
+          note: "Poolside 118B-A8B MoE coding agent. *Vendor: Terminal-Bench 2.1 70.2%, SWE-bench Pro 59.4%, Multilingual 78.5%. Text-only. OpenRouter $0.10/$0.20",
+        },
         {
           name: "Nemotron 3 Super",
           role: "watch",
@@ -2099,6 +2238,11 @@
         ROSTER_T2,
       );
       renderRosterT3(ROSTER_T3);
+      renderRoster(
+        "t5-table",
+        ["Agent / Fallback", "Main", "Alt 1", "Alt 2"],
+        ROSTER_T5,
+      );
       renderClaudeTiers(ROSTER_T4);
       renderLedger();
     </script>
