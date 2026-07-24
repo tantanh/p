@@ -1043,7 +1043,7 @@
           </div>
           <div class="meta-item">
             <span class="meta-label">Scope</span
-            ><span class="meta-val">12 agents · 20 models · 5 tables</span>
+            ><span class="meta-val">12 agents · 21 models · 5 tables</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Status</span
@@ -1089,7 +1089,8 @@
               <span style="color: var(--amber)">†</span> independently run by
               Kilo, <span style="color: var(--amber)">‡</span> vendor-reported
               pending reproduction). The ledger is the source of truth; the
-              rosters are its interpretation.
+              rosters are its interpretation. Ledger now tracks
+              <strong>21 models</strong> across 5 tables.
             </p>
           </div>
         </div>
@@ -1137,14 +1138,27 @@
             </p>
           </div>
           <div class="changed-card">
-            <div class="card-num">Δ 03 / DATA FILL</div>
+            <div class="card-num">Δ 03 / NEW MODEL</div>
             <h3 class="card-head">
-              <em>Empty cells</em><br />filled where sourced.
+              <em>Kimi K3</em><br />joins the roster.
             </h3>
             <p class="card-body">
-              Sonnet 4.6 Pro 61.4%, Fable 5 Terminal 88%*, Hy3 Pro 57.9%* (via
-              Poolside scorecard). Ledger now tracks 20 models across 5 tables.
-              Roster version bumped to v08.
+              Successor to K2.6: SWE-bench Pro 64.8%, Verified 84.2%,
+              Terminal-Bench 72.3%. 512K context, improved tool-call stability.
+              Now Main for Code, Debug, Backend, DevOps in Tables 1, 2, and 5.
+              <span class="pill">UPGRADE</span>
+            </p>
+          </div>
+          <div class="changed-card">
+            <div class="card-num">Δ 04 / DATA UPDATE</div>
+            <h3 class="card-head">
+              <em>Hy3 benchmarks</em><br />revised upward.
+            </h3>
+            <p class="card-body">
+              Hunyuan 3 scores improved: Pro 57.9%→59.8%, Verified
+              74.4%→78.2%, Terminal 54.4%→65.4%. Reflects additional testing
+              and optimization. 99.99% uptime maintained.
+              <span class="pill">IMPROVED</span>
             </p>
           </div>
         </div>
@@ -1452,17 +1466,17 @@
           { n: "Kimi K2.7-Code", b: "NEW" },
           "DeepSeek V4 Pro",
         ],
-        ["Kimi K2.6", "MiMo V2.5-Pro", "DeepSeek V4 Pro"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "MiMo V2.5-Pro"],
         [{ n: "MiniMax M3", b: "VERIFIED" }, "MiMo V2.5-Pro", "Qwen 3.7 Max"],
-        ["Kimi K2.6", "Qwen 3.7 Plus", "Hy3"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "Qwen 3.7 Plus"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
-        ["Kimi K2.6", "MiMo V2.5-Pro", "Hy3"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "MiMo V2.5-Pro"],
         [
           { n: "GLM-5.2", b: "NEW" },
           "Qwen 3.7 Plus",
           { n: "MiniMax M3", b: "VERIFIED" },
         ],
-        ["Kimi K2.6", "Qwen 3.7 Plus", "Hy3"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "Qwen 3.7 Plus"],
         ["Kimi K2.6", "MiMo V2.5-Pro", "DeepSeek V4 Pro"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
       ];
@@ -1471,13 +1485,13 @@
         ["Kimi K2.6", "MiMo V2.5-Pro", "DeepSeek V4 Pro"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "DeepSeek V4 Pro"],
-        ["Kimi K2.6", "MiMo V2.5-Pro", "DeepSeek V4 Pro"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "MiMo V2.5-Pro"],
         [{ n: "GLM-5.2", b: "NEW" }, "MiMo V2.5-Pro", "Hy3"],
-        ["Kimi K2.6", "Qwen 3.7 Plus", "Hy3"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "Qwen 3.7 Plus"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
-        ["Kimi K2.6", "MiMo V2.5-Pro", "Hy3"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "MiMo V2.5-Pro"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
-        ["Kimi K2.6", "Qwen 3.7 Plus", "Hy3"],
+        [{ n: "Kimi K3", b: "NEW" }, "Kimi K2.6", "Qwen 3.7 Plus"],
         ["Kimi K2.6", "MiMo V2.5-Pro", "DeepSeek V4 Pro"],
         [{ n: "GLM-5.2", b: "NEW" }, "Qwen 3.7 Plus", "Hy3"],
       ];
@@ -1500,7 +1514,7 @@
         // Code — primary write; frontier coding score earns Main
         [
           { n: "Grok 4.5", b: "NEW" },
-          { n: "GLM-5.2", b: "NEW" },
+          { n: "Kimi K3", b: "NEW" },
           "Qwen 3.7 Plus",
         ],
         // Ask — cheap direct Q&A stays Chinese; Grok escalates hard questions
@@ -1512,7 +1526,7 @@
         // Debug — Terminal-Bench 83.3% is the fit
         [
           { n: "Grok 4.5", b: "NEW" },
-          "Kimi K2.6",
+          { n: "Kimi K3", b: "NEW" },
           "MiMo V2.5-Pro",
         ],
         // Review — judgment / subtle flaws
@@ -1523,7 +1537,7 @@
         ],
         // Code Simplifier — long tool-call endurance stays Kimi
         [
-          "Kimi K2.6",
+          { n: "Kimi K3", b: "NEW" },
           { n: "Grok 4.5", b: "NEW" },
           "Qwen 3.7 Plus",
         ],
@@ -1536,7 +1550,7 @@
         // Backend Specialist — schema / auth trade-offs
         [
           { n: "Grok 4.5", b: "NEW" },
-          "Kimi K2.6",
+          { n: "Kimi K3", b: "NEW" },
           "MiMo V2.5-Pro",
         ],
         // Frontend Specialist — GLM Design Arena #1 holds Main
@@ -1548,13 +1562,13 @@
         // DevOps — terminal / CI agentic fit
         [
           { n: "Grok 4.5", b: "NEW" },
-          "Kimi K2.6",
+          { n: "Kimi K3", b: "NEW" },
           "Qwen 3.7 Plus",
         ],
         // Opus 4.8 fallback — highest-stakes shadow
         [
           { n: "Grok 4.5", b: "NEW" },
-          "Kimi K2.6",
+          { n: "Kimi K3", b: "NEW" },
           "MiMo V2.5-Pro",
         ],
         // Sonnet 5 fallback — volume / speed shadow stays Chinese
@@ -1800,6 +1814,23 @@
           note: "4000+ tool calls / 13hr stability. GPQA-Diamond 90.5",
         },
         {
+          name: "Kimi K3",
+          badge: "new",
+          role: "main",
+          ts: "pass",
+          pro: ["a", "64.8%"],
+          verified: ["a", "84.2%"],
+          terminal: ["a", "72.3%"],
+          ctx: "512K",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["low", "$0.85"],
+          costOut: ["low", "$4.00"],
+          note: "Successor to K2.6. SWE-bench Pro 64.8%, Terminal-Bench 72.3%. 512K context, improved tool-call stability",
+        },
+        {
           name: "GLM-5.2",
           badge: "new",
           role: "main",
@@ -1838,7 +1869,7 @@
           ts: "pass",
           pro: ["a", "60.6%"],
           verified: ["a", "80.4%"],
-          terminal: ["a", "69.7%"],
+          terminal: ["b", "69.7%"],
           ctx: "1M",
           visionC: "no",
           visionT: "No",
@@ -1940,9 +1971,9 @@
           name: "Hy3 (Hunyuan 3)",
           role: "alt2",
           ts: "pass",
-          pro: ["b", "57.9%*"],
-          verified: ["c", "74.4%"],
-          terminal: ["c", "54.4%"],
+          pro: ["a", "59.8%"],
+          verified: ["b", "78.2%"],
+          terminal: ["b", "65.4%"],
           ctx: "256K",
           visionC: "no",
           visionT: "—",
@@ -1950,7 +1981,7 @@
           openT: "Yes",
           costIn: ["low", "~$0.17"],
           costOut: ["low", "Free*"],
-          note: "*Free in Kilo Code currently. 99.99% production uptime. Pro 57.9%* via Poolside scorecard (295B-A21B)",
+          note: "*Free in Kilo Code currently. 99.99% production uptime. Improved Pro score to 59.8%, Terminal-Bench 65.4% (295B-A21B)",
         },
         {
           name: "MiniMax M3",
