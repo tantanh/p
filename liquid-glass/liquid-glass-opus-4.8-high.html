@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Liquid Glass — Iridescence Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;1,6..96,400;1,6..96,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #060812;
+    --bg-2: #0a0d1e;
+    --ink: #f2f0fb;
+    --ink-dim: rgba(242, 240, 251, 0.58);
+    --ink-faint: rgba(242, 240, 251, 0.30);
+    --ink-ghost: rgba(242, 240, 251, 0.12);
+
+    --glass-tint: rgba(255, 255, 255, 0.045);
+    --glass-border: rgba(255, 255, 255, 0.13);
+    --glass-border-hi: rgba(255, 255, 255, 0.55);
+
+    --teal: #5eead4;
+    --violet: #c4b5fd;
+    --gold: #fcd9a0;
+    --rose: #fca5c8;
+
+    --radius-xl: 34px;
+    --radius-lg: 26px;
+    --radius-md: 18px;
+
+    --font-display: "Bodoni Moda", serif;
+    --font-body: "Hanken Grotesk", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.62;
+    overflow-x: hidden;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: rgba(94, 234, 212, 0.32); color: #fff; }
+
+  a { color: inherit; }
+
+  /* ==================================================================
+     ATMOSPHERE — oil-slick aurora, drifting caustic sheets, grain
+  ================================================================== */
+  .atmosphere {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 130% 90% at 78% -12%, #12203f 0%, transparent 52%),
+      radial-gradient(ellipse 110% 80% at 6% 108%, #1a0f30 0%, transparent 58%),
+      linear-gradient(180deg, var(--bg-2), var(--bg));
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(96px);
+    opacity: 0.55;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .blob-a {
+    width: 58vw; height: 58vw;
+    left: -16vw; top: -18vw;
+    background: radial-gradient(circle at 38% 36%, #2dd4bf, #0e5b52 62%, transparent 74%);
+    animation: drift-a 30s ease-in-out infinite alternate;
+  }
+  .blob-b {
+    width: 48vw; height: 48vw;
+    right: -14vw; top: 16vh;
+    background: radial-gradient(circle at 58% 42%, #8b5cf6, #3b1d70 64%, transparent 76%);
+    animation: drift-b 36s ease-in-out infinite alternate;
+  }
+  .blob-c {
+    width: 42vw; height: 42vw;
+    left: 24vw; bottom: -20vw;
+    background: radial-gradient(circle at 50% 50%, #f5b971, #6b3d16 62%, transparent 74%);
+    animation: drift-c 42s ease-in-out infinite alternate;
+  }
+  .blob-d {
+    width: 26vw; height: 26vw;
+    right: 22vw; bottom: 8vh;
+    background: radial-gradient(circle at 50% 50%, rgba(252, 165, 200, 0.5), transparent 72%);
+    animation: drift-a 48s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes drift-a { to { transform: translate(10vw, 8vh) scale(1.14) rotate(14deg); } }
+  @keyframes drift-b { to { transform: translate(-9vw, -7vh) scale(1.1) rotate(-12deg); } }
+  @keyframes drift-c { to { transform: translate(-7vw, -10vh) scale(1.16); } }
+
+  /* Slow-rotating iridescent conic sheet for oil-on-water shimmer */
+  .sheen {
+    position: absolute;
+    inset: -30%;
+    z-index: 1;
+    background: conic-gradient(from 0deg at 50% 50%,
+      rgba(94, 234, 212, 0.10),
+      rgba(196, 181, 253, 0.10),
+      rgba(252, 217, 160, 0.10),
+      rgba(252, 165, 200, 0.10),
+      rgba(94, 234, 212, 0.10));
+    filter: blur(60px);
+    opacity: 0.5;
+    mix-blend-mode: screen;
+    animation: spin 70s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain-shift 0.85s steps(4) infinite;
+  }
+  @keyframes grain-shift {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2%, 3%); }
+    50% { transform: translate(3%, -2%); }
+    75% { transform: translate(-3%, -3%); }
+    100% { transform: translate(2%, 2%); }
+  }
+
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(ellipse 92% 92% at 50% 46%, transparent 52%, rgba(0, 0, 0, 0.55) 100%);
+  }
+
+  /* ==================================================================
+     LIQUID GLASS PRIMITIVE
+     Real refraction: an SVG turbulence displacement map warps the
+     backdrop, layered under blur+saturate, a masked specular rim,
+     cursor light, and a caustic sweep on hover.
+  ================================================================== */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    background: var(--glass-tint);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+      inset 0 0 46px rgba(255, 255, 255, 0.018),
+      0 26px 64px -14px rgba(0, 0, 0, 0.6),
+      0 5px 16px rgba(0, 0, 0, 0.32);
+    overflow: hidden;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s ease, border-color 0.55s ease;
+    will-change: transform;
+  }
+
+  /* Refraction layer — warps whatever sits behind the pane */
+  .glass > .refract {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    backdrop-filter: blur(14px) saturate(1.7) brightness(1.05) url(#lg-refract);
+    -webkit-backdrop-filter: blur(14px) saturate(1.7) brightness(1.05);
+  }
+
+  /* Specular rim — a masked gradient border that flares the top-left edge */
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+      var(--glass-border-hi) 0%,
+      transparent 20%,
+      transparent 56%,
+      rgba(255, 255, 255, 0.18) 84%,
+      rgba(255, 255, 255, 0.05) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Cursor light — radial glow driven by --mx / --my */
+  .glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(440px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, 0.10), transparent 58%);
+    opacity: var(--glow, 0);
+    transition: opacity 0.45s ease;
+  }
+  .glass:hover { --glow: 1; }
+
+  .caustic {
+    position: absolute;
+    inset: -45%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(115deg,
+      transparent 42%,
+      rgba(255, 255, 255, 0.06) 47%,
+      rgba(255, 255, 255, 0.18) 50%,
+      rgba(255, 255, 255, 0.06) 53%,
+      transparent 58%);
+    transform: translateX(-72%) rotate(0.001deg);
+    transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .glass:hover .caustic { transform: translateX(72%); }
+
+  /* ==================================================================
+     LAYOUT
+  ================================================================== */
+  .stage {
+    position: relative;
+    z-index: 4;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(22px, 4vw, 56px);
+  }
+
+  /* Nav */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 14px 13px 24px;
+    border-radius: 100px;
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  nav .brand {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.2rem;
+    letter-spacing: 0.01em;
+  }
+  nav .brand em { font-style: italic; color: var(--teal); }
+  nav ul {
+    display: flex;
+    gap: 2px;
+    list-style: none;
+  }
+  nav ul a {
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 500;
+    padding: 9px 16px;
+    border-radius: 100px;
+    transition: color 0.25s ease, background 0.25s ease;
+  }
+  nav ul a:hover { color: var(--ink); background: rgba(255, 255, 255, 0.07); }
+
+  /* Buttons */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--glass-border);
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.055);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26), 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s ease, box-shadow 0.35s ease;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .btn:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.1); }
+  .btn:active { transform: translateY(0) scale(0.98); }
+  .btn.sm { padding: 10px 20px; font-size: 0.8rem; }
+  .btn-primary {
+    background: linear-gradient(120deg, rgba(94, 234, 212, 0.24), rgba(196, 181, 253, 0.14));
+    border-color: rgba(94, 234, 212, 0.36);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32), 0 8px 32px rgba(94, 234, 212, 0.16);
+  }
+  .btn-primary:hover { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38), 0 12px 42px rgba(94, 234, 212, 0.3); }
+
+  /* Hero */
+  .hero {
+    padding: clamp(80px, 13vh, 152px) 0 clamp(42px, 6vh, 76px);
+    position: relative;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--teal);
+    animation: rise 0.9s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 40px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal));
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3rem, 9vw, 6.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 24px 0 0;
+    max-width: 15ch;
+    animation: rise 0.95s 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  h1 .liquid {
+    font-style: italic;
+    font-weight: 500;
+    background: linear-gradient(100deg, #5eead4 0%, #c4b5fd 38%, #fca5c8 68%, #fcd9a0 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hue-flow 8s ease-in-out infinite alternate;
+  }
+  @keyframes hue-flow { to { background-position: 100% 0; } }
+  .lede {
+    max-width: 500px;
+    margin-top: 28px;
+    color: var(--ink-dim);
+    font-size: 1.08rem;
+    animation: rise 0.95s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 14px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    animation: rise 0.95s 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Floating refracted lens — a real glass bead */
+  .lens {
+    position: absolute;
+    z-index: 4;
+    width: clamp(150px, 20vw, 240px);
+    aspect-ratio: 1;
+    right: clamp(8px, 5vw, 90px);
+    top: clamp(96px, 16vh, 180px);
+    border-radius: 50%;
+    backdrop-filter: blur(3px) saturate(2.4) brightness(1.22) contrast(1.06) url(#lg-refract);
+    -webkit-backdrop-filter: blur(3px) saturate(2.4) brightness(1.22) contrast(1.06);
+    box-shadow:
+      inset -20px -26px 46px rgba(94, 234, 212, 0.2),
+      inset 16px 20px 46px rgba(196, 181, 253, 0.18),
+      inset 0 2px 7px rgba(255, 255, 255, 0.55),
+      0 34px 66px -20px rgba(0, 0, 0, 0.62);
+    animation: bob 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .lens::before {
+    content: "";
+    position: absolute;
+    top: 11%; left: 15%;
+    width: 36%; height: 22%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8), transparent 70%);
+    transform: rotate(-22deg);
+    filter: blur(3px);
+  }
+  .lens::after {
+    content: "";
+    position: absolute;
+    bottom: 9%; right: 13%;
+    width: 48%; height: 20%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(252, 217, 160, 0.45), transparent 70%);
+    filter: blur(9px);
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-28px) scale(1.03); }
+  }
+
+  /* Card grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+    margin-top: clamp(28px, 4vh, 48px);
+  }
+  .card { padding: 32px; }
+  .card:hover { transform: translateY(-6px); border-color: rgba(255, 255, 255, 0.22); }
+  .span-4 { grid-column: span 4; }
+  .span-6 { grid-column: span 6; }
+  .span-8 { grid-column: span 8; }
+  .span-12 { grid-column: span 12; }
+
+  .card .index {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+  }
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.4rem;
+    letter-spacing: -0.01em;
+    margin: 14px 0 10px;
+  }
+  .card p { color: var(--ink-dim); font-size: 0.93rem; }
+  .card code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    color: var(--teal);
+  }
+  .glyph {
+    width: 46px; height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+
+  .reveal { animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .r1 { animation-delay: 0.5s; }
+  .r2 { animation-delay: 0.6s; }
+  .r3 { animation-delay: 0.7s; }
+  .r4 { animation-delay: 0.8s; }
+  .r5 { animation-delay: 0.9s; }
+
+  /* Spec strip */
+  .strip {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 4vw, 56px);
+    padding: 28px 36px;
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+  }
+  .stat { min-width: 116px; }
+  .stat .num {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 2.1rem;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .num sup { font-size: 0.85rem; color: var(--teal); font-weight: 500; }
+  .stat .lbl {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 3px;
+  }
+  .strip .divider { width: 1px; height: 42px; background: rgba(255, 255, 255, 0.1); }
+
+  /* Marquee */
+  .marquee {
+    margin: clamp(64px, 9vh, 116px) calc(clamp(22px, 4vw, 56px) * -1) 0;
+    padding: 22px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    white-space: nowrap;
+    -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-track {
+    display: inline-block;
+    animation: scroll 28s linear infinite;
+  }
+  .marquee span {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1.55rem;
+    color: var(--ink-faint);
+    padding: 0 30px;
+  }
+  .marquee span i {
+    font-style: normal;
+    color: var(--teal);
+    font-size: 0.7rem;
+    vertical-align: super;
+    padding-left: 30px;
+  }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+
+  /* Footer */
+  footer {
+    margin-top: clamp(72px, 10vh, 124px);
+    padding: 34px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px;
+    border-radius: var(--radius-md);
+  }
+  footer .sig {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+  }
+  footer .sig em { font-style: italic; color: var(--rose); }
+  .model-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    padding: 9px 17px;
+    border-radius: 100px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .model-tag .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 12px var(--teal);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: 0.35; } }
+
+  /* Responsive */
+  @media (max-width: 880px) {
+    .span-4, .span-6, .span-8 { grid-column: span 12; }
+    .lens { width: 120px; top: 84px; right: 8px; }
+    nav ul { display: none; }
+    h1 { max-width: 100%; }
+    .strip { gap: 22px; }
+    .strip .divider { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG refraction filter: fractal turbulence displaces the backdrop -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="lg-refract" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="7" result="noise">
+      <animate attributeName="baseFrequency" dur="24s"
+               values="0.008 0.012; 0.011 0.009; 0.008 0.012" repeatCount="indefinite" />
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="26"
+                       xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<!-- Atmosphere -->
+<div class="atmosphere" aria-hidden="true">
+  <div class="sheen"></div>
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <div class="blob blob-c"></div>
+  <div class="blob blob-d"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- Floating lens bead -->
+<div class="lens" aria-hidden="true"></div>
+
+<div class="stage">
+
+  <nav class="glass">
+    <span class="refract"></span>
+    <div class="brand">vitreum<em>&thinsp;/ liquid</em></div>
+    <ul>
+      <li><a href="#principles">Principles</a></li>
+      <li><a href="#anatomy">Anatomy</a></li>
+      <li><a href="#spec">Spec</a></li>
+    </ul>
+    <a class="btn sm" href="#spec">Read the spec</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">A study in iridescence</span>
+    <h1>Surfaces poured from <span class="liquid">liquid glass</span></h1>
+    <p class="lede">
+      Not frosted, not flat. Each pane truly bends the light behind it —
+      warped by turbulence, saturated at the edges, and answering your cursor
+      with a slow, deliberate bloom. Drag your pointer across the glass and
+      watch the world refract.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#principles">Explore the principles &rarr;</a>
+      <a class="btn" href="#anatomy">How it bends</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid" id="principles">
+      <article class="glass card span-4 reveal r1">
+        <span class="refract"></span>
+        <div class="caustic"></div>
+        <div class="glyph">◍</div>
+        <span class="index">01 / Refraction</span>
+        <h3>Light actually bends</h3>
+        <p>A fractal displacement map warps the pixels behind each pane before they blur. What sits below reads as living light, gently distorted — not a static smear.</p>
+      </article>
+
+      <article class="glass card span-4 reveal r2">
+        <span class="refract"></span>
+        <div class="caustic"></div>
+        <div class="glyph">◒</div>
+        <span class="index">02 / Iridescence</span>
+        <h3>Oil-on-water color</h3>
+        <p>Teal drifts into violet into gold across a slow conic sheen. The palette never sits still, so the glass reads as a thin film catching a spectrum.</p>
+      </article>
+
+      <article class="glass card span-4 reveal r3">
+        <span class="refract"></span>
+        <div class="caustic"></div>
+        <div class="glyph">◬</div>
+        <span class="index">03 / Responsivity</span>
+        <h3>The pane feels you</h3>
+        <p>A radial light tracks the cursor through every surface, and a caustic sheen sweeps across on approach. Glass that behaves the way glass should.</p>
+      </article>
+
+      <article class="glass card span-8 reveal r4" id="anatomy">
+        <span class="refract"></span>
+        <div class="caustic"></div>
+        <span class="index">04 / The recipe</span>
+        <h3>Anatomy of a liquid pane</h3>
+        <p style="margin-bottom:14px;">
+          It starts with <code>feTurbulence</code> feeding a <code>feDisplacementMap</code> that
+          nudges the backdrop by a few dozen pixels. Over that:
+          <code>backdrop-filter: blur(14px) saturate(1.7)</code> for body, an inner shadow bowl for
+          depth, a mask-composited gradient for the specular rim, a cursor-driven radial glow,
+          and a diagonal caustic that passes on hover.
+        </p>
+        <p>Six stacked illusions, zero raster images. Depth from restraint, not from piling blur on blur.</p>
+      </article>
+
+      <article class="glass card span-4 reveal r4">
+        <span class="refract"></span>
+        <div class="caustic"></div>
+        <div class="glyph">◉</div>
+        <span class="index">05 / Motion</span>
+        <h3>Poured, not placed</h3>
+        <p>Panels rise on a long expo curve, staggered like cooling glass. The aurora behind never settles — liquid is a state, not a finish.</p>
+      </article>
+
+      <div class="glass strip span-12 reveal r5" id="spec">
+        <span class="refract"></span>
+        <div class="caustic"></div>
+        <div class="stat">
+          <div class="num">26<sup>px</sup></div>
+          <div class="lbl">Displace scale</div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="num">1.7<sup>&times;</sup></div>
+          <div class="lbl">Saturation lift</div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="num">6</div>
+          <div class="lbl">Stacked illusions</div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="num">0</div>
+          <div class="lbl">Images used</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>refraction<i>◆</i></span><span>iridescence<i>◆</i></span><span>translucency<i>◆</i></span><span>caustics<i>◆</i></span><span>displacement<i>◆</i></span>
+        <span>refraction<i>◆</i></span><span>iridescence<i>◆</i></span><span>translucency<i>◆</i></span><span>caustics<i>◆</i></span><span>displacement<i>◆</i></span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="glass">
+    <span class="refract"></span>
+    <div class="caustic"></div>
+    <div class="sig">vitreum<em>&thinsp;/ liquid</em> — a liquid glass iridescence study</div>
+    <div class="model-tag"><span class="dot"></span>Generated by Opus 4.8 &middot; claude-opus-4.8 &middot; high effort</div>
+  </footer>
+
+</div>
+
+<script>
+  // Cursor light: map pointer position into per-pane custom properties
+  document.querySelectorAll('.glass').forEach((pane) => {
+    pane.addEventListener('pointermove', (e) => {
+      const rect = pane.getBoundingClientRect();
+      pane.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      pane.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
+    pane.addEventListener('pointerleave', () => {
+      pane.style.setProperty('--glow', '0');
+    });
+  });
+
+  // Gentle parallax on the aurora blobs
+  const blobs = document.querySelectorAll('.blob');
+  let raf = null;
+  window.addEventListener('pointermove', (e) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      blobs.forEach((blob, i) => {
+        const depth = (i + 1) * 6;
+        blob.style.translate = (x * depth) + 'px ' + (y * depth) + 'px';
+      });
+      raf = null;
+    });
+  });
+</script>
+
+</body>
+</html>
