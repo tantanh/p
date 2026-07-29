@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Model Stack · July 2026 Roster v08</title>
+    <title>AI Model Stack · July 2026 Roster v09</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap");
 
@@ -1018,32 +1018,32 @@
       <!-- ========== MASTHEAD ========== -->
       <header class="masthead">
         <div class="eyebrow">
-          <span class="dot"></span> Roster Revision · v08 · Internal Dossier
+          <span class="dot"></span> Roster Revision · v09 · Internal Dossier
         </div>
         <h1 class="title">The Chinese<br />Model <em>Stack</em>.</h1>
         <p class="subtitle">
           A working roster for a Claude-based coding agent — built, audited, and
           superseded in the open, now routing through open-weight Chinese models
-          at a fraction of Opus pricing. Grok 4.5 and Laguna S 2.1 join the
-          ledger this cycle.
+          at a fraction of Opus pricing. Claude Opus 5 becomes the current
+          fallback target, and Gemini 2.5 Flash joins the comparison ledger.
         </p>
 
         <div class="meta-row">
           <div class="meta-item">
             <span class="meta-label">Cycle</span
-            ><span class="meta-val">July 2026 · R08</span>
+            ><span class="meta-val">July 2026 · R09</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Supersedes</span
-            ><span class="meta-val">R07 (Grok 4.5 watchlist)</span>
+            ><span class="meta-val">R08 (Grok 4.5 roster)</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Headline change</span
-            ><span class="meta-val live">Grok 4.5 roster + Laguna S 2.1</span>
+            ><span class="meta-val live">Opus 5 baseline + Gemini 2.5 Flash</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Scope</span
-            ><span class="meta-val">12 agents · 25 models · 5 tables</span>
+            ><span class="meta-val">12 agents · 28 models · 5 tables</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Status</span
@@ -1074,9 +1074,9 @@
               actually fire in practice, trimming carry-weight and token spend
               where a third fallback was never invoked.
               <strong>Table 5 (Grok 4.5)</strong> is a Lean-shaped matrix with
-              Grok woven in where it earns Main (judgment, debug, DevOps,
-              tier-shadow) and sits as Alt 1 elsewhere — SWE-bench Pro 64.7%,
-              Terminal-Bench 83.3%. R08 also adds
+               Grok woven in where it earns Main (judgment, debug, DevOps,
+               tier-shadow) and sits as Alt 1 elsewhere — SWE-bench Pro 64.7%*,
+               independently verified Terminal-Bench 2.1 79.3%. R08 also adds
               <strong>Laguna S 2.1</strong> (Poolside, 118B-A8B) and
               <strong>Macaron V1 Venti</strong> (Mind Lab, GLM-5.2 base +
               Mixture-of-LoRA) to the ledger, and fills previously empty or
@@ -1091,7 +1091,9 @@
               Kilo, <span style="color: var(--amber)">‡</span> vendor-reported
               pending reproduction). The ledger is the source of truth; the
               rosters are its interpretation. Ledger now tracks
-              <strong>25 models</strong> across 5 tables.
+              <strong>28 models</strong> across 5 tables. Terminal results now
+              name the suite version so 2.0, 2.1, and vendor-only runs are not
+              treated as interchangeable.
             </p>
           </div>
         </div>
@@ -1107,7 +1109,7 @@
             </h2>
           </div>
           <p class="section-note">
-            Each card maps to a row delta between R07 and R08. See the matrices
+            Each card maps to a row delta between R08 and R09. See the matrices
             below for the full column-level picture.
           </p>
         </div>
@@ -1122,7 +1124,8 @@
               xAI's flagship moves from watchlist into a Lean-shaped matrix:
               Main only where the agent is judgment- or terminal-heavy; Chinese
               Mains hold Ask / Simplifier / Docs / Frontend / Sonnet-shadow.
-              SWE-bench Pro 64.7%, Terminal-Bench 83.3%, $2/$6.
+              SWE-bench Pro 64.7%*, independently verified Terminal-Bench 2.1
+              79.3%, $2/$6 below 200K prompt tokens.
               <span class="pill">COST-EFFICIENT</span>
             </p>
           </div>
@@ -1144,8 +1147,8 @@
               <em>Kimi K3</em><br />joins the roster.
             </h3>
             <p class="card-body">
-              Successor to K2.6: SWE-bench Pro 64.8%, Verified 84.2%,
-              Terminal-Bench 72.3%. 512K context, improved tool-call stability.
+              Successor to K2.6: SWE-bench Pro 63.4%*, Terminal-Bench 2.0
+              71.8%*. 1M context, improved tool-call stability.
               Now Main for Code, Debug, Backend, DevOps in Tables 1, 2, and 5.
               <span class="pill">UPGRADE</span>
             </p>
@@ -1182,10 +1185,9 @@
               <em>Ledger gaps</em><br />filled and corrected.
             </h3>
             <p class="card-body">
-              Claude Sonnet 5's Terminal-Bench 2.1 cell was empty — now 80.4%
-              (Opus 4.8: 74.6%). GLM-5.2's SWE-bench Verified cell was empty —
-              now 80.4%. Both confirmed across independent scorecards this
-              cycle.
+              Independent Terminal-Bench 2.1 results replace mixed vendor runs:
+              Fable 5 83.8%, GPT-5.5 83.1%, Grok 4.5 79.3%, Opus 4.8 78.9%,
+              and Sonnet 5 74.6%. Older 2.0 scores are now labeled explicitly.
               <span class="pill">CORRECTED</span>
             </p>
           </div>
@@ -1305,8 +1307,8 @@
               </table>
             </div>
             <p class="scroll-hint">
-              → 11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on
-              Kimi K2.6
+               → 11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on
+               Kimi K3
             </p>
           </div>
 
@@ -1338,7 +1340,7 @@
           <div class="tier-columns">
             <div class="tier-col" id="tier-opus">
               <div class="tier-col-head">
-                <span class="role r-opus">Opus 4.8</span
+                <span class="role r-opus">Opus 5</span
                 ><span class="tier-col-label">Judgment-heavy</span>
               </div>
               <div class="tier-list"></div>
@@ -1424,7 +1426,9 @@
 
         <div class="footnotes">
           <p>* = vendor-reported only.</p>
-          <p>† = independently run by Kilo.</p>
+          <p>
+            † = pricing qualifier (for example cache-miss or long-prompt tier).
+          </p>
           <p>
             ‡ = vendor-reported, pending independent reproduction on standard
             suites.
@@ -1440,7 +1444,7 @@
             >Designed by GLM-5.2 (High), Researched by Sonnet 4.6, Sonnet 5, and
             others.</span
           >
-          <span class="mark">R08</span>
+          <span class="mark">R09</span>
           <span>July 2026</span>
         </div>
       </section>
@@ -1479,7 +1483,7 @@
         { name: "Backend Specialist", kind: "server logic" },
         { name: "Frontend Specialist", kind: "UI / JSX" },
         { name: "DevOps", kind: "infra / CI" },
-        { name: "Opus 4.8 fallback", kind: "tier shadow" },
+        { name: "Opus 5 fallback", kind: "tier shadow" },
         { name: "Sonnet 5 fallback", kind: "tier shadow" },
       ];
 
@@ -1551,7 +1555,7 @@
           { n: "Grok 4.5", b: "NEW" },
           "Qwen 3.7 Plus",
         ],
-        // Debug — Terminal-Bench 83.3% is the fit
+        // Debug — independently verified Terminal-Bench 2.1 strength is the fit
         [
           { n: "Grok 4.5", b: "NEW" },
           { n: "Kimi K3", b: "NEW" },
@@ -1593,7 +1597,7 @@
           { n: "Kimi K3", b: "NEW" },
           "Qwen 3.7 Plus",
         ],
-        // Opus 4.8 fallback — highest-stakes shadow
+        // Opus 5 fallback — highest-stakes shadow
         [
           { n: "Grok 4.5", b: "NEW" },
           { n: "Kimi K3", b: "NEW" },
@@ -1625,8 +1629,8 @@
         ],
         [
           5,
-          "N/A — Kimi K2.6",
-          `Refactoring is disciplined execution within constraints, not open-ended judgment — Kimi's 4000+ tool-call endurance and vision still matter here. However, "complex refactors" is explicitly Max-mode territory — if ever routed through GLM-5.2, Max would be the right setting`,
+           "N/A — Kimi K3",
+           `Refactoring is disciplined execution within constraints, not open-ended judgment — Kimi K3's long-horizon execution and native vision matter here. However, "complex refactors" is explicitly Max-mode territory — if ever routed through GLM-5.2, Max would be the right setting`,
         ],
         [6, "High", `Prose generation is a "fairly direct" task`],
         [
@@ -1647,7 +1651,7 @@
       const ROSTER_T4 = [
         [
           0,
-          "Opus 4.8",
+          "Opus 5",
           "Xhigh",
           "Architectural judgment — Anthropic's own guidance for Opus 4.8 starts at Xhigh for coding/agentic work",
         ],
@@ -1665,13 +1669,13 @@
         ],
         [
           3,
-          "Opus 4.8",
+          "Opus 5",
           "Xhigh",
           "Root-cause diagnosis is judgment work; gap to Sonnet 5 narrows but doesn't close cheaply",
         ],
         [
           4,
-          "Opus 4.8",
+          "Opus 5",
           "Xhigh",
           "Catching subtle flaws is where Opus 4.8's accuracy edge still earns its cost",
         ],
@@ -1689,7 +1693,7 @@
         ],
         [
           7,
-          "Opus 4.8",
+          "Opus 5",
           "Xhigh",
           "Schema/auth/licensing trade-offs carry long-term cost if wrong",
         ],
@@ -1708,12 +1712,14 @@
       const LEDGER = [
         { kind: "section", label: "Claude — Opus tier" },
         {
-          name: "Claude Opus 4.8",
+          name: "Claude Opus 5",
+          badge: "new",
           role: "opus",
-          ts: "pass",
-          pro: ["a", "69.2%"],
-          verified: ["a", "88.6%"],
-          terminal: ["a", "74.6–85%"],
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: null,
+          verified: null,
+          terminal: null,
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
@@ -1721,7 +1727,23 @@
           openT: "—",
           costIn: ["high", "$5.00"],
           costOut: ["high", "$25.00"],
-          note: "Now the fallback target. 4× lower code-flaw miss rate vs 4.7",
+          note: "Current Opus fallback target (released Jul 24). Same API price as 4.8; no comparable SWE-bench Pro/Verified or verified TB 2.1 result published yet",
+        },
+        {
+          name: "Claude Opus 4.8",
+          role: "replaced",
+          ts: "pass",
+          pro: ["a", "69.2%"],
+          verified: ["a", "88.6%"],
+          terminal: ["a", "78.9% (2.1)"],
+          ctx: "1M",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["high", "$5.00"],
+          costOut: ["high", "$25.00"],
+          note: "Independent TB 2.1: Claude Code, high effort. Superseded by Opus 5",
         },
         {
           name: "Claude Opus 4.7",
@@ -1729,7 +1751,7 @@
           ts: "pass",
           pro: ["a", "64.3%"],
           verified: ["a", "87.6%"],
-          terminal: ["b", "66.1%"],
+          terminal: ["b", "68.9% (2.1)"],
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
@@ -1762,7 +1784,7 @@
           ts: "pass",
           pro: ["a", "80.0%"],
           verified: ["a", "95.0%"],
-          terminal: ["a", "88%*"],
+          terminal: ["a", "83.8% (2.1)"],
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
@@ -1770,7 +1792,7 @@
           openT: "—",
           costIn: ["high", "$10.00"],
           costOut: ["high", "$50.00"],
-          note: "Above-Opus tier. Same weights as Mythos 5 (unsafeguarded). SWE-bench Pro #1 at 80.0%. *Terminal via Poolside scorecard",
+          note: "Above-Opus tier. Same weights as Mythos 5 (unsafeguarded). Terminal score is independent TB 2.1 via Claude Code, xhigh",
         },
         {
           name: "Claude Mythos Preview",
@@ -1797,15 +1819,15 @@
           ts: "pass",
           pro: ["a", "63.2%"],
           verified: ["a", "85.2%"],
-          terminal: ["a", "80.4%"],
+          terminal: ["a", "74.6% (2.1)"],
           ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
           openT: "—",
-          costIn: ["mid", "$3.00"],
-          costOut: ["high", "$15.00"],
-          note: "Intro pricing ended ($3/$15). Xhigh effort can exceed Opus 4.8 cost — win is at low/medium",
+          costIn: ["low", "$2.00*"],
+          costOut: ["mid", "$10.00*"],
+          note: "*Intro price through Aug 31, then $3/$15. Terminal score is independent TB 2.1 via Claude Code, high",
         },
         {
           name: "Claude Sonnet 4.6",
@@ -1837,26 +1859,26 @@
           visionT: "Yes",
           openC: "no",
           openT: "—",
-          costIn: ["low", "$0.75"],
-          costOut: ["low", "$3.50"],
-          note: "4000+ tool calls / 13hr stability. GPQA-Diamond 90.5",
+          costIn: ["low", "$0.95†"],
+          costOut: ["low", "$4.00"],
+          note: "†Official cache-miss input; cache-hit input $0.16. Vendor coding scores use TB 2.0",
         },
         {
           name: "Kimi K3",
           badge: "new",
           role: "main",
           ts: "pass",
-          pro: ["a", "64.8%"],
-          verified: ["a", "84.2%"],
-          terminal: ["a", "72.3%"],
-          ctx: "512K",
+          pro: ["a", "63.4%*"],
+          verified: null,
+          terminal: ["a", "71.8%* (2.0)"],
+          ctx: "1M",
           visionC: "yes",
           visionT: "Yes",
           openC: "no",
           openT: "—",
-          costIn: ["low", "$0.85"],
-          costOut: ["low", "$4.00"],
-          note: "Successor to K2.6. SWE-bench Pro 64.8%, Terminal-Bench 72.3%. 512K context, improved tool-call stability",
+          costIn: ["mid", "$3.00†"],
+          costOut: ["high", "$15.00"],
+          note: "*Vendor max-effort scores. †Official cache-miss input; cache-hit input $0.30. Open weights announced for Jul 27",
         },
         {
           name: "GLM-5.2",
@@ -1865,7 +1887,7 @@
           ts: "pass",
           pro: ["a", "62.1%"],
           verified: ["a", "80.4%"],
-          terminal: ["a", "81.0%"],
+          terminal: ["a", "81.0%* (2.1)"],
           ctx: "1M",
           visionC: "no",
           visionT: "—",
@@ -1881,7 +1903,7 @@
           ts: "pass",
           pro: ["a", "58.4%"],
           verified: ["b", "~78%"],
-          terminal: ["b", "62.0%"],
+          terminal: ["c", "58.7% (2.1)"],
           ctx: "200K",
           visionC: "no",
           visionT: "—",
@@ -1956,9 +1978,9 @@
           visionT: "Yes",
           openC: "yes",
           openT: "Yes (Mod. MIT)",
-          costIn: ["low", "$1.14"],
-          costOut: ["mid", "$4.80"],
-          note: `‡Vendor-only (MCPMark 81.1 vs Opus 4.8's 76.4). Practitioners report gains don't replicate on real repos. 30% fewer reasoning tokens than K2.6`,
+          costIn: ["low", "$0.95†"],
+          costOut: ["mid", "$4.00"],
+          note: `‡Vendor-only (MCPMark 81.1 vs Opus 4.8's 76.4). †Official cache-miss input; cache-hit input $0.19`,
         },
         {
           name: "DeepSeek V4 Flash",
@@ -1967,7 +1989,7 @@
           tsLabel: "Unverified",
           pro: null,
           verified: ["b", "79.0%"],
-          terminal: null,
+          terminal: ["a", "83.1% (2.1)"],
           ctx: "1M",
           visionC: "no",
           visionT: "—",
@@ -2063,7 +2085,7 @@
           openT: "—",
           costIn: ["high", "$5.00"],
           costOut: ["high", "$30.00"],
-          note: "OpenAI frontier. Longest context (1.1M). Not in Chinese-model roster — listed for comparison",
+          note: "Independent TB 2.1 via Codex, xhigh. Official TB 2.0 score is 82.7%. Not in Chinese-model roster",
         },
 
         { kind: "section", label: "xAI — Frontier (Table 5)" },
@@ -2075,7 +2097,7 @@
           tsLabel: "Untested",
           pro: ["a", "64.7%"],
           verified: null,
-          terminal: ["a", "83.3%"],
+          terminal: ["a", "79.3% (2.1)"],
           ctx: "500K",
           visionC: "yes",
           visionT: "Yes",
@@ -2083,10 +2105,46 @@
           openT: "—",
           costIn: ["low", "$2.00"],
           costOut: ["low", "$6.00"],
-          note: "xAI frontier. Table 5: Main on Plan/Code/Debug/Review/Backend/DevOps/Opus-shadow; Alt 1 on Ask/Simplifier/Docs/Frontend/Sonnet-shadow. Multimodal, 500K ctx",
+          note: "Independent TB 2.1 via Cursor CLI, high. $2/$6 below 200K prompt tokens; $4/$12 at 200K+. Pro score is vendor-reported",
         },
 
         { kind: "section", label: "Watchlist — not in roster" },
+        {
+          name: "Agnes 2.5 Flash",
+          badge: "new",
+          role: "watch",
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: null,
+          verified: null,
+          terminal: null,
+          ctx: "—",
+          visionC: "no",
+          visionT: "—",
+          openC: "no",
+          openT: "—",
+          costIn: ["none", "—"],
+          costOut: ["none", "—"],
+          note: "Model name provided by user; not found in OpenRouter, Hugging Face, or public benchmark catalogs as of July 2026. Awaiting provider confirmation and specification",
+        },
+        {
+          name: "Gemini 2.5 Flash",
+          badge: "new",
+          role: "watch",
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: null,
+          verified: ["d", "63.8%*"],
+          terminal: null,
+          ctx: "1M",
+          visionC: "yes",
+          visionT: "Yes",
+          openC: "no",
+          openT: "—",
+          costIn: ["low", "$0.30"],
+          costOut: ["low", "$2.50"],
+          note: "Google GA thinking model. *Vendor SWE-bench Verified; no comparable Pro or verified TB 2.1 result found",
+        },
         {
           name: "Laguna S 2.1",
           badge: "new",
@@ -2262,7 +2320,7 @@
         for (const r of LEDGER) {
           if (r.kind === "section") {
             rows.push(
-              `<tr class="divider-row"><td colspan="12">${esc(r.label)}</td></tr>`,
+              `<tr class="divider-row"><td colspan="9">${esc(r.label)}</td></tr>`,
             );
             continue;
           }
@@ -2279,8 +2337,6 @@
               <td>${esc(r.ctx)}</td>
               <td class="${esc(r.visionC)}">${esc(r.visionT)}</td>
               <td class="${esc(r.openC)}">${esc(r.openT)}</td>
-              ${costCell(r.costIn)}
-              ${costCell(r.costOut)}
               <td class="note-cell">${esc(r.note)}</td>
             </tr>`,
           );
@@ -2291,12 +2347,10 @@
           <th scope="col">TS build</th>
           <th scope="col">SWE-bench Pro</th>
           <th scope="col">SWE-bench Verified</th>
-          <th scope="col">Terminal-Bench</th>
+          <th scope="col">Terminal-Bench (suite)</th>
           <th scope="col">Context</th>
           <th scope="col">Vision</th>
           <th scope="col">Open weights</th>
-          <th scope="col">Input $/1M</th>
-          <th scope="col">Output $/1M</th>
           <th scope="col">Key note</th>
         </tr>`;
         document.getElementById("ledger-table").innerHTML =

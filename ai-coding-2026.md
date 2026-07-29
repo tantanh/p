@@ -1,6 +1,6 @@
 # The Chinese Model Stack
 
-_A working roster for a Claude-based coding agent — built, audited, and superseded in the open, now routing through open-weight Chinese models at a fraction of Opus pricing._
+_A working roster for a Claude-based coding agent — built, audited, and superseded in the open, now routing through open-weight Chinese models at a fraction of Opus pricing. R09 makes Claude Opus 5 the fallback target and adds Gemini 2.5 Flash to the comparison ledger._
 
 ---
 
@@ -8,27 +8,39 @@ _A working roster for a Claude-based coding agent — built, audited, and supers
 
 This stack exists to answer one question: _can a roster of open-weight Chinese models replace Claude Opus and Sonnet across twelve distinct coding-agent roles_ — and at what cost, with what caveats?
 
-Two rosters are maintained. **Table 1 (Expanded)** keeps three independently-strong models in every fallback column — maximum resilience for autonomous long-horizon runs. **Table 2 (Lean)** collapses to the models that actually fire in practice, trimming carry-weight and token spend where a third fallback was never invoked.
+Three open-model rosters are maintained. **Table 1 (Expanded)** keeps three independently-strong models in every fallback column. **Table 2 (Lean)** trims carry-weight where a third fallback rarely fires. **Table 5 (Grok 4.5)** is Lean-shaped, with Grok routed by agent fit. Table 3 records GLM-5.2 effort and Table 4 maps Claude tiers.
 
-Every benchmark figure below is either **independently reproduced** on standard suites or marked with a glyph (\* vendor-reported, † independently run by Kilo, ‡ vendor-reported pending reproduction). The ledger is the source of truth; the rosters are its interpretation.
+Every benchmark figure below is either **independently reproduced** on a named suite or marked with a glyph (\* vendor-reported, † pricing qualifier, ‡ vendor-reported pending reproduction). Terminal-Bench 2.0 and 2.1 are labeled explicitly because their scores are not interchangeable. The ledger is the source of truth; the rosters are its interpretation. It tracks **28 models** across five tables.
 
 ---
 
 ## 01 — What moved this cycle
 
-_Three decisions, one ledger. Each card maps to a row delta between R05 and R06._
+_Six decisions, one ledger. Each item maps to a row delta between R08 and R09._
 
-### Δ 01 / NEW CEILING
+### Δ 01 / NEW BASELINE
 
-Claude Fable 5 redefines the top. SWE-bench Verified 95.0%, Pro 80.0% — both #1. At $10/$50 it's 2× Opus pricing, but the gap is real. Mythos Preview (same weights, unsafeguarded) sits at 93.9% Verified.
+Claude Opus 5, released July 24, is now the current Opus fallback target at $5/$25. Anthropic has not yet published comparable SWE-bench Pro, SWE-bench Verified, or verified Terminal-Bench 2.1 results, so those cells remain blank rather than borrowing scores from another suite.
 
-### Δ 02 / PRICING SYNC
+### Δ 02 / MODEL IDENTITY
 
-Six models, price corrected. Sonnet 5 intro pricing ended ($3/$15). Kimi K2.6, GLM-5.2, Qwen 3.7 Max, MiMo V2.5-Pro, Qwen 3.7 Plus all repriced via cheapest-provider data from llm-stats.com. GLM-5.2 drops to **$0.95/$3.00** via DeepInfra.
+The requested “Agnes 2.5 Flash” does not exist in OpenRouter, Hugging Face, or benchmark catalogs. It was confirmed as **Google Gemini 2.5 Flash**: a closed, multimodal 1M-context model at $0.30/$2.50.
 
-### Δ 03 / VERIFIED
+### Δ 03 / SUITE NORMALIZATION
 
-Sonnet 5 earns 85.2% Verified. SWE-bench Verified score now confirmed at **85.2%** — #5 overall, closing the gap to Opus 4.7 (87.6%). Context 1M confirmed. Still trails Opus on the hardest agentic benchmarks.
+Independent Terminal-Bench 2.1 results replace mixed or ambiguous values: Fable 5 83.8%, GPT-5.5 83.1%, Grok 4.5 79.3%, Opus 4.8 78.9%, and Sonnet 5 74.6%. Kimi K2.6/K3 values remain explicitly labeled Terminal-Bench 2.0 vendor runs.
+
+### Δ 04 / KIMI K3 CORRECTION
+
+Kimi K3 is corrected to SWE-bench Pro 63.4%\*, Terminal-Bench 2.0 71.8%\*, 1M context, and official API pricing of $3 cache-miss input / $15 output (cache-hit input $0.30).
+
+### Δ 05 / PRICING CORRECTION
+
+Kimi K2.6 is corrected to $0.95 cache-miss input / $4 output ($0.16 cache hit). Kimi K2.7-Code is corrected to $0.95/$4 ($0.19 cache hit). Sonnet 5 shows its live $2/$10 introductory rate through August 31.
+
+### Δ 06 / PROVENANCE AUDIT
+
+Scores without a reproducible primary or independent source remain visibly marked vendor-only or blank. No missing score is inferred from a neighboring model, harness, or benchmark version.
 
 ---
 
@@ -45,14 +57,14 @@ _12 agents · 3 models per column · maximum resilience for long autonomous runs
 | Plan                | strategy        | Kimi K2.6             | MiMo V2.5-Pro        | DeepSeek V4 Pro       |
 | Code                | primary write   | GLM-5.2 `NEW`         | Qwen 3.7 Plus        | Hy3                   |
 | Ask                 | quick Q&A       | GLM-5.2 `NEW`         | Kimi K2.7-Code `NEW` | DeepSeek V4 Pro       |
-| Debug               | fault isolation | Kimi K2.6             | MiMo V2.5-Pro        | DeepSeek V4 Pro       |
+| Debug               | fault isolation | Kimi K3 `NEW`         | Kimi K2.6            | MiMo V2.5-Pro          |
 | Review              | critique        | MiniMax M3 `VERIFIED` | MiMo V2.5-Pro        | Qwen 3.7 Max          |
-| Code Simplifier     | refactor        | Kimi K2.6             | Qwen 3.7 Plus        | Hy3                   |
+| Code Simplifier     | refactor        | Kimi K3 `NEW`         | Kimi K2.6            | Qwen 3.7 Plus         |
 | Documentation       | prose           | GLM-5.2 `NEW`         | Qwen 3.7 Plus        | Hy3                   |
-| Backend Specialist  | server logic    | Kimi K2.6             | MiMo V2.5-Pro        | Hy3                   |
+| Backend Specialist  | server logic    | Kimi K3 `NEW`         | Kimi K2.6            | MiMo V2.5-Pro          |
 | Frontend Specialist | UI / JSX        | GLM-5.2 `NEW`         | Qwen 3.7 Plus        | MiniMax M3 `VERIFIED` |
-| DevOps              | infra / CI      | Kimi K2.6             | Qwen 3.7 Plus        | Hy3                   |
-| Opus 4.8 fallback   | tier shadow     | Kimi K2.6             | MiMo V2.5-Pro        | DeepSeek V4 Pro       |
+| DevOps              | infra / CI      | Kimi K3 `NEW`         | Kimi K2.6            | Qwen 3.7 Plus         |
+| Opus 5 fallback     | tier shadow     | Kimi K2.6             | MiMo V2.5-Pro        | DeepSeek V4 Pro       |
 | Sonnet 5 fallback   | tier shadow     | GLM-5.2 `NEW`         | Qwen 3.7 Plus        | Hy3                   |
 
 ### Table 2 · Lean
@@ -64,19 +76,19 @@ _12 agents · trimmed third column · lower carry-weight where the Alt 2 never f
 | Plan                | strategy        | Kimi K2.6     | MiMo V2.5-Pro | DeepSeek V4 Pro |
 | Code                | primary write   | GLM-5.2 `NEW` | Qwen 3.7 Plus | Hy3             |
 | Ask                 | quick Q&A       | GLM-5.2 `NEW` | Qwen 3.7 Plus | DeepSeek V4 Pro |
-| Debug               | fault isolation | Kimi K2.6     | MiMo V2.5-Pro | DeepSeek V4 Pro |
+| Debug               | fault isolation | Kimi K3 `NEW` | Kimi K2.6     | MiMo V2.5-Pro   |
 | Review              | critique        | GLM-5.2 `NEW` | MiMo V2.5-Pro | Hy3             |
-| Code Simplifier     | refactor        | Kimi K2.6     | Qwen 3.7 Plus | Hy3             |
+| Code Simplifier     | refactor        | Kimi K3 `NEW` | Kimi K2.6     | Qwen 3.7 Plus   |
 | Documentation       | prose           | GLM-5.2 `NEW` | Qwen 3.7 Plus | Hy3             |
-| Backend Specialist  | server logic    | Kimi K2.6     | MiMo V2.5-Pro | Hy3             |
+| Backend Specialist  | server logic    | Kimi K3 `NEW` | Kimi K2.6     | MiMo V2.5-Pro   |
 | Frontend Specialist | UI / JSX        | GLM-5.2 `NEW` | Qwen 3.7 Plus | Hy3             |
-| DevOps              | infra / CI      | Kimi K2.6     | Qwen 3.7 Plus | Hy3             |
-| Opus 4.8 fallback   | tier shadow     | Kimi K2.6     | MiMo V2.5-Pro | DeepSeek V4 Pro |
+| DevOps              | infra / CI      | Kimi K3 `NEW` | Kimi K2.6     | Qwen 3.7 Plus   |
+| Opus 5 fallback     | tier shadow     | Kimi K2.6     | MiMo V2.5-Pro | DeepSeek V4 Pro |
 | Sonnet 5 fallback   | tier shadow     | GLM-5.2 `NEW` | Qwen 3.7 Plus | Hy3             |
 
 ### Table 3 · GLM-5.2 Modes
 
-_11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on Kimi K2.6_
+_11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on Kimi K3_
 
 | Agent               | Kind            | GLM-5.2 Mode        | Rationale                                                                                                |
 | ------------------- | --------------- | ------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -85,23 +97,23 @@ _11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on Kimi K2.6_
 | Ask                 | quick Q&A       | **High**            | Direct Q&A, no benefit from extra deliberation                                                             |
 | Debug               | fault isolation | **Max**             | "Intricate debugging" — named directly as a Max use case                                                   |
 | Review              | critique        | **Max**             | Catching subtle bugs is exactly where deeper reasoning pays off                                             |
-| Code Simplifier     | refactor        | **N/A — Kimi K2.6** | Refactoring is disciplined execution within constraints, not open-ended judgment                            |
+| Code Simplifier     | refactor        | **N/A — Kimi K3**   | Refactoring is disciplined execution within constraints, not open-ended judgment                            |
 | Documentation       | prose           | **High**            | Prose generation is a "fairly direct" task                                                               |
 | Backend Specialist  | server logic    | **Max**             | Schema / auth / licensing trade-offs — architectural judgment                                                |
 | Frontend Specialist | UI / JSX        | **High**            | Pattern-based UI implementation                                                                            |
 | DevOps              | infra / CI      | **High**            | Bounded, structured tasks — escalate to Max only for complex pipeline redesign                              |
-| Opus 4.8 fallback   | tier shadow     | **Max**             | Highest-stakes moments — use the deeper mode                                                                 |
+| Opus 5 fallback     | tier shadow     | **Max**             | Highest-stakes moments — use the deeper mode                                                                 |
 | Sonnet 5 fallback   | tier shadow     | **High**            | Sonnet-tier work is volume / speed-oriented by design                                                     |
 
 ### Table 4 — Claude tier per agent
 
-**Opus 4.8** — Judgment-heavy
+**Opus 5** — Judgment-heavy
 
 | Agent              | Kind            | Effort | Rationale                                                                                                  |
 | ------------------ | --------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
-| Plan               | strategy        | Xhigh  | Architectural judgment — Anthropic's own guidance for Opus 4.8 starts at Xhigh for coding/agentic work        |
-| Debug              | fault isolation | Xhigh  | Root-cause diagnosis is judgment work; gap to Sonnet 5 narrows but doesn't close cheaply                      |
-| Review             | critique        | Xhigh  | Catching subtle flaws is where Opus 4.8's accuracy edge still earns its cost                                  |
+| Plan               | strategy        | Xhigh  | Architectural judgment and highest-stakes planning                                                            |
+| Debug              | fault isolation | Xhigh  | Root-cause diagnosis is judgment work                                                                          |
+| Review             | critique        | Xhigh  | Catching subtle flaws is where the Opus tier earns its cost                                                    |
 | Backend Specialist | server logic    | Xhigh  | Schema/auth/licensing trade-offs carry long-term cost if wrong                                                |
 
 **Sonnet 5** — Execution-heavy
@@ -115,6 +127,25 @@ _11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on Kimi K2.6_
 | Frontend Specialist | UI / JSX      | Medium  | Pattern-based UI implementation                                                                          |
 | DevOps              | infra / CI    | Medium  | Structured, bounded tasks; escalate to Xhigh only for complex pipeline redesigns                        |
 
+### Table 5 · Grok 4.5
+
+_12 agents · Lean shape · Grok Main on seven judgment/terminal-heavy agents and Alt 1 on five execution-heavy agents_
+
+| Agent | Kind | Main | Alt 1 | Alt 2 |
+| --- | --- | --- | --- | --- |
+| Plan | strategy | Grok 4.5 | Kimi K2.6 | MiMo V2.5-Pro |
+| Code | primary write | Grok 4.5 | Kimi K3 | Qwen 3.7 Plus |
+| Ask | quick Q&A | GLM-5.2 | Grok 4.5 | Qwen 3.7 Plus |
+| Debug | fault isolation | Grok 4.5 | Kimi K3 | MiMo V2.5-Pro |
+| Review | critique | Grok 4.5 | GLM-5.2 | MiMo V2.5-Pro |
+| Code Simplifier | refactor | Kimi K3 | Grok 4.5 | Qwen 3.7 Plus |
+| Documentation | prose | GLM-5.2 | Grok 4.5 | Qwen 3.7 Plus |
+| Backend Specialist | server logic | Grok 4.5 | Kimi K3 | MiMo V2.5-Pro |
+| Frontend Specialist | UI / JSX | GLM-5.2 | Grok 4.5 | Qwen 3.7 Plus |
+| DevOps | infra / CI | Grok 4.5 | Kimi K3 | Qwen 3.7 Plus |
+| Opus 5 fallback | tier shadow | Grok 4.5 | Kimi K3 | MiMo V2.5-Pro |
+| Sonnet 5 fallback | tier shadow | GLM-5.2 | Grok 4.5 | Qwen 3.7 Plus |
+
 ---
 
 ## 03 — Full ledger
@@ -125,59 +156,70 @@ _The source of truth. Scores colour-graded by tier; glyphs flag provenance. Hove
 
 ### Claude — Opus tier
 
-| Model            | Role  | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Input $/1M | Output $/1M | Key note                                         |
-| ---------------- | ----- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------- | ----------- | ---------------------------------------------- |
-| Claude Opus 4.8  | Opus  | Pass     | 69.2%         | 88.6%              | 74.6–85%       | 1M      | Yes    | —            | $5.00      | $25.00      | Now the fallback target. 4× lower code-flaw miss with vs 4.7 |
-| Claude Opus 4.7  | Replaced | Pass  | 64.3%         | 87.6%              | 66.1%          | 1M      | Yes    | —            | $5.00      | $25.00      | Superseded by Opus 4.8 in this session            |
-| Claude Opus 4.6  | Legacy | Pass   | 53.4%         | 80.8%              | —              | 1M      | Yes    | —            | $5.00      | $25.00      | Original baseline this stack was designed around    |
-| Claude Fable 5 `NEW` | Opus | Pass | 80.0%         | 95.0%              | —              | 1M      | Yes    | —            | $10.00     | $50.00      | Above-Opus tier. Same weights as Mythos 5 (unsafeguarded) |
-| Claude Mythos Preview | Opus | Pass | 77.8%         | 93.9%              | —              | —       | Yes    | —            | —          | —           | Preview-only; same weights as Fable 5 but unsafeguarded |
+| Model            | Role  | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                         |
+| ---------------- | ----- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------------------------------------------- |
+| Claude Opus 5 `NEW` | Opus | Untested | —            | —                  | —              | 1M      | Yes    | —            | Current Opus fallback target; comparable public scores not yet available |
+| Claude Opus 4.8  | Replaced | Pass  | 69.2%         | 88.6%              | 78.9% (2.1)   | 1M      | Yes    | —            | Independent TB 2.1 via Claude Code, high effort |
+| Claude Opus 4.7  | Replaced | Pass  | 64.3%         | 87.6%              | 68.9% (2.1)   | 1M      | Yes    | —            | Independent TB 2.1 via Claude Code, max effort |
+| Claude Opus 4.6  | Legacy | Pass   | 53.4%         | 80.8%              | —              | 1M      | Yes    | —            | Original baseline this stack was designed around    |
+| Claude Fable 5 `NEW` | Opus | Pass | 80.0%         | 95.0%              | 83.8% (2.1)   | 1M      | Yes    | —            | Independent TB 2.1 via Claude Code, xhigh |
+| Claude Mythos Preview | Opus | Pass | 77.8%         | 93.9%              | —              | 1M      | Yes    | —            | Preview-only; superseded by restricted-access Mythos 5 |
 
 ### Claude — Sonnet tier
 
-| Model               | Role    | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Input $/1M | Output $/1M | Key note                                            |
-| ------------------- | ------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------- | ----------- | --------------------------------------------------- |
-| Claude Sonnet 5 `NEW` | Sonnet  | Pass     | 63.2%         | 85.2%              | —              | 1M      | Yes    | —            | $3.00      | $15.00      | Intro pricing ended ($3/$15). Xhigh can exceed Opus cost |
-| Claude Sonnet 4.6     | Replaced | Pass    | 61.4%         | 79.6%              | 59.1%          | 1M      | Yes    | —            | $3.00      | $15.00      | Superseded by Sonnet 5 in this session                |
+| Model               | Role    | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                            |
+| ------------------- | ------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | --------------------------------------------------- |
+| Claude Sonnet 5 `NEW` | Sonnet  | Pass     | 63.2%         | 85.2%              | 74.6% (2.1)   | 1M      | Yes    | —            | Intro price through Aug 31 then price increases. Independent TB 2.1 |
+| Claude Sonnet 4.6     | Replaced | Pass    | 61.4%         | 79.6%              | 59.1%          | 200K    | Yes    | —            | Superseded by Sonnet 5                                  |
 
 ### Roster — Main models
 
-| Model       | Role  | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Input $/1M | Output $/1M | Key note                                                              |
-| ----------- | ----- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------- | ----------- | ------------------------------------------------------------------- |
-| Kimi K2.6   | Main  | Pass     | 58.6%         | 80.2%              | 66.7%          | 262K    | Yes    | —            | $0.75      | $3.50       | 4000+ tool calls / 13hr stability. GPQA-Diamond 90.5               |
-| GLM-5.2 `NEW` | Main  | Pass   | 62.1%         | —                  | 81.0%          | 1M      | No     | Yes (MIT)    | $0.95      | $3.00       | Code Arena #2 (independent), Design Arena #1. Big upgrade from 5.1    |
-| GLM-5.1     | Replaced | Pass  | 58.4%         | ~78%               | 62.0%          | 200K    | No     | Yes (MIT)    | $1.40      | $4.40       | Superseded by GLM-5.2 in this session                               |
-| Qwen 3.7 Max | Alt 2 (v1) | Pass | 60.6%         | 80.4%              | 69.7%          | 1M      | No     | —            | $1.25      | $3.75       | Text-only. Now second-highest SWE-bench Pro behind GLM-5.2             |
+| Model       | Role  | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                                              |
+| ----------- | ----- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ------------------------------------------------------------------- |
+| Pass     | 58.6%         | 80.2%              | 66.7%* (2.0)   | 262K    | Yes    | —            | Vendor TB 2.0; cache-miss input pricing, cache hit discounted                    
+| Pass    | 63.4%*        | —                  | 71.8%* (2.0)   | 1M      | Yes    | —            | Vendor max-effort scores; cache-miss input pricing, cache hit discounted               
+| Pass   | 62.1%         | 80.4%              | 81.0%* (2.1)   | 1M      | No     | Yes (MIT)    | Vendor TB 2.1; no independent leaderboard submission               
+| Pass  | 58.4%         | ~78%               | 58.7% (2.1)    | 200K    | No     | Yes (MIT)    | Independent TB 2.1 via Claude Code, max                             
+| Pass | 60.6%         | 80.4%              | 69.7%          | 1M      | No     | —            | Text-only. Now second-highest SWE-bench Pro behind GLM-5.2             
 
 ### Roster — Alt 1 models
 
-| Model                 | Role        | TS build  | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights    | Input $/1M | Output $/1M | Key note                                             |
-| --------------------- | ----------- | --------- | ------------- | ------------------ | -------------- | ------- | ------ | --------------- | ---------- | ----------- | ---------------------------------------------------- |
-| MiMo V2.5-Pro         | Alt 1       | Pass      | 57.2%         | 78.9%              | 68.4%*         | 1M*     | Yes    | Yes             | $0.43      | $0.87       | 1M ctx = 4× price uplift ($4/$12). *Vendor Terminal-Bench |
-| Qwen 3.7 Plus         | Alt 1       | Builds*   | —             | 77.7%              | 70.3%          | 1M      | Yes    | —               | $0.32      | $1.28       | *Builds, less idiomatic JSX. ScreenSpot Pro 79%        |
-| Kimi K2.7-Code `NEW`  | Alt 1 (v1)  | Contested | —‡            | —‡                 | —‡             | 256K    | Yes    | Yes (Mod. MIT)  | $1.14      | $4.80       | ‡Vendor-only (MCPMark 81.1 vs Opus 4.8's 76.4). Practitioners report gains don't replicate on real repos. 30% fewer reasoning tokens than K2.6 |
-| DeepSeek V4 Flash     | Demoted (v1) | Unverified | —            | 79.0%              | —              | 1M      | No     | Yes             | $0.10      | $0.20       | Cheapest in table. Replaced by Kimi K2.7-Code for Ask this round |
+| Model                 | Role        | TS build  | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights    | Key note                                             |
+| --------------------- | ----------- | --------- | ------------- | ------------------ | -------------- | ------- | ------ | --------------- | ---------------------------------------------------- |
+| MiMo V2.5-Pro         | Alt 1       | Pass      | 57.2%         | 78.9%              | 68.4%*         | 1M*     | Yes    | Yes             | 1M ctx = 4× price uplift ($4/$12). *Vendor Terminal-Bench 
+| Qwen 3.7 Plus         | Alt 1       | Builds*   | —             | 77.7%              | 70.3%          | 1M      | Yes    | —               | *Builds, less idiomatic JSX. ScreenSpot Pro 79%        
+| Kimi K2.7-Code `NEW`  | Alt 1 (v1)  | Contested | —‡            | —‡                 | —‡             | 256K    | Yes    | Yes (Mod. MIT)  | ‡Vendor-only MCPMark; †cache-miss input, cache hit $0.19 
+| DeepSeek V4 Flash     | Demoted (v1) | Unverified | —            | 79.0%              | —              | 1M      | No     | Yes             | Cheapest in table. Replaced by Kimi K2.7-Code for Ask this round 
 
 ### Roster — Alt 2 models
 
-| Model                 | Role        | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights    | Input $/1M | Output $/1M | Key note                                               |
-| --------------------- | ----------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | --------------- | ---------- | ----------- | ------------------------------------------------------ |
-| DeepSeek V4 Pro       | Alt 2       | Failed   | 55.4%         | 80.6%              | 44.0%          | 1M      | No     | Yes             | $0.435     | $0.87       | TS build failed in Kilo's own test. Reasoning-only agents |
-| Hy3 (Hunyuan 3)       | Alt 2       | Pass     | —             | 74.4%              | 54.4%          | 256K    | No     | Yes             | ~$0.17     | Free*       | *Free in Kilo Code currently. 99.99% production uptime |
-| MiniMax M3 `VERIFIED` | Main        | Pass†    | 59.0%‡        | 80.5%              | 66.0%‡         | 1M      | Yes    | Yes             | $0.30      | $1.20       | †Kilo's own audit: found 13/17 planted TS bugs for $0.07, tying Opus 4.8 at 18× less cost. Now in Table 1 for Review/Frontend |
-| Step 3.7 Flash        | Demoted (v1) | Untested | 56.3%         | 76.5%‡            | 59.5%          | 256K    | Yes    | Yes (Apache 2.0) | $0.20      | $1.15       | Replaced by MiniMax M3 — weaker, less recent verification |
+| Model                 | Role        | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights    | Key note                                               |
+| --------------------- | ----------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | --------------- | ------------------------------------------------------ |
+| DeepSeek V4 Pro       | Alt 2       | Failed   | 55.4%         | 80.6%              | 44.0%          | 1M      | No     | Yes             | TS build failed in Kilo's own test. Reasoning-only agents 
+| Hy3 (Hunyuan 3)       | Alt 2       | Pass     | 59.8%         | 78.2%              | 65.4%          | 256K    | No     | Yes             | ~$0.17     | Free*       | *Free in Kilo Code currently. 99.99% production uptime |
+| MiniMax M3 `VERIFIED` | Main        | Pass†    | 59.0%‡        | 80.5%              | 66.0%‡         | 1M      | Yes    | Yes             | †Kilo's own audit: found 13/17 planted TS bugs for $0.07, tying Opus 4.8 at 18× less cost. Now in Table 1 for Review/Frontend 
+| Step 3.7 Flash        | Demoted (v1) | Untested | 56.3%         | 76.5%‡            | 59.5%          | 256K    | Yes    | Yes (Apache 2.0) | Replaced by MiniMax M3 — weaker, less recent verification 
 
 ### OpenAI — Frontier
 
-| Model         | Role    | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Input $/1M | Output $/1M | Key note                                                  |
-| ------------- | ------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------- | ----------- | --------------------------------------------------------- |
-| GPT-5.5 `NEW` | Watch   | Pass     | 58.6%         | —                  | —              | 1.1M    | Yes    | —            | $5.00      | $30.00      | OpenAI frontier. Longest context (1.1M). Not in roster. |
+| Model         | Role    | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                                  |
+| ------------- | ------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | --------------------------------------------------------- |
+| Pass     | 58.6%         | —                  | 83.1% (2.1)   | 1.1M    | Yes    | —            | Independent TB 2.1 via Codex; official TB 2.0 is 82.7% 
+
+### xAI — Frontier (Table 5)
+
+| Model | Role | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Grok 4.5 `NEW` | Main | Untested | 64.7%* | — | 79.3% (2.1) | 500K | Yes | — | Vendor Pro; independent TB 2.1. Below 200K prompt tokens priced lower; higher rate at 200K+ |
 
 ### Watchlist — not in roster
 
-| Model             | Role      | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Input $/1M  | Output $/1M  | Key note                                                   |
-| ----------------- | --------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------- | ----------- | -------------------------------------------------------- |
-| Nemotron 3 Super  | Not a fit | Untested | —             | 60.5%              | —              | 128K    | No     | Yes (NVIDIA) | Self-host  | Self-host   | Best US open-weight model. Trails Chinese stack on all metrics |
+| Model             | Role      | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                                   |
+| ----------------- | --------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | -------------------------------------------------------- |
+| Gemini 2.5 Flash `NEW` | Not a fit | Untested | — | 63.8%* | — | 1M | Yes | — | *Vendor Verified; requested model, corrected from “Agnes 2.5 Flash” 
+| Laguna S 2.1 `NEW` | Not a fit | Untested | 59.4%* | — | 70.2%* | 1M | No | Yes (OpenMDW) | Vendor scores; suite provenance retained 
+| Macaron V1 Venti `NEW` | Not a fit | Untested | —‡ | 85.6%‡ | 87.6%‡ | 1M | No | Yes (MIT) | Vendor-only; third-party gateway rate 
+| Nemotron 3 Super  | Not a fit | Untested | —             | 60.5%              | —              | 128K    | No     | Yes (NVIDIA) | Self-host  | Self-host   | Best US open-weight comparison model |
 
 ---
 
@@ -194,13 +236,13 @@ _The source of truth. Scores colour-graded by tier; glyphs flag provenance. Hove
 **Glyph key:**
 
 - `*` = vendor-reported only
-- `†` = independently run by Kilo
+- `†` = pricing qualifier (for example cache-miss or long-prompt tier)
 - `‡` = vendor-reported, pending independent reproduction on standard suites
 
 **TS build** statuses: Pass / Builds / Contested / Unverified / Failed / Untested
 
 ---
 
-_Merged · AI_MODELS_REPORT.md × ai_model_report.html · R06 · July 2026 · internal_
+_Merged · AI_MODELS_REPORT.md × ai_model_report.html · R09 · July 2026 · internal_
 
 _Created with GLM-5.2 High_
