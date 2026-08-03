@@ -1043,7 +1043,7 @@
           </div>
           <div class="meta-item">
             <span class="meta-label">Scope</span
-            ><span class="meta-val">12 agents · 28 models · 5 tables</span>
+             ><span class="meta-val">12 agents · 27 models · 5 tables</span>
           </div>
           <div class="meta-item">
             <span class="meta-label">Status</span
@@ -1091,7 +1091,7 @@
               Kilo, <span style="color: var(--amber)">‡</span> vendor-reported
               pending reproduction). The ledger is the source of truth; the
               rosters are its interpretation. Ledger now tracks
-              <strong>28 models</strong> across 5 tables. Terminal results now
+               <strong>27 models</strong> across 5 tables. Terminal results now
               name the suite version so 2.0, 2.1, and vendor-only runs are not
               treated as interchangeable.
             </p>
@@ -1186,8 +1186,8 @@
             </h3>
             <p class="card-body">
               Independent Terminal-Bench 2.1 results replace mixed vendor runs:
-              Fable 5 83.8%, GPT-5.5 83.1%, Grok 4.5 79.3%, Opus 4.8 78.9%,
-              and Sonnet 5 74.6%. Older 2.0 scores are now labeled explicitly.
+               Fable 5 83.8%, Grok 4.5 79.3%, and Sonnet 5 74.6%. Older 2.0
+               scores are now labeled explicitly.
               <span class="pill">CORRECTED</span>
             </p>
           </div>
@@ -1653,7 +1653,7 @@
           0,
           "Opus 5",
           "Xhigh",
-          "Architectural judgment — Anthropic's own guidance for Opus 4.8 starts at Xhigh for coding/agentic work",
+           "Architectural judgment — use Opus 5 at Xhigh for coding and agentic work",
         ],
         [
           1,
@@ -1677,7 +1677,7 @@
           4,
           "Opus 5",
           "Xhigh",
-          "Catching subtle flaws is where Opus 4.8's accuracy edge still earns its cost",
+           "Catching subtle flaws is where Opus 5's accuracy edge still earns its cost",
         ],
         [
           5,
@@ -1728,54 +1728,6 @@
           costIn: ["high", "$5.00"],
           costOut: ["high", "$25.00"],
           note: "Current Opus fallback target (released Jul 24). Same API price as 4.8; no comparable SWE-bench Pro/Verified or verified TB 2.1 result published yet",
-        },
-        {
-          name: "Claude Opus 4.8",
-          role: "replaced",
-          ts: "pass",
-          pro: ["a", "69.2%"],
-          verified: ["a", "88.6%"],
-          terminal: ["a", "78.9% (2.1)"],
-          ctx: "1M",
-          visionC: "yes",
-          visionT: "Yes",
-          openC: "no",
-          openT: "—",
-          costIn: ["high", "$5.00"],
-          costOut: ["high", "$25.00"],
-          note: "Independent TB 2.1: Claude Code, high effort. Superseded by Opus 5",
-        },
-        {
-          name: "Claude Opus 4.7",
-          role: "replaced",
-          ts: "pass",
-          pro: ["a", "64.3%"],
-          verified: ["a", "87.6%"],
-          terminal: ["b", "68.9% (2.1)"],
-          ctx: "1M",
-          visionC: "yes",
-          visionT: "Yes",
-          openC: "no",
-          openT: "—",
-          costIn: ["high", "$5.00"],
-          costOut: ["high", "$25.00"],
-          note: "Superseded by Opus 4.8 in this session",
-        },
-        {
-          name: "Claude Opus 4.6",
-          role: "legacy",
-          ts: "pass",
-          pro: ["b", "53.4%"],
-          verified: ["a", "80.8%"],
-          terminal: null,
-          ctx: "1M",
-          visionC: "yes",
-          visionT: "Yes",
-          openC: "no",
-          openT: "—",
-          costIn: ["high", "$5.00"],
-          costOut: ["high", "$25.00"],
-          note: "Original baseline this stack was designed around",
         },
         {
           name: "Claude Fable 5",
@@ -1980,10 +1932,10 @@
           openT: "Yes (Mod. MIT)",
           costIn: ["low", "$0.95†"],
           costOut: ["mid", "$4.00"],
-          note: `‡Vendor-only (MCPMark 81.1 vs Opus 4.8's 76.4). †Official cache-miss input; cache-hit input $0.19`,
+          note: "‡Vendor-only MCPMark 81.1. †Official cache-miss input; cache-hit input $0.19",
         },
         {
-          name: "DeepSeek V4 Flash",
+          name: "DeepSeek-V4-Flash-0731",
           role: "demoted-v1",
           ts: "warn",
           tsLabel: "Unverified",
@@ -1997,7 +1949,7 @@
           openT: "Yes",
           costIn: ["low", "$0.10"],
           costOut: ["low", "$0.20"],
-          note: "Cheapest in table. Replaced by Kimi K2.7-Code for Ask this round",
+          note: "July 31 release. Cheapest in table; replaced by Kimi K2.7-Code for Ask this round",
         },
 
         { kind: "section", label: "Roster — Alt 2 models" },
@@ -2049,7 +2001,7 @@
           openT: "Yes",
           costIn: ["low", "$0.30"],
           costOut: ["low", "$1.20"],
-          note: "†Kilo's own audit: found 13/17 planted TS bugs for $0.07, tying Opus 4.8 at 18× less cost. Now in Table 1 for Review/Frontend",
+          note: "†Kilo's own audit: found 13/17 planted TS bugs for $0.07 at 18× less cost. Now in Table 1 for Review/Frontend",
         },
         {
           name: "Step 3.7 Flash",
@@ -2071,21 +2023,58 @@
 
         { kind: "section", label: "OpenAI — Frontier" },
         {
-          name: "GPT-5.5",
+          name: "GPT-5.6 Luna",
           badge: "new",
           role: "watch",
-          ts: "pass",
-          pro: ["a", "58.6%"],
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: null,
           verified: null,
           terminal: null,
-          ctx: "1.1M",
-          visionC: "yes",
-          visionT: "Yes",
+          ctx: "—",
+          visionC: "no",
+          visionT: "—",
           openC: "no",
           openT: "—",
-          costIn: ["high", "$5.00"],
-          costOut: ["high", "$30.00"],
-          note: "Independent TB 2.1 via Codex, xhigh. Official TB 2.0 score is 82.7%. Not in Chinese-model roster",
+          costIn: ["none", "—"],
+          costOut: ["none", "—"],
+          note: "GPT-5.6 Luna. Benchmark, context, capability, and pricing data pending verification; not in Chinese-model roster",
+        },
+        {
+          name: "GPT-5.6 Terra",
+          badge: "new",
+          role: "watch",
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: null,
+          verified: null,
+          terminal: null,
+          ctx: "—",
+          visionC: "no",
+          visionT: "—",
+          openC: "no",
+          openT: "—",
+          costIn: ["none", "—"],
+          costOut: ["none", "—"],
+          note: "GPT-5.6 Terra. Benchmark, context, capability, and pricing data pending verification; not in Chinese-model roster",
+        },
+        {
+          name: "GPT-5.6 Sol",
+          badge: "new",
+          role: "watch",
+          ts: "warn",
+          tsLabel: "Untested",
+          pro: null,
+          verified: null,
+          terminal: null,
+          ctx: "—",
+          visionC: "no",
+          visionT: "—",
+          openC: "no",
+          openT: "—",
+          costIn: ["none", "—"],
+          costOut: ["none", "—"],
+          note: "GPT-5.6 Sol. Benchmark, context, capability, and pricing data pending verification; not in Chinese-model roster",
         },
 
         { kind: "section", label: "xAI — Frontier (Table 5)" },

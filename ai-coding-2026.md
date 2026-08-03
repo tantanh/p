@@ -10,7 +10,7 @@ This stack exists to answer one question: _can a roster of open-weight Chinese m
 
 Three open-model rosters are maintained. **Table 1 (Expanded)** keeps three independently-strong models in every fallback column. **Table 2 (Lean)** trims carry-weight where a third fallback rarely fires. **Table 5 (Grok 4.5)** is Lean-shaped, with Grok routed by agent fit. Table 3 records GLM-5.2 effort and Table 4 maps Claude tiers.
 
-Every benchmark figure below is either **independently reproduced** on a named suite or marked with a glyph (\* vendor-reported, † pricing qualifier, ‡ vendor-reported pending reproduction). Terminal-Bench 2.0 and 2.1 are labeled explicitly because their scores are not interchangeable. The ledger is the source of truth; the rosters are its interpretation. It tracks **28 models** across five tables.
+Every benchmark figure below is either **independently reproduced** on a named suite or marked with a glyph (\* vendor-reported, † pricing qualifier, ‡ vendor-reported pending reproduction). Terminal-Bench 2.0 and 2.1 are labeled explicitly because their scores are not interchangeable. The ledger is the source of truth; the rosters are its interpretation. It tracks **27 models** across five tables.
 
 ---
 
@@ -28,7 +28,7 @@ The requested “Agnes 2.5 Flash” does not exist in OpenRouter, Hugging Face, 
 
 ### Δ 03 / SUITE NORMALIZATION
 
-Independent Terminal-Bench 2.1 results replace mixed or ambiguous values: Fable 5 83.8%, GPT-5.5 83.1%, Grok 4.5 79.3%, Opus 4.8 78.9%, and Sonnet 5 74.6%. Kimi K2.6/K3 values remain explicitly labeled Terminal-Bench 2.0 vendor runs.
+Independent Terminal-Bench 2.1 results replace mixed or ambiguous values: Fable 5 83.8%, Grok 4.5 79.3%, and Sonnet 5 74.6%. Kimi K2.6/K3 values remain explicitly labeled Terminal-Bench 2.0 vendor runs.
 
 ### Δ 04 / KIMI K3 CORRECTION
 
@@ -159,9 +159,6 @@ _The source of truth. Scores colour-graded by tier; glyphs flag provenance. Hove
 | Model            | Role  | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                         |
 | ---------------- | ----- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | ---------------------------------------------- |
 | Claude Opus 5 `NEW` | Opus | Untested | —            | —                  | —              | 1M      | Yes    | —            | Current Opus fallback target; comparable public scores not yet available |
-| Claude Opus 4.8  | Replaced | Pass  | 69.2%         | 88.6%              | 78.9% (2.1)   | 1M      | Yes    | —            | Independent TB 2.1 via Claude Code, high effort |
-| Claude Opus 4.7  | Replaced | Pass  | 64.3%         | 87.6%              | 68.9% (2.1)   | 1M      | Yes    | —            | Independent TB 2.1 via Claude Code, max effort |
-| Claude Opus 4.6  | Legacy | Pass   | 53.4%         | 80.8%              | —              | 1M      | Yes    | —            | Original baseline this stack was designed around    |
 | Claude Fable 5 `NEW` | Opus | Pass | 80.0%         | 95.0%              | 83.8% (2.1)   | 1M      | Yes    | —            | Independent TB 2.1 via Claude Code, xhigh |
 | Claude Mythos Preview | Opus | Pass | 77.8%         | 93.9%              | —              | 1M      | Yes    | —            | Preview-only; superseded by restricted-access Mythos 5 |
 
@@ -189,7 +186,7 @@ _The source of truth. Scores colour-graded by tier; glyphs flag provenance. Hove
 | MiMo V2.5-Pro         | Alt 1       | Pass      | 57.2%         | 78.9%              | 68.4%*         | 1M*     | Yes    | Yes             | 1M ctx = 4× price uplift ($4/$12). *Vendor Terminal-Bench 
 | Qwen 3.7 Plus         | Alt 1       | Builds*   | —             | 77.7%              | 70.3%          | 1M      | Yes    | —               | *Builds, less idiomatic JSX. ScreenSpot Pro 79%        
 | Kimi K2.7-Code `NEW`  | Alt 1 (v1)  | Contested | —‡            | —‡                 | —‡             | 256K    | Yes    | Yes (Mod. MIT)  | ‡Vendor-only MCPMark; †cache-miss input, cache hit $0.19 
-| DeepSeek V4 Flash     | Demoted (v1) | Unverified | —            | 79.0%              | —              | 1M      | No     | Yes             | Cheapest in table. Replaced by Kimi K2.7-Code for Ask this round 
+| DeepSeek-V4-Flash-0731 | Demoted (v1) | Unverified | —            | 79.0%              | 83.1% (2.1)   | 1M      | No     | Yes             | July 31 release. Cheapest in table; replaced by Kimi K2.7-Code for Ask this round
 
 ### Roster — Alt 2 models
 
@@ -197,14 +194,16 @@ _The source of truth. Scores colour-graded by tier; glyphs flag provenance. Hove
 | --------------------- | ----------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | --------------- | ------------------------------------------------------ |
 | DeepSeek V4 Pro       | Alt 2       | Failed   | 55.4%         | 80.6%              | 44.0%          | 1M      | No     | Yes             | TS build failed in Kilo's own test. Reasoning-only agents 
 | Hy3 (Hunyuan 3)       | Alt 2       | Pass     | 59.8%         | 78.2%              | 65.4%          | 256K    | No     | Yes             | ~$0.17     | Free*       | *Free in Kilo Code currently. 99.99% production uptime |
-| MiniMax M3 `VERIFIED` | Main        | Pass†    | 59.0%‡        | 80.5%              | 66.0%‡         | 1M      | Yes    | Yes             | †Kilo's own audit: found 13/17 planted TS bugs for $0.07, tying Opus 4.8 at 18× less cost. Now in Table 1 for Review/Frontend 
+| MiniMax M3 `VERIFIED` | Main        | Pass†    | 59.0%‡        | 80.5%              | 66.0%‡         | 1M      | Yes    | Yes             | †Kilo's own audit: found 13/17 planted TS bugs for $0.07 at 18× less cost. Now in Table 1 for Review/Frontend
 | Step 3.7 Flash        | Demoted (v1) | Untested | 56.3%         | 76.5%‡            | 59.5%          | 256K    | Yes    | Yes (Apache 2.0) | Replaced by MiniMax M3 — weaker, less recent verification 
 
 ### OpenAI — Frontier
 
 | Model         | Role    | TS build | SWE-bench Pro | SWE-bench Verified | Terminal-Bench | Context | Vision | Open weights | Key note                                                  |
 | ------------- | ------- | -------- | ------------- | ------------------ | -------------- | ------- | ------ | ------------ | --------------------------------------------------------- |
-| Pass     | 58.6%         | —                  | 83.1% (2.1)   | 1.1M    | Yes    | —            | Independent TB 2.1 via Codex; official TB 2.0 is 82.7% 
+| GPT-5.6 Luna `NEW` | Not a fit | Untested | — | — | — | — | — | — | Benchmark, context, capability, and pricing data pending verification |
+| GPT-5.6 Terra `NEW` | Not a fit | Untested | — | — | — | — | — | — | Benchmark, context, capability, and pricing data pending verification |
+| GPT-5.6 Sol `NEW` | Not a fit | Untested | — | — | — | — | — | — | Benchmark, context, capability, and pricing data pending verification |
 
 ### xAI — Frontier (Table 5)
 
