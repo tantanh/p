@@ -1,0 +1,2525 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Chinese Model Stack · Audit Register R09 — August 2026</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap");
+
+      :root {
+        --paper: #f3f0e7;
+        --paper-2: #eae6d8;
+        --paper-3: #e1dccb;
+        --ink: #182231;
+        --ink-2: #33405a;
+        --ink-dim: #6b7280;
+        --ink-faint: #9aa0ab;
+        --line: #d4cdba;
+        --line-strong: #a99f87;
+        --red: #c23c2e;
+        --red-deep: #8e2c21;
+        --red-tint: rgba(194, 60, 46, 0.08);
+        --blue: #2d5f8c;
+        --blue-tint: rgba(45, 95, 140, 0.08);
+        --green: #2e6b45;
+        --green-tint: rgba(46, 107, 69, 0.1);
+        --amber: #9a6a1e;
+        --amber-tint: rgba(154, 106, 30, 0.1);
+        --grid: rgba(45, 95, 140, 0.07);
+        --shadow: 0 1px 0 rgba(24, 34, 49, 0.06), 0 10px 30px -18px rgba(24, 34, 49, 0.35);
+        --mono: "IBM Plex Mono", ui-monospace, monospace;
+        --disp: "Bricolage Grotesque", "Arial Narrow", sans-serif;
+        --serif: "Instrument Serif", Georgia, serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--disp);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        position: relative;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 100% 48px,
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 48px 100%;
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.5;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='.035'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      .wrap {
+        position: relative;
+        z-index: 2;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 36px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(243, 240, 231, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .topbar-in {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 12px 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .topbar .mark {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+      }
+      .topbar .mark .glyph {
+        width: 10px;
+        height: 10px;
+        border: 2px solid var(--red);
+        transform: rotate(45deg);
+        display: inline-block;
+      }
+      .topbar .rev {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--ink-dim);
+      }
+      .topbar .rev b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .topbar .rev .stamp-sm {
+        font-size: 10px;
+        color: var(--red);
+        border: 1.5px solid var(--red);
+        padding: 3px 8px;
+        transform: rotate(-2deg);
+        border-radius: 2px;
+      }
+
+      .masthead {
+        padding: 96px 0 56px;
+        border-bottom: 2px solid var(--ink);
+        position: relative;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 40px;
+        animation: rise 0.7s 0.05s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 44px;
+        height: 2px;
+        background: var(--red);
+      }
+      h1 {
+        font-size: clamp(48px, 7.2vw, 104px);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 0.98;
+        text-transform: uppercase;
+        max-width: 11em;
+        animation: rise 0.7s 0.14s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      h1 em {
+        font-family: var(--serif);
+        font-style: italic;
+        text-transform: none;
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--red);
+      }
+      .deck {
+        margin-top: 36px;
+        max-width: 760px;
+        font-size: 19px;
+        line-height: 1.55;
+        color: var(--ink-2);
+        animation: rise 0.7s 0.24s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      .deck em {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 1.15em;
+        color: var(--ink);
+      }
+      .stamp-float {
+        position: absolute;
+        top: 120px;
+        right: 0;
+        transform: rotate(5deg);
+        border: 3px double var(--red);
+        color: var(--red);
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        padding: 10px 18px;
+        border-radius: 3px;
+        background: var(--red-tint);
+        animation: pop 0.5s 0.9s cubic-bezier(0.2, 1.4, 0.3, 1) both;
+      }
+      .stamp-float .ln {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 0.3em;
+        font-weight: 500;
+        opacity: 0.75;
+        margin-top: 3px;
+      }
+
+      .meta-strip {
+        margin-top: 56px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border: 1px solid var(--line-strong);
+        border-top: 2px solid var(--ink);
+        animation: rise 0.7s 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      .meta-cell {
+        padding: 20px 24px;
+        border-left: 1px solid var(--line-strong);
+      }
+      .meta-cell:first-child {
+        border-left: 0;
+      }
+      .meta-cell .num {
+        font-family: var(--mono);
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+      .meta-cell .lbl {
+        margin-top: 8px;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+      }
+
+      .glyph-legend {
+        margin-top: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 26px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--ink-dim);
+      }
+      .glyph-legend span b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .toc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 30px 0 0;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .toc a {
+        color: var(--ink-2);
+        text-decoration: none;
+        border: 1px solid var(--line-strong);
+        padding: 7px 14px;
+        border-radius: 2px;
+        background: var(--paper-2);
+        transition: all 0.18s ease;
+      }
+      .toc a:hover {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+
+      section {
+        padding: 88px 0 0;
+      }
+      .sec-head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        border-bottom: 1px solid var(--line-strong);
+        padding-bottom: 14px;
+        margin-bottom: 34px;
+      }
+      .sec-no {
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--red);
+        letter-spacing: 0.12em;
+      }
+      .sec-title {
+        font-size: clamp(26px, 3.4vw, 40px);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        line-height: 1.05;
+      }
+      .sec-sub {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        white-space: nowrap;
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+
+      .premise {
+        display: grid;
+        grid-template-columns: 1.25fr 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+      .premise .lead p {
+        font-size: 18.5px;
+        line-height: 1.65;
+        color: var(--ink-2);
+      }
+      .premise .lead p + p {
+        margin-top: 18px;
+      }
+      .premise .lead strong {
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .premise .aside {
+        border: 1px solid var(--line-strong);
+        border-left: 3px solid var(--red);
+        background: var(--paper-2);
+        padding: 26px 28px;
+      }
+      .premise .aside .tag {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--red);
+        font-weight: 600;
+      }
+      .premise .aside ul {
+        list-style: none;
+        margin-top: 14px;
+      }
+      .premise .aside li {
+        font-size: 15.5px;
+        padding: 10px 0;
+        border-bottom: 1px dashed var(--line-strong);
+        color: var(--ink-2);
+        display: flex;
+        gap: 12px;
+      }
+      .premise .aside li:last-child {
+        border-bottom: 0;
+      }
+      .premise .aside li::before {
+        content: "§";
+        font-family: var(--mono);
+        color: var(--red);
+        font-size: 13px;
+        flex: 0 0 auto;
+      }
+
+      .delta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .delta {
+        border: 1px solid var(--line-strong);
+        background: var(--paper-2);
+        padding: 26px 26px 22px;
+        position: relative;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .delta:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow);
+      }
+      .delta::after {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px dashed rgba(169, 159, 135, 0.5);
+        pointer-events: none;
+      }
+      .delta .delta-no {
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--paper);
+        background: var(--red);
+        padding: 4px 10px;
+        letter-spacing: 0.14em;
+        display: inline-block;
+        transform: rotate(-1.5deg);
+        border-radius: 2px;
+        margin-bottom: 18px;
+      }
+      .delta h3 {
+        font-size: 21px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .delta p {
+        font-size: 14.5px;
+        line-height: 1.65;
+        color: var(--ink-2);
+      }
+      .delta p code {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        background: var(--paper-3);
+        border: 1px solid var(--line);
+        padding: 1px 6px;
+        border-radius: 3px;
+        color: var(--ink);
+        white-space: nowrap;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 26px;
+      }
+      .tab-btn {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 10px 16px;
+        border: 1px solid var(--line-strong);
+        background: var(--paper-2);
+        color: var(--ink-2);
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.18s ease;
+      }
+      .tab-btn:hover {
+        border-color: var(--ink);
+        color: var(--ink);
+      }
+      .tab-btn[aria-selected="true"] {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+      .tab-panel {
+        border: 1px solid var(--line-strong);
+        background: rgba(243, 240, 231, 0.85);
+        overflow-x: auto;
+      }
+      .tab-panel[hidden] {
+        display: none;
+      }
+      .panel-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 20px;
+        padding: 18px 22px 14px;
+        border-bottom: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      .panel-meta .ptitle {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--red);
+        font-weight: 600;
+      }
+      .panel-meta .psub {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ink-dim);
+      }
+
+      table.roster,
+      table.ledger,
+      table.modes {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      table.roster th,
+      table.ledger th,
+      table.modes th {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        text-align: left;
+        color: var(--ink-dim);
+        font-weight: 600;
+        padding: 12px 16px;
+        border-bottom: 2px solid var(--ink);
+        white-space: nowrap;
+        background: var(--paper-2);
+      }
+      table.roster td,
+      table.modes td {
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      table.roster tbody tr {
+        transition: background 0.15s ease;
+      }
+      table.roster tbody tr:hover {
+        background: var(--blue-tint);
+        outline: 1px solid var(--blue);
+        outline-offset: -1px;
+      }
+      table.roster .agent {
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+      table.roster .kind {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        white-space: nowrap;
+      }
+      .model {
+        white-space: nowrap;
+      }
+      .model.main {
+        font-weight: 700;
+      }
+      .role-badge {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 9.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        padding: 2px 7px;
+        border-radius: 2px;
+        margin-left: 6px;
+        vertical-align: 1px;
+        transform: rotate(-1.5deg);
+      }
+      .badge-new {
+        color: var(--red);
+        background: var(--red-tint);
+        border: 1px solid var(--red);
+      }
+      .badge-verified {
+        color: var(--green);
+        background: var(--green-tint);
+        border: 1px solid var(--green);
+      }
+      .tier-cell {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .tier-cell .tb {
+        font-size: 10px;
+        color: var(--ink-dim);
+        font-weight: 400;
+      }
+      .mode-badge {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 2px;
+        letter-spacing: 0.1em;
+      }
+      .mode-max {
+        color: var(--red);
+        background: var(--red-tint);
+        border: 1px solid var(--red);
+        transform: rotate(-1deg);
+      }
+      .mode-high {
+        color: var(--blue);
+        background: var(--blue-tint);
+        border: 1px solid var(--blue);
+      }
+      .mode-na {
+        color: var(--ink-dim);
+        background: var(--paper-3);
+        border: 1px solid var(--line-strong);
+      }
+      table.modes td.rationale {
+        color: var(--ink-2);
+        font-size: 13px;
+        max-width: 460px;
+      }
+
+      .tier-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .tier-pair .tier-half {
+        padding: 22px;
+        border-right: 1px solid var(--line-strong);
+      }
+      .tier-pair .tier-half:last-child {
+        border-right: 0;
+        border-left: 1px solid var(--line-strong);
+      }
+      .tier-half h4 {
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .tier-half .effort-line {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ink-dim);
+        margin-bottom: 16px;
+      }
+      .tier-half .effort {
+        display: inline-block;
+        font-family: var(--mono);
+        font-weight: 600;
+        font-size: 11px;
+        padding: 2px 9px;
+        border-radius: 2px;
+        margin-right: 8px;
+      }
+      .effort-xhigh {
+        color: var(--red);
+        background: var(--red-tint);
+        border: 1px solid var(--red);
+      }
+      .effort-low {
+        color: var(--ink-dim);
+        border: 1px solid var(--line-strong);
+      }
+      .effort-med {
+        color: var(--blue);
+        background: var(--blue-tint);
+        border: 1px solid var(--blue);
+      }
+      table.modes.compact td {
+        padding: 11px 16px;
+      }
+
+      .ledger-tools {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 26px;
+        flex-wrap: wrap;
+      }
+      .search-box {
+        position: relative;
+        flex: 1;
+        max-width: 460px;
+      }
+      .search-box input {
+        width: 100%;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--ink);
+        background: var(--paper);
+        border: 1px solid var(--line-strong);
+        border-left: 3px solid var(--ink);
+        padding: 12px 44px 12px 16px;
+        outline: none;
+        border-radius: 2px;
+        transition: border-color 0.18s ease;
+      }
+      .search-box input:focus {
+        border-color: var(--red);
+        border-left-color: var(--red);
+      }
+      .search-box .clear {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 0;
+        background: var(--paper-3);
+        color: var(--ink-2);
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 4px 8px;
+        cursor: pointer;
+        border-radius: 2px;
+        display: none;
+      }
+      .search-box .clear.show {
+        display: block;
+      }
+      .ledger-count {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--ink-dim);
+        letter-spacing: 0.08em;
+      }
+      .ledger-group {
+        margin-bottom: 34px;
+      }
+      .ledger-group-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--paper);
+        background: var(--ink);
+        padding: 10px 16px;
+        border-radius: 2px 2px 0 0;
+      }
+      .ledger-group-title .count {
+        margin-left: auto;
+        color: var(--paper-3);
+        font-weight: 400;
+        opacity: 0.8;
+      }
+      table.ledger td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: middle;
+        font-size: 13px;
+      }
+      table.ledger tbody tr {
+        transition: background 0.12s ease;
+      }
+      table.ledger tbody tr:hover {
+        background: var(--blue-tint);
+        outline: 1px solid var(--blue);
+        outline-offset: -1px;
+      }
+      table.ledger tr.dim {
+        opacity: 0.28;
+        pointer-events: none;
+      }
+      table.ledger .model-name {
+        font-weight: 700;
+        font-size: 13.5px;
+        white-space: nowrap;
+        letter-spacing: -0.01em;
+      }
+      table.ledger .model-name small {
+        display: block;
+        font-family: var(--mono);
+        font-weight: 400;
+        font-size: 9.5px;
+        color: var(--ink-dim);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .role-chip {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 2px;
+        border: 1px solid var(--line-strong);
+        color: var(--ink-2);
+        background: var(--paper);
+        white-space: nowrap;
+      }
+      .ts-chip {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        white-space: nowrap;
+      }
+      .ts-pass {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .ts-warn {
+        color: var(--amber);
+      }
+      .ts-fail {
+        color: var(--red);
+        font-weight: 600;
+      }
+      .price-cell {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        white-space: nowrap;
+        text-align: right;
+      }
+      .price-cell .out {
+        color: var(--ink-dim);
+      }
+      .note-cell {
+        color: var(--ink-2);
+        font-size: 12.5px;
+        max-width: 300px;
+      }
+      .note-cell .glyph-note {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-dim);
+      }
+
+      .t-green {
+        color: var(--green);
+        background: var(--green-tint);
+        border: 1px solid rgba(46, 107, 69, 0.35);
+        border-radius: 2px;
+        padding: 1px 7px;
+      }
+      .t-blue {
+        color: var(--blue);
+        background: var(--blue-tint);
+        border: 1px solid rgba(45, 95, 140, 0.35);
+        border-radius: 2px;
+        padding: 1px 7px;
+      }
+      .t-amber {
+        color: var(--amber);
+        background: var(--amber-tint);
+        border: 1px solid rgba(154, 106, 30, 0.35);
+        border-radius: 2px;
+        padding: 1px 7px;
+      }
+      .t-red {
+        color: var(--red-deep);
+        background: var(--red-tint);
+        border: 1px solid rgba(194, 60, 46, 0.35);
+        border-radius: 2px;
+        padding: 1px 7px;
+      }
+      .t-none {
+        color: var(--ink-faint);
+        font-family: var(--mono);
+        padding: 1px 7px;
+      }
+
+      .legend-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .legend-card {
+        border: 1px solid var(--line-strong);
+        background: var(--paper-2);
+        padding: 26px;
+      }
+      .legend-card h4 {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--red);
+        font-weight: 600;
+        margin-bottom: 18px;
+      }
+      table.legend {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      table.legend th {
+        text-align: left;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--line-strong);
+        font-weight: 600;
+      }
+      table.legend td {
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .swatch {
+        display: inline-block;
+        width: 26px;
+        height: 10px;
+        border-radius: 2px;
+        border: 1px solid rgba(24, 34, 49, 0.15);
+      }
+      .sw-green {
+        background: var(--green);
+      }
+      .sw-blue {
+        background: var(--blue);
+      }
+      .sw-amber {
+        background: var(--amber);
+      }
+      .sw-red {
+        background: var(--red);
+      }
+      .glyph-key {
+        list-style: none;
+      }
+      .glyph-key li {
+        display: flex;
+        gap: 14px;
+        padding: 9px 0;
+        border-bottom: 1px dashed var(--line-strong);
+        font-size: 14px;
+        color: var(--ink-2);
+      }
+      .glyph-key li:last-child {
+        border-bottom: 0;
+      }
+      .glyph-key .g {
+        font-family: var(--mono);
+        font-weight: 600;
+        color: var(--red);
+        min-width: 20px;
+      }
+      .ts-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .ts-list span {
+        font-family: var(--mono);
+        font-size: 11px;
+        border: 1px solid var(--line-strong);
+        padding: 5px 10px;
+        border-radius: 2px;
+        background: var(--paper);
+        color: var(--ink-2);
+      }
+
+      footer {
+        margin-top: 110px;
+        border-top: 2px solid var(--ink);
+        background: var(--paper-2);
+      }
+      .foot-in {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 44px 36px 40px;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 40px;
+      }
+      .foot-brand {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        line-height: 1.05;
+      }
+      .foot-brand em {
+        font-family: var(--serif);
+        font-style: italic;
+        text-transform: none;
+        color: var(--red);
+      }
+      .foot-line {
+        margin-top: 12px;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        line-height: 2;
+      }
+      .foot-sig {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 10px;
+      }
+      .renderer-stamp {
+        border: 2.5px solid var(--ink);
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 12px 20px;
+        transform: rotate(-2deg);
+        border-radius: 3px;
+        background: var(--paper);
+        text-align: center;
+      }
+      .renderer-stamp .sub {
+        display: block;
+        font-size: 9.5px;
+        font-weight: 400;
+        letter-spacing: 0.26em;
+        color: var(--ink-dim);
+        margin-top: 4px;
+      }
+      .foot-sig .colophon {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        text-align: right;
+        line-height: 1.9;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(22px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: rotate(5deg) scale(0.4);
+        }
+        to {
+          opacity: 1;
+          transform: rotate(5deg) scale(1);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .delta-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .premise {
+          grid-template-columns: 1fr;
+        }
+        .meta-strip {
+          grid-template-columns: 1fr 1fr;
+        }
+        .meta-cell:nth-child(3) {
+          border-left: 0;
+          border-top: 1px solid var(--line-strong);
+        }
+        .meta-cell:nth-child(4) {
+          border-top: 1px solid var(--line-strong);
+        }
+        .tier-pair {
+          grid-template-columns: 1fr;
+        }
+        .tier-pair .tier-half {
+          border-right: 0;
+          border-bottom: 1px solid var(--line-strong);
+        }
+        .tier-pair .tier-half:last-child {
+          border-left: 0;
+          border-bottom: 0;
+        }
+        .legend-grid {
+          grid-template-columns: 1fr;
+        }
+        .foot-in {
+          grid-template-columns: 1fr;
+        }
+        .foot-sig {
+          align-items: flex-start;
+          text-align: left;
+        }
+        .stamp-float {
+          display: none;
+        }
+      }
+      @media (max-width: 640px) {
+        .wrap,
+        .topbar-in {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .delta-grid {
+          grid-template-columns: 1fr;
+        }
+        .meta-strip {
+          grid-template-columns: 1fr;
+        }
+        .meta-cell {
+          border-left: 0;
+          border-top: 1px solid var(--line-strong);
+        }
+        .meta-cell:first-child {
+          border-top: 0;
+        }
+      }
+      @media print {
+        .topbar,
+        .toc,
+        .tabs,
+        .ledger-tools {
+          display: none;
+        }
+        body {
+          background: #fff;
+        }
+        body::before,
+        body::after {
+          display: none;
+        }
+        .tab-panel[hidden] {
+          display: block;
+          margin-bottom: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-in">
+        <div class="mark">
+          <span class="glyph" aria-hidden="true"></span>
+          CS-STACK · AUDIT REGISTER
+        </div>
+        <div class="rev">
+          <span>Edition <b>R09</b> · July 2026 · Internal</span>
+          <span class="stamp-sm">SUPERSEDES R08</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <header class="masthead">
+        <div class="eyebrow">Working roster · Claude-based coding agent</div>
+        <h1>The Chinese<br />Model <em>Stack</em></h1>
+        <div class="stamp-float" aria-hidden="true">INTERNAL<span class="ln">REVISION 09</span></div>
+        <p class="deck">
+          A working roster for a Claude-based coding agent — built, audited, and superseded in
+          the open, now routing through open-weight Chinese models at a fraction of Opus pricing.
+          <em>R09</em> makes Claude Opus 5 the fallback target and adds Gemini 2.5 Flash to the
+          comparison ledger.
+        </p>
+        <div class="meta-strip" aria-label="Ledger summary">
+          <div class="meta-cell">
+            <div class="num">26</div>
+            <div class="lbl">Models tracked</div>
+          </div>
+          <div class="meta-cell">
+            <div class="num">05</div>
+            <div class="lbl">Roster tables</div>
+          </div>
+          <div class="meta-cell">
+            <div class="num">12</div>
+            <div class="lbl">Agent roles</div>
+          </div>
+          <div class="meta-cell">
+            <div class="num">06</div>
+            <div class="lbl">Deltas since R08</div>
+          </div>
+        </div>
+        <div class="glyph-legend">
+          <span><b>*</b> vendor-reported only</span>
+          <span><b>†</b> pricing qualifier (cache-miss / long-prompt)</span>
+          <span><b>‡</b> vendor-reported, pending independent reproduction</span>
+        </div>
+        <nav class="toc" aria-label="Sections">
+          <a href="#s00">00 · Premise</a>
+          <a href="#s01">01 · Deltas</a>
+          <a href="#s02">02 · Roster matrices</a>
+          <a href="#s03">03 · Full ledger</a>
+          <a href="#s04">04 · How to read</a>
+        </nav>
+      </header>
+
+      <!-- ================ 00 PREMISE ================ -->
+      <section id="s00" aria-labelledby="s00t">
+        <div class="sec-head reveal">
+          <span class="sec-no">00</span>
+          <h2 class="sec-title" id="s00t">Premise</h2>
+          <span class="sec-sub">One question, three rosters</span>
+        </div>
+        <div class="premise">
+          <div class="lead reveal">
+            <p>
+              This stack exists to answer one question: <strong>can a roster of open-weight
+              Chinese models replace Claude Opus and Sonnet</strong> across twelve distinct
+              coding-agent roles — and at what cost, with what caveats?
+            </p>
+            <p>
+              Three open-model rosters are maintained. <strong>Table 1 (Expanded)</strong> keeps
+              three independently-strong models in every fallback column.
+              <strong>Table 2 (Lean)</strong> trims carry-weight where a third fallback rarely
+              fires. <strong>Table 5 (Grok 4.5)</strong> is Lean-shaped, with Grok routed by
+              agent fit. Table 3 records GLM-5.2 effort and Table 4 maps Claude tiers.
+            </p>
+          </div>
+          <aside class="aside reveal">
+            <div class="tag">Evidence protocol</div>
+            <ul>
+              <li>
+                Every benchmark figure is independently reproduced on a named suite, or marked
+                with a glyph: <b>*</b> vendor-reported, <b>†</b> pricing qualifier,
+                <b>‡</b> vendor-reported pending reproduction.
+              </li>
+              <li>
+                Terminal-Bench 2.0 and 2.1 are labeled explicitly — their scores are not
+                interchangeable.
+              </li>
+              <li>The ledger is the source of truth; the rosters are its interpretation.</li>
+              <li>26 models tracked across five tables.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================ 01 DELTAS ================ -->
+      <section id="s01" aria-labelledby="s01t">
+        <div class="sec-head reveal">
+          <span class="sec-no">01</span>
+          <h2 class="sec-title" id="s01t">What moved this cycle</h2>
+          <span class="sec-sub">Six decisions · one ledger</span>
+        </div>
+        <div class="delta-grid">
+          <article class="delta reveal">
+            <span class="delta-no">Δ 01</span>
+            <h3>New baseline</h3>
+            <p>
+              Claude Opus 5, released July 24, is now the current Opus fallback target at
+              <code>$5/$25</code>. Anthropic has not yet published comparable SWE-bench Pro,
+              SWE-bench Verified, or verified Terminal-Bench 2.1 results, so those cells remain
+              blank rather than borrowing scores from another suite.
+            </p>
+          </article>
+          <article class="delta reveal">
+            <span class="delta-no">Δ 02</span>
+            <h3>Model identity</h3>
+            <p>
+              The requested “Agnes 2.5 Flash” does not exist in OpenRouter, Hugging Face, or
+              benchmark catalogs. It was confirmed as <strong>Google Gemini 2.5 Flash</strong>:
+              a closed, multimodal <code>1M</code>-context model at <code>$0.30/$2.50</code>.
+            </p>
+          </article>
+          <article class="delta reveal">
+            <span class="delta-no">Δ 03</span>
+            <h3>Suite normalization</h3>
+            <p>
+              Independent Terminal-Bench 2.1 results replace mixed or ambiguous values: Fable 5
+              <code>83.8%</code>, Grok 4.5 <code>79.3%</code>, Sonnet 5 <code>74.6%</code>.
+              Kimi K2.6/K3 values remain explicitly labeled Terminal-Bench 2.0 vendor runs.
+            </p>
+          </article>
+          <article class="delta reveal">
+            <span class="delta-no">Δ 04</span>
+            <h3>Kimi K3 correction</h3>
+            <p>
+              Kimi K3 is corrected to SWE-bench Pro <code>63.4%*</code>, Terminal-Bench 2.0
+              <code>71.8%*</code>, <code>1M</code> context, and official API pricing of
+              <code>$3</code> cache-miss input / <code>$15</code> output (cache-hit input
+              <code>$0.30</code>).
+            </p>
+          </article>
+          <article class="delta reveal">
+            <span class="delta-no">Δ 05</span>
+            <h3>Pricing correction</h3>
+            <p>
+              Kimi K2.6 is corrected to <code>$0.95</code> cache-miss input / <code>$4</code>
+              output (<code>$0.16</code> cache hit). Kimi K2.7-Code is corrected to
+              <code>$0.95/$4</code> (<code>$0.19</code> cache hit). Sonnet 5 shows its live
+              <code>$2/$10</code> introductory rate through August 31.
+            </p>
+          </article>
+          <article class="delta reveal">
+            <span class="delta-no">Δ 06</span>
+            <h3>Provenance audit</h3>
+            <p>
+              Scores without a reproducible primary or independent source remain visibly marked
+              vendor-only or blank. No missing score is inferred from a neighboring model,
+              harness, or benchmark version.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ================ 02 ROSTER MATRICES ================ -->
+      <section id="s02" aria-labelledby="s02t">
+        <div class="sec-head reveal">
+          <span class="sec-no">02</span>
+          <h2 class="sec-title" id="s02t">Roster matrices</h2>
+          <span class="sec-sub">Main fires first · cascade Alt 1 → Alt 2</span>
+        </div>
+
+        <div class="tabs reveal" role="tablist" aria-label="Roster tables">
+          <button class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-t1" data-tab="panel-t1">Table 1 · Expanded</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-t2" data-tab="panel-t2">Table 2 · Lean</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-t3" data-tab="panel-t3">Table 3 · GLM-5.2 Modes</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-t4" data-tab="panel-t4">Table 4 · Claude Tiers</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-t5" data-tab="panel-t5">Table 5 · Grok 4.5</button>
+        </div>
+
+        <!-- TABLE 1 -->
+        <div class="tab-panel reveal in" id="panel-t1" role="tabpanel" aria-label="Table 1 Expanded">
+          <div class="panel-meta">
+            <span class="ptitle">Table 1 · Expanded</span>
+            <span class="psub">12 agents · 3 models per column · maximum resilience for long autonomous runs</span>
+          </div>
+          <table class="roster">
+            <thead>
+              <tr>
+                <th scope="col">Agent / Fallback</th>
+                <th scope="col">Kind</th>
+                <th scope="col">Main</th>
+                <th scope="col">Alt 1</th>
+                <th scope="col">Alt 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="agent">Plan</td><td class="kind">strategy</td>
+                <td><span class="model main">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+                <td><span class="model">DeepSeek V4 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Code</td><td class="kind">primary write</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Ask</td><td class="kind">quick Q&amp;A</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.7-Code <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">DeepSeek V4 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Debug</td><td class="kind">fault isolation</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Review</td><td class="kind">critique</td>
+                <td><span class="model main">MiniMax M3 <span class="role-badge badge-verified">VERIFIED</span></span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+                <td><span class="model">Qwen 3.7 Max</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Code Simplifier</td><td class="kind">refactor</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Documentation</td><td class="kind">prose</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Backend Specialist</td><td class="kind">server logic</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Frontend Specialist</td><td class="kind">UI / JSX</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">MiniMax M3 <span class="role-badge badge-verified">VERIFIED</span></span></td>
+              </tr>
+              <tr>
+                <td class="agent">DevOps</td><td class="kind">infra / CI</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Opus 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="model main">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+                <td><span class="model">DeepSeek V4 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Sonnet 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TABLE 2 -->
+        <div class="tab-panel reveal" id="panel-t2" role="tabpanel" aria-label="Table 2 Lean" hidden>
+          <div class="panel-meta">
+            <span class="ptitle">Table 2 · Lean</span>
+            <span class="psub">12 agents · trimmed third column · lower carry-weight where the Alt 2 never fired</span>
+          </div>
+          <table class="roster">
+            <thead>
+              <tr>
+                <th scope="col">Agent / Fallback</th>
+                <th scope="col">Kind</th>
+                <th scope="col">Main</th>
+                <th scope="col">Alt 1</th>
+                <th scope="col">Alt 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="agent">Plan</td><td class="kind">strategy</td>
+                <td><span class="model main">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+                <td><span class="model">DeepSeek V4 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Code</td><td class="kind">primary write</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Ask</td><td class="kind">quick Q&amp;A</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">DeepSeek V4 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Debug</td><td class="kind">fault isolation</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Review</td><td class="kind">critique</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Code Simplifier</td><td class="kind">refactor</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Documentation</td><td class="kind">prose</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Backend Specialist</td><td class="kind">server logic</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Frontend Specialist</td><td class="kind">UI / JSX</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+              <tr>
+                <td class="agent">DevOps</td><td class="kind">infra / CI</td>
+                <td><span class="model main">Kimi K3 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Opus 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="model main">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+                <td><span class="model">DeepSeek V4 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Sonnet 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="model main">GLM-5.2 <span class="role-badge badge-new">NEW</span></span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+                <td><span class="model">Hy3</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TABLE 3 -->
+        <div class="tab-panel reveal" id="panel-t3" role="tabpanel" aria-label="Table 3 GLM-5.2 Modes" hidden>
+          <div class="panel-meta">
+            <span class="ptitle">Table 3 · GLM-5.2 Modes</span>
+            <span class="psub">11 GLM-5.2 agents · 6 Max / 5 High · Code Simplifier runs on Kimi K3</span>
+          </div>
+          <table class="modes">
+            <thead>
+              <tr>
+                <th scope="col">Agent</th>
+                <th scope="col">Kind</th>
+                <th scope="col">GLM-5.2 Mode</th>
+                <th scope="col">Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="agent">Plan</td><td class="kind">strategy</td>
+                <td><span class="mode-badge mode-max">Max</span></td>
+                <td class="rationale">Architectural decisions — named directly as a Max use case</td>
+              </tr>
+              <tr>
+                <td class="agent">Code</td><td class="kind">primary write</td>
+                <td><span class="mode-badge mode-high">High</span></td>
+                <td class="rationale">Everyday generation against a clear spec</td>
+              </tr>
+              <tr>
+                <td class="agent">Ask</td><td class="kind">quick Q&amp;A</td>
+                <td><span class="mode-badge mode-high">High</span></td>
+                <td class="rationale">Direct Q&amp;A, no benefit from extra deliberation</td>
+              </tr>
+              <tr>
+                <td class="agent">Debug</td><td class="kind">fault isolation</td>
+                <td><span class="mode-badge mode-max">Max</span></td>
+                <td class="rationale">“Intricate debugging” — named directly as a Max use case</td>
+              </tr>
+              <tr>
+                <td class="agent">Review</td><td class="kind">critique</td>
+                <td><span class="mode-badge mode-max">Max</span></td>
+                <td class="rationale">Catching subtle bugs is exactly where deeper reasoning pays off</td>
+              </tr>
+              <tr>
+                <td class="agent">Code Simplifier</td><td class="kind">refactor</td>
+                <td><span class="mode-badge mode-na">N/A — Kimi K3</span></td>
+                <td class="rationale">Refactoring is disciplined execution within constraints, not open-ended judgment</td>
+              </tr>
+              <tr>
+                <td class="agent">Documentation</td><td class="kind">prose</td>
+                <td><span class="mode-badge mode-high">High</span></td>
+                <td class="rationale">Prose generation is a “fairly direct” task</td>
+              </tr>
+              <tr>
+                <td class="agent">Backend Specialist</td><td class="kind">server logic</td>
+                <td><span class="mode-badge mode-max">Max</span></td>
+                <td class="rationale">Schema / auth / licensing trade-offs — architectural judgment</td>
+              </tr>
+              <tr>
+                <td class="agent">Frontend Specialist</td><td class="kind">UI / JSX</td>
+                <td><span class="mode-badge mode-high">High</span></td>
+                <td class="rationale">Pattern-based UI implementation</td>
+              </tr>
+              <tr>
+                <td class="agent">DevOps</td><td class="kind">infra / CI</td>
+                <td><span class="mode-badge mode-high">High</span></td>
+                <td class="rationale">Bounded, structured tasks — escalate to Max only for complex pipeline redesign</td>
+              </tr>
+              <tr>
+                <td class="agent">Opus 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="mode-badge mode-max">Max</span></td>
+                <td class="rationale">Highest-stakes moments — use the deeper mode</td>
+              </tr>
+              <tr>
+                <td class="agent">Sonnet 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="mode-badge mode-high">High</span></td>
+                <td class="rationale">Sonnet-tier work is volume / speed-oriented by design</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TABLE 4 -->
+        <div class="tab-panel reveal" id="panel-t4" role="tabpanel" aria-label="Table 4 Claude Tiers" hidden>
+          <div class="panel-meta">
+            <span class="ptitle">Table 4 · Claude tier per agent</span>
+            <span class="psub">Judgment-heavy → Opus 5 · Execution-heavy → Sonnet 5</span>
+          </div>
+          <div class="tier-pair">
+            <div class="tier-half">
+              <h4 style="color: var(--red)">Opus 5 — Judgment-heavy</h4>
+              <div class="effort-line">Every agent at <span class="effort effort-xhigh">Xhigh</span> effort</div>
+              <table class="modes compact">
+                <thead>
+                  <tr>
+                    <th scope="col">Agent</th>
+                    <th scope="col">Kind</th>
+                    <th scope="col">Effort</th>
+                    <th scope="col">Rationale</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="agent">Plan</td><td class="kind">strategy</td>
+                    <td><span class="effort effort-xhigh">Xhigh</span></td>
+                    <td class="rationale">Architectural judgment and highest-stakes planning</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Debug</td><td class="kind">fault isolation</td>
+                    <td><span class="effort effort-xhigh">Xhigh</span></td>
+                    <td class="rationale">Root-cause diagnosis is judgment work</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Review</td><td class="kind">critique</td>
+                    <td><span class="effort effort-xhigh">Xhigh</span></td>
+                    <td class="rationale">Catching subtle flaws is where the Opus tier earns its cost</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Backend Specialist</td><td class="kind">server logic</td>
+                    <td><span class="effort effort-xhigh">Xhigh</span></td>
+                    <td class="rationale">Schema/auth/licensing trade-offs carry long-term cost if wrong</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tier-half">
+              <h4 style="color: var(--blue)">Sonnet 5 — Execution-heavy</h4>
+              <div class="effort-line">Volume / speed-oriented by design</div>
+              <table class="modes compact">
+                <thead>
+                  <tr>
+                    <th scope="col">Agent</th>
+                    <th scope="col">Kind</th>
+                    <th scope="col">Effort</th>
+                    <th scope="col">Rationale</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="agent">Code</td><td class="kind">primary write</td>
+                    <td><span class="effort effort-med">Medium</span></td>
+                    <td class="rationale">Anthropic states medium now matches what used to require Sonnet 4.6 at high — same quality, lower cost</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Ask</td><td class="kind">quick Q&amp;A</td>
+                    <td><span class="effort effort-low">Low</span></td>
+                    <td class="rationale">Lightweight Q&amp;A, no frontier reasoning needed</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Code Simplifier</td><td class="kind">refactor</td>
+                    <td><span class="effort effort-med">Medium</span></td>
+                    <td class="rationale">Refactoring within known constraints, not open-ended judgment</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Documentation</td><td class="kind">prose</td>
+                    <td><span class="effort effort-low">Low</span></td>
+                    <td class="rationale">Prose generation, well within Sonnet's range, cost-conscious</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">Frontend Specialist</td><td class="kind">UI / JSX</td>
+                    <td><span class="effort effort-med">Medium</span></td>
+                    <td class="rationale">Pattern-based UI implementation</td>
+                  </tr>
+                  <tr>
+                    <td class="agent">DevOps</td><td class="kind">infra / CI</td>
+                    <td><span class="effort effort-med">Medium</span></td>
+                    <td class="rationale">Structured, bounded tasks; escalate to Xhigh only for complex pipeline redesigns</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE 5 -->
+        <div class="tab-panel reveal" id="panel-t5" role="tabpanel" aria-label="Table 5 Grok 4.5" hidden>
+          <div class="panel-meta">
+            <span class="ptitle">Table 5 · Grok 4.5</span>
+            <span class="psub">12 agents · Lean shape · Grok Main on seven judgment/terminal-heavy agents, Alt 1 on five execution-heavy</span>
+          </div>
+          <table class="roster">
+            <thead>
+              <tr>
+                <th scope="col">Agent</th>
+                <th scope="col">Kind</th>
+                <th scope="col">Main</th>
+                <th scope="col">Alt 1</th>
+                <th scope="col">Alt 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="agent">Plan</td><td class="kind">strategy</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">Kimi K2.6</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Code</td><td class="kind">primary write</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">Kimi K3</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Ask</td><td class="kind">quick Q&amp;A</td>
+                <td><span class="model main">GLM-5.2</span></td>
+                <td><span class="model">Grok 4.5</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Debug</td><td class="kind">fault isolation</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">Kimi K3</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Review</td><td class="kind">critique</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">GLM-5.2</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Code Simplifier</td><td class="kind">refactor</td>
+                <td><span class="model main">Kimi K3</span></td>
+                <td><span class="model">Grok 4.5</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Documentation</td><td class="kind">prose</td>
+                <td><span class="model main">GLM-5.2</span></td>
+                <td><span class="model">Grok 4.5</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Backend Specialist</td><td class="kind">server logic</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">Kimi K3</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Frontend Specialist</td><td class="kind">UI / JSX</td>
+                <td><span class="model main">GLM-5.2</span></td>
+                <td><span class="model">Grok 4.5</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">DevOps</td><td class="kind">infra / CI</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">Kimi K3</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Opus 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="model main">Grok 4.5</span></td>
+                <td><span class="model">Kimi K3</span></td>
+                <td><span class="model">MiMo V2.5-Pro</span></td>
+              </tr>
+              <tr>
+                <td class="agent">Sonnet 5 fallback</td><td class="kind">tier shadow</td>
+                <td><span class="model main">GLM-5.2</span></td>
+                <td><span class="model">Grok 4.5</span></td>
+                <td><span class="model">Qwen 3.7 Plus</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================ 03 FULL LEDGER ================ -->
+      <section id="s03" aria-labelledby="s03t">
+        <div class="sec-head reveal">
+          <span class="sec-no">03</span>
+          <h2 class="sec-title" id="s03t">Full ledger</h2>
+          <span class="sec-sub">Source of truth · hover any row to focus</span>
+        </div>
+        <div class="ledger-tools reveal">
+          <div class="search-box">
+            <input id="ledger-search" type="search" placeholder="Filter ledger — model, note, glyph…" aria-label="Filter ledger rows" autocomplete="off" />
+            <button class="clear" id="ledger-clear" type="button" aria-label="Clear filter">✕</button>
+          </div>
+          <span class="ledger-count" id="ledger-count"></span>
+        </div>
+
+        <!-- CLAUDE OPUS -->
+        <div class="ledger-group" data-group="Claude — Opus tier">
+          <div class="ledger-group-title">Claude — Opus tier <span class="count">3 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">Claude Opus 5<small>New · Jul 24</small></td>
+                <td><span class="role-chip">Opus</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$5.00 <span class="out">/ $25.00</span></td>
+                <td class="note-cell">Current Opus fallback target; comparable public scores not yet available</td>
+              </tr>
+              <tr>
+                <td class="model-name">Claude Fable 5<small>New</small></td>
+                <td><span class="role-chip">Opus</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">80.0%</span></td>
+                <td><span class="tier-cell t-green">95.0%</span></td>
+                <td><span class="tier-cell t-green">83.8% <small class="tb">(2.1)</small></span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$10.00 <span class="out">/ $50.00</span></td>
+                <td class="note-cell">Independent TB 2.1 via Claude Code, xhigh</td>
+              </tr>
+              <tr>
+                <td class="model-name">Claude Mythos Preview</td>
+                <td><span class="role-chip">Opus</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">77.8%</span></td>
+                <td><span class="tier-cell t-green">93.9%</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">— <span class="out">/ —</span></td>
+                <td class="note-cell">Preview-only; superseded by restricted-access Mythos 5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- CLAUDE SONNET -->
+        <div class="ledger-group" data-group="Claude — Sonnet tier">
+          <div class="ledger-group-title">Claude — Sonnet tier <span class="count">2 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">Claude Sonnet 5<small>New</small></td>
+                <td><span class="role-chip">Sonnet</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">63.2%</span></td>
+                <td><span class="tier-cell t-green">85.2%</span></td>
+                <td><span class="tier-cell t-green">74.6% <small class="tb">(2.1)</small></span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$2.00* <span class="out">/ $10.00*</span></td>
+                <td class="note-cell">Intro price through Aug 31 then price increases. Independent TB 2.1</td>
+              </tr>
+              <tr>
+                <td class="model-name">Claude Sonnet 4.6</td>
+                <td><span class="role-chip">Replaced</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">61.4%</span></td>
+                <td><span class="tier-cell t-blue">79.6%</span></td>
+                <td><span class="tier-cell t-amber">59.1%</span></td>
+                <td><span class="tier-cell">200K</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$3.00 <span class="out">/ $15.00</span></td>
+                <td class="note-cell">Superseded by Sonnet 5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ROSTER MAIN -->
+        <div class="ledger-group" data-group="Roster — Main models">
+          <div class="ledger-group-title">Roster — Main models <span class="count">5 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">Kimi K2.6</td>
+                <td><span class="role-chip">Main</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">58.6%</span></td>
+                <td><span class="tier-cell t-green">80.2%</span></td>
+                <td><span class="tier-cell t-blue">66.7%* <small class="tb">(2.0)</small></span></td>
+                <td><span class="tier-cell">262K</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$0.95† <span class="out">/ $4.00</span></td>
+                <td class="note-cell">Vendor TB 2.0; cache-miss input pricing, cache hit discounted<span class="glyph-note"> · cache-hit $0.16</span></td>
+              </tr>
+              <tr>
+                <td class="model-name">Kimi K3<small>New</small></td>
+                <td><span class="role-chip">Main</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">63.4%*</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-green">71.8%* <small class="tb">(2.0)</small></span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$3.00† <span class="out">/ $15.00</span></td>
+                <td class="note-cell">Vendor max-effort scores; cache-miss input pricing, cache hit discounted<span class="glyph-note"> · cache-hit $0.30</span></td>
+              </tr>
+              <tr>
+                <td class="model-name">GLM-5.2<small>New</small></td>
+                <td><span class="role-chip">Main</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">62.1%</span></td>
+                <td><span class="tier-cell t-green">80.4%</span></td>
+                <td><span class="tier-cell t-green">81.0%* <small class="tb">(2.1)</small></span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes (MIT)</span></td>
+                <td class="price-cell">$0.95 <span class="out">/ $3.00</span></td>
+                <td class="note-cell">Vendor TB 2.1; no independent leaderboard submission</td>
+              </tr>
+              <tr>
+                <td class="model-name">GLM-5.1</td>
+                <td><span class="role-chip">Superseded</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">58.4%</span></td>
+                <td><span class="tier-cell t-blue">~78%</span></td>
+                <td><span class="tier-cell t-amber">58.7% <small class="tb">(2.1)</small></span></td>
+                <td><span class="tier-cell">200K</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes (MIT)</span></td>
+                <td class="price-cell">$1.40 <span class="out">/ $4.40</span></td>
+                <td class="note-cell">Independent TB 2.1 via Claude Code, max</td>
+              </tr>
+              <tr>
+                <td class="model-name">Qwen 3.7 Max</td>
+                <td><span class="role-chip">Alt 2 (v1)</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">60.6%</span></td>
+                <td><span class="tier-cell t-green">80.4%</span></td>
+                <td><span class="tier-cell t-blue">69.7%</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$1.25 <span class="out">/ $3.75</span></td>
+                <td class="note-cell">Text-only. Now second-highest SWE-bench Pro behind GLM-5.2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ROSTER ALT 1 -->
+        <div class="ledger-group" data-group="Roster — Alt 1 models">
+          <div class="ledger-group-title">Roster — Alt 1 models <span class="count">4 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">MiMo V2.5-Pro</td>
+                <td><span class="role-chip">Alt 1</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-blue">57.2%</span></td>
+                <td><span class="tier-cell t-blue">78.9%</span></td>
+                <td><span class="tier-cell t-blue">68.4%*</span></td>
+                <td><span class="tier-cell">1M*</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td class="price-cell">$0.43 <span class="out">/ $0.87</span></td>
+                <td class="note-cell">1M ctx = 4× price uplift ($4/$12). *Vendor Terminal-Bench</td>
+              </tr>
+              <tr>
+                <td class="model-name">Qwen 3.7 Plus</td>
+                <td><span class="role-chip">Alt 1</span></td>
+                <td><span class="ts-chip ts-warn">Builds*</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-blue">77.7%</span></td>
+                <td><span class="tier-cell t-green">70.3%</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$0.32 <span class="out">/ $1.28</span></td>
+                <td class="note-cell">*Builds, less idiomatic JSX. ScreenSpot Pro 79%</td>
+              </tr>
+              <tr>
+                <td class="model-name">Kimi K2.7-Code<small>New</small></td>
+                <td><span class="role-chip">Alt 1 (v1)</span></td>
+                <td><span class="ts-chip ts-warn">Contested</span></td>
+                <td><span class="tier-cell t-none">—‡</span></td>
+                <td><span class="tier-cell t-none">—‡</span></td>
+                <td><span class="tier-cell t-none">—‡</span></td>
+                <td><span class="tier-cell">256K</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">Yes (Mod. MIT)</span></td>
+                <td class="price-cell">$0.95† <span class="out">/ $4.00</span></td>
+                <td class="note-cell">‡Vendor-only MCPMark<span class="glyph-note"> · cache-hit $0.19</span></td>
+              </tr>
+              <tr>
+                <td class="model-name">DeepSeek-V4-Flash-0731</td>
+                <td><span class="role-chip">Demoted (v1)</span></td>
+                <td><span class="ts-chip ts-warn">Unverified</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-blue">79.0%</span></td>
+                <td><span class="tier-cell t-green">83.1% <small class="tb">(2.1)</small></span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td class="price-cell">$0.10 <span class="out">/ $0.20</span></td>
+                <td class="note-cell">July 31 release. Cheapest in table; replaced by Kimi K2.7-Code for Ask this round</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ROSTER ALT 2 -->
+        <div class="ledger-group" data-group="Roster — Alt 2 models">
+          <div class="ledger-group-title">Roster — Alt 2 models <span class="count">4 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">DeepSeek V4 Pro</td>
+                <td><span class="role-chip">Alt 2</span></td>
+                <td><span class="ts-chip ts-fail">Failed</span></td>
+                <td><span class="tier-cell t-blue">55.4%</span></td>
+                <td><span class="tier-cell t-green">80.6%</span></td>
+                <td><span class="tier-cell t-red">44.0%</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td class="price-cell">$0.435 <span class="out">/ $0.87</span></td>
+                <td class="note-cell">TS build failed in Kilo's own test. Reasoning-only agents</td>
+              </tr>
+              <tr>
+                <td class="model-name">Hy3 (Hunyuan 3)</td>
+                <td><span class="role-chip">Alt 2</span></td>
+                <td><span class="ts-chip ts-pass">Pass</span></td>
+                <td><span class="tier-cell t-green">59.8%</span></td>
+                <td><span class="tier-cell t-blue">78.2%</span></td>
+                <td><span class="tier-cell t-blue">65.4%</span></td>
+                <td><span class="tier-cell">256K</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td class="price-cell">~$0.17 <span class="out">/ Free*</span></td>
+                <td class="note-cell">*Free in Kilo Code currently. 99.99% production uptime</td>
+              </tr>
+              <tr>
+                <td class="model-name">MiniMax M3<small>Verified</small></td>
+                <td><span class="role-chip">Main</span></td>
+                <td><span class="ts-chip ts-pass">Pass†</span></td>
+                <td><span class="tier-cell t-green">59.0%‡</span></td>
+                <td><span class="tier-cell t-green">80.5%</span></td>
+                <td><span class="tier-cell t-blue">66.0%‡</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td class="price-cell">$0.30 <span class="out">/ $1.20</span></td>
+                <td class="note-cell">†Kilo's own audit: found 13/17 planted TS bugs for $0.07 at 18× less cost. Now in Table 1 for Review/Frontend</td>
+              </tr>
+              <tr>
+                <td class="model-name">Step 3.7 Flash</td>
+                <td><span class="role-chip">Demoted (v1)</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-blue">56.3%</span></td>
+                <td><span class="tier-cell t-blue">76.5%‡</span></td>
+                <td><span class="tier-cell t-amber">59.5%</span></td>
+                <td><span class="tier-cell">256K</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">Yes (Apache 2.0)</span></td>
+                <td class="price-cell">$0.20 <span class="out">/ $1.15</span></td>
+                <td class="note-cell">Replaced by MiniMax M3 — weaker, less recent verification</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- OPENAI -->
+        <div class="ledger-group" data-group="OpenAI — Frontier">
+          <div class="ledger-group-title">OpenAI — Frontier <span class="count">3 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">GPT-5.6 Luna<small>New</small></td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">— <span class="out">/ —</span></td>
+                <td class="note-cell">Benchmark, context, capability, and pricing data pending verification</td>
+              </tr>
+              <tr>
+                <td class="model-name">GPT-5.6 Terra<small>New</small></td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">— <span class="out">/ —</span></td>
+                <td class="note-cell">Benchmark, context, capability, and pricing data pending verification</td>
+              </tr>
+              <tr>
+                <td class="model-name">GPT-5.6 Sol<small>New</small></td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">— <span class="out">/ —</span></td>
+                <td class="note-cell">Benchmark, context, capability, and pricing data pending verification</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- XAI -->
+        <div class="ledger-group" data-group="xAI — Frontier (Table 5)">
+          <div class="ledger-group-title">xAI — Frontier (Table 5) <span class="count">1 model</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">Grok 4.5<small>New</small></td>
+                <td><span class="role-chip">Main</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-green">64.7%*</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-green">79.3% <small class="tb">(2.1)</small></span></td>
+                <td><span class="tier-cell">500K</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$2.00 <span class="out">/ $6.00</span></td>
+                <td class="note-cell">Vendor Pro; independent TB 2.1. Below 200K prompt tokens priced lower; higher rate at 200K+</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- WATCHLIST -->
+        <div class="ledger-group" data-group="Watchlist — not in roster">
+          <div class="ledger-group-title">Watchlist — not in roster <span class="count">4 models</span></div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Role</th>
+                <th scope="col">TS build</th>
+                <th scope="col">SWE-bench Pro</th>
+                <th scope="col">SWE-bench Verified</th>
+                <th scope="col">Terminal-Bench</th>
+                <th scope="col">Ctx</th>
+                <th scope="col">Vision</th>
+                <th scope="col">Open weights</th>
+                <th scope="col">Price in / out</th>
+                <th scope="col">Key note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="model-name">Gemini 2.5 Flash<small>New</small></td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-red">63.8%*</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">Yes</span></td>
+                <td><span class="tier-cell">—</span></td>
+                <td class="price-cell">$0.30 <span class="out">/ $2.50</span></td>
+                <td class="note-cell">*Vendor Verified; requested model, corrected from “Agnes 2.5 Flash”</td>
+              </tr>
+              <tr>
+                <td class="model-name">Laguna S 2.1<small>New</small></td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-green">59.4%*</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-green">70.2%*</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes (OpenMDW)</span></td>
+                <td class="price-cell">$0.10 <span class="out">/ $0.20</span></td>
+                <td class="note-cell">Vendor scores; suite provenance retained</td>
+              </tr>
+              <tr>
+                <td class="model-name">Macaron V1 Venti<small>New</small></td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—‡</span></td>
+                <td><span class="tier-cell t-green">85.6%‡</span></td>
+                <td><span class="tier-cell t-green">87.6%‡</span></td>
+                <td><span class="tier-cell">1M</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes (MIT)</span></td>
+                <td class="price-cell">$2.13* <span class="out">/ $2.13*</span></td>
+                <td class="note-cell">Vendor-only; third-party gateway rate</td>
+              </tr>
+              <tr>
+                <td class="model-name">Nemotron 3 Super</td>
+                <td><span class="role-chip">Not a fit</span></td>
+                <td><span class="ts-chip ts-warn">Untested</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell t-red">60.5%</span></td>
+                <td><span class="tier-cell t-none">—</span></td>
+                <td><span class="tier-cell">128K</span></td>
+                <td><span class="tier-cell">No</span></td>
+                <td><span class="tier-cell">Yes (NVIDIA)</span></td>
+                <td class="price-cell">Self-host <span class="out">/ Self-host</span></td>
+                <td class="note-cell">Best US open-weight comparison model</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================ 04 HOW TO READ ================ -->
+      <section id="s04" aria-labelledby="s04t">
+        <div class="sec-head reveal">
+          <span class="sec-no">04</span>
+          <h2 class="sec-title" id="s04t">How to read this</h2>
+          <span class="sec-sub">Tiers · glyphs · build statuses</span>
+        </div>
+        <div class="legend-grid">
+          <div class="legend-card reveal">
+            <h4>Score tiers</h4>
+            <table class="legend">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Tier</th>
+                  <th scope="col">SWE-bench Pro</th>
+                  <th scope="col">SWE-bench Verified</th>
+                  <th scope="col">Terminal-Bench</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="swatch sw-green" aria-hidden="true"></span></td>
+                  <td>Top tier</td><td>≥58%</td><td>≥80%</td><td>≥70%</td>
+                </tr>
+                <tr>
+                  <td><span class="swatch sw-blue" aria-hidden="true"></span></td>
+                  <td>Strong</td><td>50–57%</td><td>75–79%</td><td>60–69%</td>
+                </tr>
+                <tr>
+                  <td><span class="swatch sw-amber" aria-hidden="true"></span></td>
+                  <td>Adequate</td><td>40–49%</td><td>70–74%</td><td>50–59%</td>
+                </tr>
+                <tr>
+                  <td><span class="swatch sw-red" aria-hidden="true"></span></td>
+                  <td>Limited</td><td>&lt;40%</td><td>&lt;70%</td><td>&lt;50%</td>
+                </tr>
+                <tr>
+                  <td><span class="tier-cell t-none">—</span></td>
+                  <td>No data</td><td>benchmark N/A</td><td>—</td><td>—</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="ts-list" style="margin-top: 18px">
+              <span><b>TS build</b> statuses:</span>
+              <span>Pass</span><span>Builds</span><span>Contested</span><span>Unverified</span><span>Failed</span><span>Untested</span>
+            </div>
+          </div>
+          <div class="legend-card reveal">
+            <h4>Glyph key</h4>
+            <ul class="glyph-key">
+              <li><span class="g">*</span><span>vendor-reported only</span></li>
+              <li><span class="g">†</span><span>pricing qualifier — for example cache-miss or long-prompt tier</span></li>
+              <li><span class="g">‡</span><span>vendor-reported, pending independent reproduction on standard suites</span></li>
+            </ul>
+            <p style="margin-top: 16px; font-family: var(--mono); font-size: 11px; color: var(--ink-dim); letter-spacing: 0.08em">
+              Terminal-Bench 2.0 and 2.1 are labeled explicitly — their scores are not interchangeable.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="foot-in">
+          <div>
+            <div class="foot-brand">The Chinese Model <em>Stack</em></div>
+            <div class="foot-line">
+              Merged · AI_MODELS_REPORT.md × ai_model_report.html · R09 · July 2026 · internal<br />
+              Created with GLM-5.2 High · Ledger is the source of truth; rosters are its interpretation
+            </div>
+          </div>
+          <div class="foot-sig">
+            <div class="renderer-stamp" aria-label="Rendered by deepseek-v4-flash">
+              Rendered by deepseek-v4-flash
+              <span class="sub">DEEPSEEK V4 FLASH · MAX · DS</span>
+            </div>
+            <div class="colophon">
+              AI model report · Aug 2026 · No. 01<br />
+              Self-contained static page · no build step
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+
+        // ---- Tabs ----
+        var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+        var panels = {};
+        tabs.forEach(function (b) {
+          panels[b.getAttribute("aria-controls")] = document.getElementById(b.getAttribute("aria-controls"));
+        });
+        function activate(id, updateHash) {
+          tabs.forEach(function (b) {
+            var on = b.getAttribute("aria-controls") === id;
+            b.setAttribute("aria-selected", on ? "true" : "false");
+            b.setAttribute("tabindex", on ? "0" : "-1");
+          });
+          Object.keys(panels).forEach(function (k) {
+            if (k === id) {
+              panels[k].hidden = false;
+              panels[k].classList.add("in");
+            } else {
+              panels[k].hidden = true;
+            }
+          });
+          if (updateHash !== false) {
+            try {
+              history.replaceState(null, "", "#" + id);
+            } catch (e) {}
+          }
+        }
+        tabs.forEach(function (b) {
+          b.addEventListener("click", function () {
+            activate(b.getAttribute("aria-controls"));
+          });
+          b.addEventListener("keydown", function (e) {
+            var idx = tabs.indexOf(b);
+            if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+              e.preventDefault();
+              activate(tabs[(idx + 1) % tabs.length].getAttribute("aria-controls"));
+              tabs[(idx + 1) % tabs.length].focus();
+            } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+              e.preventDefault();
+              activate(tabs[(idx - 1 + tabs.length) % tabs.length].getAttribute("aria-controls"));
+              tabs[(idx - 1 + tabs.length) % tabs.length].focus();
+            }
+          });
+        });
+        if (location.hash && panels[location.hash.slice(1)]) {
+          activate(location.hash.slice(1), false);
+        }
+
+        // ---- Reveal on scroll ----
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                  en.target.classList.add("in");
+                  io.unobserve(en.target);
+                }
+              });
+            },
+            { threshold: 0.08, rootMargin: "0px 0px -6% 0px" }
+          );
+          Array.prototype.forEach.call(document.querySelectorAll(".reveal"), function (el) {
+            io.observe(el);
+          });
+        } else {
+          Array.prototype.forEach.call(document.querySelectorAll(".reveal"), function (el) {
+            el.classList.add("in");
+          });
+        }
+
+        // ---- Ledger filter ----
+        var search = document.getElementById("ledger-search");
+        var clearBtn = document.getElementById("ledger-clear");
+        var countEl = document.getElementById("ledger-count");
+        var rows = Array.prototype.slice.call(document.querySelectorAll("table.ledger tbody tr"));
+        var groups = Array.prototype.slice.call(document.querySelectorAll(".ledger-group"));
+        var total = rows.length;
+        countEl.textContent = total + " models in ledger";
+
+        function applyFilter() {
+          var q = search.value.trim().toLowerCase();
+          clearBtn.classList.toggle("show", q.length > 0);
+          var visible = 0;
+          rows.forEach(function (r) {
+            var hay = (r.textContent || "").toLowerCase();
+            var match = !q || hay.indexOf(q) !== -1;
+            r.classList.toggle("dim", !match);
+            if (match) visible++;
+          });
+          groups.forEach(function (g) {
+            var any = Array.prototype.some.call(g.querySelectorAll("tbody tr"), function (r) {
+              return !r.classList.contains("dim");
+            });
+            g.style.display = any ? "" : "none";
+          });
+          countEl.textContent = q
+            ? visible + " of " + total + " models match"
+            : total + " models in ledger";
+        }
+        search.addEventListener("input", applyFilter);
+        clearBtn.addEventListener("click", function () {
+          search.value = "";
+          applyFilter();
+          search.focus();
+        });
+      })();
+    </script>
+  </body>
+</html>
