@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LP Collection</title>
+    <title>LP Collection — AI Model Landing Pages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,173 +14,432 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-hover: #1a1a1a;
+            --accent: #00d4ff;
+            --accent-dim: rgba(0, 212, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-tertiary: rgba(255, 255, 255, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 80px 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Editorial header */
+        header {
+            margin-bottom: 100px;
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .header-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
         }
 
         h1 {
-            text-align: center;
-            color: white;
-            font-size: 3rem;
-            margin-bottom: 50px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.4s;
         }
 
+        h1 em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .header-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 600px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.6s;
+        }
+
+        /* Asymmetric grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 20px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            position: relative;
         }
 
+        /* Card variations for visual interest */
         .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 40px;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
         }
 
+        .card:nth-child(1) { grid-column: span 8; animation-delay: 0.8s; }
+        .card:nth-child(2) { grid-column: span 4; animation-delay: 0.9s; }
+        .card:nth-child(3) { grid-column: span 4; animation-delay: 1.0s; }
+        .card:nth-child(4) { grid-column: span 8; animation-delay: 1.1s; }
+        .card:nth-child(5) { grid-column: span 6; animation-delay: 1.2s; }
+        .card:nth-child(6) { grid-column: span 6; animation-delay: 1.3s; }
+        .card:nth-child(7) { grid-column: span 12; animation-delay: 1.4s; }
+
+        /* Hover effect */
         .card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-dim), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: white;
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover::after {
+            transform: scaleY(1);
+        }
+
+        /* Card content */
+        .card-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
         }
 
         .card h2 {
-            color: #333;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            line-height: 1.3;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
         }
 
         .card p {
-            color: #666;
             font-size: 0.95rem;
             line-height: 1.6;
-            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 32px;
         }
 
-        .card-link {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
         }
 
-        .card-link:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        .card-meta-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            transition: background 0.5s ease;
         }
 
-        .card-link::after {
-            content: ' ↗';
-            font-size: 1.1em;
+        .card:hover .card-meta-line {
+            background: var(--accent);
+        }
+
+        .card-arrow {
+            font-size: 1.25rem;
+            color: var(--text-tertiary);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+        }
+
+        .card:hover .card-arrow {
+            color: var(--accent);
+            transform: translateX(8px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 60px 40px;
+            }
+
+            .card:nth-child(n) {
+                grid-column: span 12;
+            }
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 40px 24px;
+            }
+
+            header {
+                margin-bottom: 60px;
+            }
+
             h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
 
             .grid {
-                grid-template-columns: 1fr;
-                padding: 10px;
+                gap: 16px;
             }
+
+            .card {
+                padding: 32px 28px;
+            }
+
+            .card h2 {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Subtle floating elements */
+        .bg-element {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-element-1 {
+            width: 600px;
+            height: 600px;
+            background: rgba(0, 212, 255, 0.03);
+            top: -200px;
+            right: -200px;
+        }
+
+        .bg-element-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(120, 80, 255, 0.03);
+            bottom: -100px;
+            left: -100px;
         }
     </style>
 </head>
 <body>
+    <div class="bg-element bg-element-1"></div>
+    <div class="bg-element bg-element-2"></div>
+
     <div class="container">
-        <h1>LP Collection</h1>
-        
+        <header>
+            <div class="header-meta">Collection — 2026</div>
+            <h1>AI Model<br><em>Landing Pages</em></h1>
+            <p class="header-description">
+                A curated collection of high-converting landing pages for cutting-edge AI models. 
+                Each page is crafted to showcase unique capabilities and drive user engagement.
+            </p>
+        </header>
+
         <div class="grid">
-            <div class="card">
-                <div class="card-icon">📄</div>
-                <h2>DeepSeek V4 Flash Max</h2>
-                <p>Landing page for DeepSeek V4 Flash Max model</p>
-                <a href="lp-deepseek-v4-flash-max.html" class="card-link" target="_blank">Open</a>
-            </div>
+            <a href="lp-deepseek-v4-flash-max.html" class="card" target="_blank">
+                <div class="card-number">01</div>
+                <h2>DeepSeek V4<br>Flash Max</h2>
+                <p>Ultra-fast inference with maximum context window for enterprise-scale applications.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <div class="card">
-                <div class="card-icon">📄</div>
+            <a href="lp-glm-5.2-high.html" class="card" target="_blank">
+                <div class="card-number">02</div>
                 <h2>GLM 5.2 High</h2>
-                <p>Landing page for GLM 5.2 High model</p>
-                <a href="lp-glm-5.2-high.html" class="card-link" target="_blank">Open</a>
-            </div>
+                <p>Next-generation reasoning with enhanced multilingual capabilities.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <div class="card">
-                <div class="card-icon">📄</div>
-                <h2>GPT 5.6 Sol High</h2>
-                <p>Landing page for GPT 5.6 Sol High model</p>
-                <a href="lp-gpt-5.6-sol-high.html" class="card-link" target="_blank">Open</a>
-            </div>
+            <a href="lp-gpt-5.6-sol-high.html" class="card" target="_blank">
+                <div class="card-number">03</div>
+                <h2>GPT 5.6 Sol<br>High</h2>
+                <p>Advanced problem-solving model optimized for technical and scientific tasks.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <div class="card">
-                <div class="card-icon">📄</div>
-                <h2>Mimo V2.5 Pro High</h2>
-                <p>Landing page for Mimo V2.5 Pro High model</p>
-                <a href="lp-mimo-v2.5-pro-high.html" class="card-link" target="_blank">Open</a>
-            </div>
+            <a href="lp-mimo-v2.5-pro-high.html" class="card" target="_blank">
+                <div class="card-number">04</div>
+                <h2>Mimo V2.5<br>Pro High</h2>
+                <p>Multi-modal intelligence with superior code generation and analysis.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <div class="card">
-                <div class="card-icon">📄</div>
-                <h2>Minimax M3 Thinking</h2>
-                <p>Landing page for Minimax M3 Thinking model</p>
-                <a href="lp-minimax-m3-thinking.html" class="card-link" target="_blank">Open</a>
-            </div>
+            <a href="lp-minimax-m3-thinking.html" class="card" target="_blank">
+                <div class="card-number">05</div>
+                <h2>Minimax M3<br>Thinking</h2>
+                <p>Deep reasoning architecture with transparent thought processes.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <div class="card">
-                <div class="card-icon">📄</div>
-                <h2>Minimax M3 Thinking (Alt)</h2>
-                <p>Landing page for Minimax M3 Thinking variant</p>
-                <a href="lp-minimax-m3-thinking-.html" class="card-link" target="_blank">Open</a>
-            </div>
+            <a href="lp-minimax-m3-thinking-.html" class="card" target="_blank">
+                <div class="card-number">06</div>
+                <h2>Minimax M3<br>Thinking Alt</h2>
+                <p>Alternative variant with specialized optimization strategies.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
 
-            <div class="card">
-                <div class="card-icon">📄</div>
+            <a href="lp-sonnet-5-high.html" class="card" target="_blank">
+                <div class="card-number">07</div>
                 <h2>Sonnet 5 High</h2>
-                <p>Landing page for Sonnet 5 High model</p>
-                <a href="lp-sonnet-5-high.html" class="card-link" target="_blank">Open</a>
-            </div>
+                <p>Balanced performance with creative writing and analytical excellence.</p>
+                <div class="card-meta">
+                    <div class="card-meta-line"></div>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
         </div>
     </div>
+
+    <script>
+        // Magnetic hover effect
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Staggered animation on scroll (if needed)
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
