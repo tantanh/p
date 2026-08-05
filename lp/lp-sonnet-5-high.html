@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Findex — Every document your team owns, findable in 2 seconds</title>
+<meta name="description" content="One command indexes every document on your server. Your whole team searches it from a browser. No cloud, no migration, no IT department.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F1EA;
+  --paper-2:#EBE7DD;
+  --card:#FBFAF6;
+  --ink:#16150F;
+  --ink-2:#4A473C;
+  --ink-3:#8A8577;
+  --rule:#D6D1C4;
+  --rule-2:#C2BCAB;
+  --signal:#C0402A;
+  --signal-soft:#F0DCD5;
+  --sage:#4F6B52;
+  --max:1180px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Instrument Sans',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* paper grain */
+body::before{
+  content:'';
+  position:fixed;
+  inset:-50%;
+  z-index:0;
+  pointer-events:none;
+  opacity:.32;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* ── type ─────────────────────────────── */
+h1,h2,h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;letter-spacing:-.015em;line-height:1.02}
+h1{font-size:clamp(3.1rem,7.4vw,6.6rem)}
+h2{font-size:clamp(2.3rem,4.6vw,3.9rem);line-height:1.05}
+h3{font-size:1.55rem;line-height:1.15}
+em{font-style:italic;color:var(--signal)}
+
+.mono{
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:.685rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  font-weight:500;
+}
+
+.lead{font-size:clamp(1.06rem,1.55vw,1.28rem);color:var(--ink-2);line-height:1.55;max-width:44ch}
+
+/* ── section chrome ───────────────────── */
+section{position:relative;z-index:1}
+.sec-head{
+  display:flex;align-items:baseline;gap:22px;
+  padding-bottom:26px;margin-bottom:64px;
+  border-bottom:1px solid var(--rule);
+}
+.sec-num{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.16em;
+  color:var(--signal);flex-shrink:0;padding-top:.5em;
+}
+.sec-head .txt{flex:1}
+.sec-head h2{margin-bottom:10px}
+.sec-head p{color:var(--ink-2);max-width:52ch;font-size:1.02rem}
+
+/* ── reveal ───────────────────────────── */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  *{animation:none!important}
+  h1 .line>span,.hero-sub,.hero-cta,.rail,.mock,.res{opacity:1!important;transform:none!important}
+  .caret{opacity:1}
+}
+
+/* ── nav ──────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(244,241,234,.82);
+  backdrop-filter:blur(14px) saturate(1.4);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s,background .3s;
+}
+nav.stuck{border-bottom-color:var(--rule);background:rgba(244,241,234,.94)}
+.nav-in{max-width:var(--max);margin:0 auto;padding:16px 32px;display:flex;align-items:center;gap:14px}
+.logo{
+  font-family:'Instrument Serif',serif;font-size:1.42rem;letter-spacing:-.02em;
+  display:flex;align-items:center;gap:9px;
+}
+.logo .dot{width:7px;height:7px;background:var(--signal);border-radius:50%;display:block;margin-top:2px}
+.nav-links{margin-left:auto;display:flex;gap:30px;align-items:center}
+.nav-links a{
+  color:var(--ink-2);text-decoration:none;font-size:.87rem;
+  transition:color .2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:-3px;width:100%;height:1px;
+  background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .32s var(--ease);
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+@media(max-width:760px){.nav-links a:not(.btn-sm){display:none}}
+
+.btn-sm{
+  background:var(--ink);color:var(--paper)!important;padding:9px 18px;
+  font-size:.82rem;font-weight:500;border-radius:2px;transition:background .25s,transform .25s;
+}
+.btn-sm::after{display:none!important}
+.btn-sm:hover{background:var(--signal);transform:translateY(-1px)}
+
+/* ── hero ─────────────────────────────── */
+.hero{padding:clamp(64px,10vw,116px) 0 clamp(72px,9vw,110px);position:relative}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:60px;align-items:end}
+@media(max-width:940px){.hero-grid{grid-template-columns:1fr;gap:44px;align-items:start}}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--rule-2);border-radius:100px;
+  padding:6px 15px 6px 11px;margin-bottom:34px;background:var(--card);
+}
+.eyebrow .pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--sage);
+  box-shadow:0 0 0 0 rgba(79,107,82,.55);animation:pulse 2.6s infinite;
+}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(79,107,82,0)}100%{box-shadow:0 0 0 0 rgba(79,107,82,0)}}
+.eyebrow span:last-child{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
+
+h1 .line{display:block;overflow:hidden}
+h1 .line>span{display:block;transform:translateY(105%);animation:rise .95s var(--ease) forwards}
+@keyframes rise{to{transform:none}}
+h1 .line:nth-child(1)>span{animation-delay:.1s}
+h1 .line:nth-child(2)>span{animation-delay:.2s}
+h1 .line:nth-child(3)>span{animation-delay:.3s}
+
+.hero-sub{margin-top:32px;max-width:46ch;font-size:clamp(1.06rem,1.6vw,1.3rem);color:var(--ink-2);line-height:1.5;opacity:0;animation:fadeUp .9s var(--ease) .52s forwards}
+.hero-sub strong{color:var(--ink);font-weight:600}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.hero-cta{margin-top:42px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;opacity:0;animation:fadeUp .9s var(--ease) .66s forwards}
+
+.btn{
+  display:inline-flex;align-items:center;gap:11px;
+  background:var(--ink);color:var(--paper);text-decoration:none;
+  padding:16px 26px;border-radius:2px;font-weight:500;font-size:.98rem;
+  position:relative;overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s;
+  box-shadow:0 1px 0 rgba(22,21,15,.2);
+}
+.btn::before{
+  content:'';position:absolute;inset:0;background:var(--signal);
+  transform:translateY(101%);transition:transform .42s var(--ease);
+}
+.btn:hover::before{transform:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(22,21,15,.55)}
+.btn span{position:relative;z-index:1}
+.btn .arw{position:relative;z-index:1;transition:transform .32s var(--ease)}
+.btn:hover .arw{transform:translateX(4px)}
+.btn.big{padding:20px 34px;font-size:1.06rem}
+
+.cta-note{font-size:.86rem;color:var(--ink-3);max-width:22ch;line-height:1.4}
+
+/* hero stat rail */
+.rail{
+  display:flex;flex-direction:column;gap:0;border-left:1px solid var(--rule);
+  padding-left:30px;min-width:212px;opacity:0;animation:fadeUp .9s var(--ease) .8s forwards;
+}
+.rail .item{padding:14px 0;border-bottom:1px solid var(--rule)}
+.rail .item:last-child{border-bottom:0}
+.rail .num{font-family:'Instrument Serif',serif;font-size:2.35rem;line-height:1;letter-spacing:-.02em}
+.rail .num .u{font-size:1rem;color:var(--ink-3);font-family:'Instrument Sans',sans-serif}
+.rail .lbl{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
+@media(max-width:940px){.rail{flex-direction:row;flex-wrap:wrap;border-left:0;border-top:1px solid var(--rule);padding:18px 0 0;gap:0}
+.rail .item{border-bottom:0;padding:0 34px 0 0}}
+
+/* browser mock */
+.mock{
+  margin-top:clamp(62px,8vw,90px);border:1px solid var(--rule-2);border-radius:6px;
+  background:var(--card);overflow:hidden;
+  box-shadow:0 40px 80px -50px rgba(22,21,15,.5),0 2px 4px rgba(22,21,15,.05);
+  opacity:0;animation:fadeUp 1.1s var(--ease) .92s forwards;
+}
+.mock-bar{
+  display:flex;align-items:center;gap:8px;padding:11px 15px;
+  border-bottom:1px solid var(--rule);background:var(--paper-2);
+}
+.mock-bar .d{width:9px;height:9px;border-radius:50%;background:var(--rule-2)}
+.mock-url{
+  margin-left:12px;flex:1;background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:5px 12px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--ink-3);
+}
+.mock-body{padding:clamp(20px,3vw,34px)}
+.search-box{
+  display:flex;align-items:center;gap:13px;border:1px solid var(--ink);border-radius:3px;
+  padding:15px 18px;background:var(--paper);
+}
+.search-box .qtext{font-family:'JetBrains Mono',monospace;font-size:.94rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.caret{display:inline-block;width:2px;height:1.05em;background:var(--signal);vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.search-meta{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--sage);letter-spacing:.06em;white-space:nowrap;flex-shrink:0}
+@media(max-width:620px){
+  .search-box .mono{display:none}
+  .search-meta{display:none}
+  .search-box .qtext{font-size:.86rem}
+}
+
+.results{margin-top:20px;display:flex;flex-direction:column}
+.res{
+  display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
+  padding:15px 4px;border-bottom:1px solid var(--rule);
+  opacity:0;animation:fadeUp .6s var(--ease) forwards;
+}
+.res:nth-child(1){animation-delay:1.5s}
+.res:nth-child(2){animation-delay:1.62s}
+.res:nth-child(3){animation-delay:1.74s}
+.res:nth-child(4){animation-delay:1.86s}
+.res:last-child{border-bottom:0}
+.ftype{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.09em;
+  border:1px solid var(--rule-2);border-radius:2px;padding:4px 6px;color:var(--ink-3);min-width:44px;text-align:center;
+}
+.ftype.pdf{color:var(--signal);border-color:var(--signal-soft);background:var(--signal-soft)}
+.res .nm{font-size:.94rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res>div{min-width:0}
+.res .nm mark{background:rgba(192,64,42,.16);color:var(--ink);padding:0 2px;border-radius:1px}
+.res .pth{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--ink-3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res .dt{font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--ink-3);white-space:nowrap}
+@media(max-width:640px){.res .dt{display:none}.res{grid-template-columns:auto 1fr}}
+
+/* ── logos strip ──────────────────────── */
+.strip{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 0;overflow:hidden}
+.strip-in{display:flex;align-items:center;gap:44px;flex-wrap:wrap;justify-content:center}
+.strip .lbl{font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.strip .org{font-family:'Instrument Serif',serif;font-size:1.18rem;color:var(--ink-2);opacity:.72;transition:opacity .3s}
+.strip .org:hover{opacity:1}
+
+/* ── section 2: before / after ────────── */
+.sec{padding:clamp(88px,11vw,142px) 0}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:5px;overflow:hidden;background:var(--card)}
+@media(max-width:860px){.ba{grid-template-columns:1fr}}
+.ba-col{padding:clamp(28px,3.6vw,44px)}
+.ba-col.before{background:var(--paper-2);border-right:1px solid var(--rule)}
+@media(max-width:860px){.ba-col.before{border-right:0;border-bottom:1px solid var(--rule)}}
+.ba-tag{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ba-tag .sq{width:8px;height:8px;border-radius:1px}
+.before .sq{background:var(--ink-3)}
+.after .sq{background:var(--signal)}
+.ba-col h3{margin-bottom:6px}
+.before h3{color:var(--ink-2)}
+.ba-time{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-3);margin-bottom:26px;display:block}
+.after .ba-time{color:var(--sage)}
+
+.ba-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.ba-list li{
+  display:flex;gap:14px;align-items:flex-start;padding:14px 0;
+  border-bottom:1px dashed var(--rule);font-size:.97rem;line-height:1.45;
+}
+.ba-list li:last-child{border-bottom:0}
+.before .ba-list li{color:var(--ink-2)}
+.mk{
+  flex-shrink:0;width:19px;height:19px;border-radius:50%;margin-top:2px;
+  display:grid;place-items:center;font-size:.68rem;font-family:'JetBrains Mono',monospace;
+}
+.before .mk{background:var(--rule);color:var(--ink-2)}
+.after .mk{background:var(--ink);color:var(--paper)}
+.before .ba-list li span:last-child{text-decoration:line-through;text-decoration-color:var(--rule-2);text-decoration-thickness:1px}
+
+.ba-foot{margin-top:30px;padding-top:20px;border-top:1px solid var(--rule);font-size:.88rem;color:var(--ink-3)}
+.after .ba-foot{color:var(--ink-2)}
+.after .ba-foot strong{color:var(--ink);font-weight:600}
+
+.delta{
+  margin-top:36px;display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,52px);
+  flex-wrap:wrap;text-align:center;
+}
+.delta .d-item .v{font-family:'Instrument Serif',serif;font-size:clamp(2.4rem,5vw,3.6rem);line-height:1;letter-spacing:-.025em}
+.delta .d-item .v.hi{color:var(--signal)}
+.delta .d-item .k{font-family:'JetBrains Mono',monospace;font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-top:9px}
+.delta .arrow{font-family:'Instrument Serif',serif;font-size:1.6rem;color:var(--rule-2)}
+@media(max-width:620px){.delta .arrow{display:none}.delta{gap:26px}}
+
+/* ── section 3: how it works ──────────── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--rule)}
+@media(max-width:880px){.steps{grid-template-columns:1fr}}
+.step{padding:34px 30px 34px 0;border-right:1px solid var(--rule);position:relative}
+.step:last-child{border-right:0;padding-right:0}
+.step:not(:first-child){padding-left:30px}
+@media(max-width:880px){.step{border-right:0;border-bottom:1px solid var(--rule);padding:28px 0!important}.step:last-child{border-bottom:0}}
+.step .n{
+  font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.14em;color:var(--signal);
+  display:block;margin-bottom:16px;
+}
+.step h3{font-size:1.32rem;margin-bottom:10px}
+.step p{font-size:.95rem;color:var(--ink-2);line-height:1.5}
+.step .t{font-family:'JetBrains Mono',monospace;font-size:.63rem;color:var(--ink-3);letter-spacing:.09em;margin-top:14px;display:block}
+
+/* terminal */
+.term{
+  margin-top:44px;border-radius:6px;overflow:hidden;background:#100F0B;
+  border:1px solid #26241C;box-shadow:0 34px 70px -46px rgba(22,21,15,.8);
+}
+.term-bar{display:flex;align-items:center;gap:8px;padding:11px 15px;background:#1A1913;border-bottom:1px solid #26241C}
+.term-bar .d{width:9px;height:9px;border-radius:50%}
+.term-bar .d1{background:#C0402A}.term-bar .d2{background:#B8933E}.term-bar .d3{background:#4F6B52}
+.term-bar .ttl{margin-left:10px;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:#6E6A5C;letter-spacing:.07em}
+.term-body{padding:clamp(20px,3vw,30px);font-family:'JetBrains Mono',monospace;font-size:clamp(.76rem,1.35vw,.9rem);line-height:1.85;color:#D8D3C4}
+.term-body .pr{color:#4F8B62}
+.term-body .cmd{color:#F4F1EA}
+.term-body .out{color:#7E7A6C}
+.term-body .ok{color:#7FB08A}
+.term-body .hl{color:#E0714F}
+#typed{white-space:pre-wrap}
+.term-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:14px 20px;border-top:1px solid #26241C;background:#151410;
+}
+.term-foot .lbl{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#6E6A5C;letter-spacing:.1em;text-transform:uppercase}
+.copy{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  background:transparent;color:#D8D3C4;border:1px solid #333026;border-radius:2px;
+  padding:7px 14px;cursor:pointer;transition:background .22s,color .22s,border-color .22s;
+}
+.copy:hover{background:#D8D3C4;color:#100F0B;border-color:#D8D3C4}
+.copy.done{background:#4F6B52;border-color:#4F6B52;color:#F4F1EA}
+
+.helper{
+  margin-top:26px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  border:1px solid var(--rule-2);border-left:3px solid var(--signal);border-radius:3px;
+  padding:18px 22px;background:var(--card);
+}
+.helper .ico{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--signal);line-height:1}
+.helper p{font-size:.95rem;color:var(--ink-2);flex:1;min-width:240px}
+.helper strong{color:var(--ink);font-weight:600}
+.helper a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--rule-2);transition:text-decoration-color .2s}
+.helper a:hover{text-decoration-color:var(--signal)}
+
+/* ── section 4: proof ─────────────────── */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+@media(max-width:900px){.quotes{grid-template-columns:1fr}}
+.q{background:var(--card);padding:clamp(26px,3vw,36px);display:flex;flex-direction:column;transition:background .3s}
+.q:hover{background:var(--paper-2)}
+.q .mark{font-family:'Instrument Serif',serif;font-size:3rem;line-height:.6;color:var(--signal);opacity:.55;margin-bottom:18px}
+.q blockquote{font-family:'Instrument Serif',serif;font-size:1.22rem;line-height:1.32;letter-spacing:-.01em;flex:1;margin-bottom:26px}
+.q blockquote em{font-style:italic}
+.q .who{display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--rule)}
+.q .av{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.04em;
+  background:var(--paper-2);border:1px solid var(--rule-2);color:var(--ink-2);
+}
+.q .who .nm{font-size:.9rem;font-weight:600;line-height:1.25}
+.q .who .rl{font-size:.78rem;color:var(--ink-3);line-height:1.3}
+
+.demo{
+  margin-top:34px;display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;
+  border:1px solid var(--rule);border-radius:5px;padding:clamp(24px,3vw,34px);background:var(--card);
+}
+@media(max-width:760px){.demo{grid-template-columns:1fr}}
+.demo h3{margin-bottom:8px}
+.demo p{color:var(--ink-2);font-size:.95rem;max-width:52ch}
+.play{
+  display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);
+  border:1px solid var(--ink);border-radius:3px;padding:14px 22px;transition:background .28s,color .28s;
+  white-space:nowrap;
+}
+.play:hover{background:var(--ink);color:var(--paper)}
+.play .tri{
+  width:0;height:0;border-left:10px solid currentColor;border-top:6.5px solid transparent;border-bottom:6.5px solid transparent;
+}
+.play .txt{font-size:.9rem;font-weight:500}
+.play .len{font-family:'JetBrains Mono',monospace;font-size:.66rem;opacity:.6;letter-spacing:.08em}
+
+.guarantee{
+  margin-top:34px;display:flex;gap:22px;align-items:flex-start;
+  border:1px solid var(--ink);border-radius:5px;padding:clamp(24px,3vw,34px);background:var(--paper-2);
+}
+@media(max-width:620px){.guarantee{flex-direction:column;gap:16px}}
+.seal{
+  width:88px;height:88px;flex-shrink:0;border-radius:50%;border:1px solid var(--ink);
+  display:grid;place-items:center;text-align:center;line-height:1.05;background:var(--card);
+  position:relative;
+}
+.seal::after{content:'';position:absolute;inset:5px;border:1px dashed var(--rule-2);border-radius:50%}
+.seal .big{font-family:'Instrument Serif',serif;font-size:1.85rem;line-height:1}
+.seal .sm{font-family:'JetBrains Mono',monospace;font-size:.53rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+.guarantee h3{font-size:1.4rem;margin-bottom:9px}
+.guarantee p{color:var(--ink-2);font-size:.97rem;max-width:60ch}
+
+/* ── section 5: pricing ───────────────── */
+.price-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,56px);align-items:start}
+@media(max-width:900px){.price-grid{grid-template-columns:1fr}}
+
+.stack{border-top:1px solid var(--rule)}
+.stack-row{
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:baseline;
+  padding:19px 0;border-bottom:1px solid var(--rule);
+}
+.stack-row .t{font-size:1rem;font-weight:500}
+.stack-row .d{font-size:.85rem;color:var(--ink-3);margin-top:3px;line-height:1.4}
+.stack-row .v{font-family:'JetBrains Mono',monospace;font-size:.86rem;color:var(--ink-2);white-space:nowrap}
+.stack-row.bonus .t::before{
+  content:'BONUS';font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.13em;
+  color:var(--signal);background:var(--signal-soft);padding:3px 6px;border-radius:2px;margin-right:9px;vertical-align:2px;
+}
+.stack-total{
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:baseline;padding:20px 0 0;
+}
+.stack-total .t{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.stack-total .v{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--signal);text-decoration-thickness:1.5px}
+
+.card{
+  border:1px solid var(--ink);border-radius:5px;background:var(--card);overflow:hidden;
+  box-shadow:0 30px 60px -46px rgba(22,21,15,.6);position:relative;
+}
+.card-top{padding:clamp(26px,3.4vw,36px);border-bottom:1px dashed var(--rule)}
+.card .badge{
+  position:absolute;top:0;right:0;background:var(--signal);color:var(--paper);
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;
+  padding:6px 13px;border-bottom-left-radius:4px;
+}
+.card .plan{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3)}
+.price{display:flex;align-items:baseline;gap:11px;margin-top:14px}
+.price .cur{font-family:'Instrument Serif',serif;font-size:2rem;color:var(--ink-2)}
+.price .amt{font-family:'Instrument Serif',serif;font-size:clamp(4rem,9vw,5.6rem);line-height:.86;letter-spacing:-.035em}
+.price .per{font-size:.88rem;color:var(--ink-3);line-height:1.3;max-width:11ch}
+.price-note{margin-top:16px;font-size:.9rem;color:var(--ink-2)}
+.price-note s{color:var(--ink-3)}
+
+.card-list{list-style:none;padding:clamp(24px,3vw,32px)}
+.card-list li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;font-size:.94rem;color:var(--ink-2)}
+.card-list .ck{
+  flex-shrink:0;width:16px;height:16px;margin-top:3px;border-radius:50%;background:var(--ink);
+  display:grid;place-items:center;
+}
+.card-list .ck::after{content:'';width:5px;height:8px;border:solid var(--paper);border-width:0 1.5px 1.5px 0;transform:rotate(43deg) translate(-.5px,-1px)}
+.card-foot{padding:0 clamp(24px,3vw,32px) clamp(26px,3vw,34px)}
+.card-foot .btn{width:100%;justify-content:center}
+.card-foot .fine{margin-top:14px;text-align:center;font-size:.8rem;color:var(--ink-3)}
+
+.scarce{
+  margin-top:22px;display:flex;align-items:center;gap:11px;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+}
+.scarce .bar{flex:1;max-width:120px;height:3px;background:var(--rule);border-radius:2px;overflow:hidden}
+.scarce .bar i{display:block;height:100%;width:72%;background:var(--signal)}
+
+/* ── section 6: final cta ─────────────── */
+.final{background:var(--ink);color:var(--paper);position:relative;overflow:hidden;padding:clamp(90px,11vw,140px) 0}
+.final::before{
+  content:'';position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background:
+    radial-gradient(660px 340px at 78% 12%,rgba(192,64,42,.24),transparent 68%),
+    radial-gradient(520px 300px at 12% 92%,rgba(79,107,82,.2),transparent 70%);
+}
+.final::after{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:.16;
+  background-image:linear-gradient(rgba(244,241,234,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(244,241,234,.09) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at 50% 42%,#000,transparent 74%);
+}
+.final .wrap{position:relative;z-index:2;text-align:center}
+.final .mono{color:rgba(244,241,234,.45)}
+.final h2{margin:20px auto 22px;max-width:16ch;color:var(--paper)}
+.final p.lead{color:rgba(244,241,234,.72);margin:0 auto;text-align:center}
+.final .btn{background:var(--paper);color:var(--ink);margin-top:40px}
+.final .btn::before{background:var(--signal)}
+.final .btn:hover{color:var(--paper)}
+.final .under{margin-top:20px;font-size:.92rem;color:rgba(244,241,234,.62)}
+.final .under strong{color:var(--paper);font-weight:600}
+.final-marks{
+  margin-top:52px;padding-top:30px;border-top:1px solid rgba(244,241,234,.14);
+  display:flex;gap:clamp(20px,5vw,60px);justify-content:center;flex-wrap:wrap;
+}
+.final-marks div{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(244,241,234,.5)}
+.final-marks div b{color:var(--paper);font-weight:500}
+
+/* ── footer ───────────────────────────── */
+footer{padding:46px 0;border-top:1px solid var(--rule)}
+.foot-in{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:space-between}
+footer .cr{font-size:.83rem;color:var(--ink-3)}
+.foot-links{display:flex;gap:24px}
+.foot-links a{font-size:.83rem;color:var(--ink-3);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--ink)}
+
+::selection{background:var(--ink);color:var(--paper)}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-in">
+    <div class="logo"><span class="dot"></span>Findex</div>
+    <div class="nav-links">
+      <a href="#compare">Before / After</a>
+      <a href="#how">How it works</a>
+      <a href="#proof">Proof</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing" class="btn-sm">Get Findex</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ 01 · HEADLINE ═══ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="pulse"></span><span>Runs on your own server · No cloud</span></div>
+        <h1>
+          <span class="line"><span>Every document</span></span>
+          <span class="line"><span>your team owns,</span></span>
+          <span class="line"><span><em>findable in 2 seconds.</em></span></span>
+        </h1>
+        <p class="hero-sub">Findex indexes every file on your shared drive — PDFs, scans, spreadsheets, contracts — and gives your whole company <strong>one search bar</strong> in the browser. One command to install. <strong>Nobody has to ask "where's the file?" ever again.</strong></p>
+        <div class="hero-cta">
+          <a href="#pricing" class="btn"><span>Get Started Now</span><span class="arw">→</span></a>
+          <p class="cta-note">$79 one-time. 30-day money-back guarantee.</p>
+        </div>
+      </div>
+
+      <aside class="rail">
+        <div class="item"><div class="num">2<span class="u">s</span></div><div class="lbl">Average search</div></div>
+        <div class="item"><div class="num">1</div><div class="lbl">Command to install</div></div>
+        <div class="item"><div class="num">0</div><div class="lbl">Files leave your server</div></div>
+      </aside>
+    </div>
+
+    <!-- browser mock -->
+    <div class="mock">
+      <div class="mock-bar">
+        <span class="d"></span><span class="d"></span><span class="d"></span>
+        <div class="mock-url">http://findex.local:7420 &nbsp;·&nbsp; 128,441 documents indexed</div>
+      </div>
+      <div class="mock-body">
+        <div class="search-box">
+          <span class="mono" style="letter-spacing:.1em">SEARCH</span>
+          <span class="qtext">supplier contract 2025 renewal<span class="caret"></span></span>
+          <span class="search-meta">41 results · 0.19s</span>
+        </div>
+        <div class="results">
+          <div class="res">
+            <span class="ftype pdf">PDF</span>
+            <div><div class="nm">Nordwind Logistics — <mark>Supplier Contract</mark> <mark>Renewal</mark> <mark>2025</mark>.pdf</div><div class="pth">/shared/legal/contracts/vendors/nordwind/</div></div>
+            <span class="dt">14 Mar 2025</span>
+          </div>
+          <div class="res">
+            <span class="ftype">DOCX</span>
+            <div><div class="nm">Addendum B — <mark>renewal</mark> terms &amp; indexation clause</div><div class="pth">/shared/legal/contracts/vendors/nordwind/</div></div>
+            <span class="dt">02 Apr 2025</span>
+          </div>
+          <div class="res">
+            <span class="ftype">XLSX</span>
+            <div><div class="nm">FY25 <mark>supplier</mark> pricing matrix (all divisions)</div><div class="pth">/shared/finance/procurement/2025/</div></div>
+            <span class="dt">28 Jan 2025</span>
+          </div>
+          <div class="res">
+            <span class="ftype pdf">SCAN</span>
+            <div><div class="nm">Signed page 12 — <mark>contract</mark> countersignature (OCR)</div><div class="pth">/shared/scans/inbox/2025-03/</div></div>
+            <span class="dt">17 Mar 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap strip-in">
+    <span class="lbl">Quietly running at</span>
+    <span class="org">Nordwind Logistics</span>
+    <span class="org">Halden &amp; Roos</span>
+    <span class="org">Meridian Clinic Group</span>
+    <span class="org">Bureau Vantel</span>
+    <span class="org">Corvus Manufacturing</span>
+  </div>
+</div>
+
+<!-- ═══ 02 · BEFORE / AFTER ═══ -->
+<section class="sec" id="compare">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-num">02 / 06</span>
+      <div class="txt">
+        <h2>Thirty minutes, or <em>two seconds</em>.</h2>
+        <p>Same drive. Same files. Same people. The only difference is whether they're indexed.</p>
+      </div>
+    </div>
+
+    <div class="ba rv">
+      <div class="ba-col before">
+        <div class="ba-tag"><span class="sq"></span><span class="mono">Before Findex</span></div>
+        <h3>The 30-minute hunt</h3>
+        <span class="ba-time">Average time to locate one document: 27 min</span>
+        <ul class="ba-list">
+          <li><span class="mk">01</span><span>Open six nested folders that all look like "Final_v2_NEW"</span></li>
+          <li><span class="mk">02</span><span>Search the drive — it hangs, then returns nothing</span></li>
+          <li><span class="mk">03</span><span>Message two colleagues. Wait. One is on holiday</span></li>
+          <li><span class="mk">04</span><span>Scanned PDFs are invisible to search — they're just images</span></li>
+          <li><span class="mk">05</span><span>Client emails again. You email the file. Again</span></li>
+          <li><span class="mk">06</span><span>Someone re-creates a document that already existed</span></li>
+        </ul>
+        <p class="ba-foot">Multiply by every person, every day, forever.</p>
+      </div>
+
+      <div class="ba-col after">
+        <div class="ba-tag"><span class="sq"></span><span class="mono">After Findex</span></div>
+        <h3>One search bar</h3>
+        <span class="ba-time">Average time to locate one document: 2 sec</span>
+        <ul class="ba-list">
+          <li><span class="mk">✓</span><span>Every file indexed — including text inside scans, via OCR</span></li>
+          <li><span class="mk">✓</span><span>Type a half-remembered phrase. Results appear as you type</span></li>
+          <li><span class="mk">✓</span><span>Filter by division, date, file type, or author in one click</span></li>
+          <li><span class="mk">✓</span><span>Give clients a read-only link — they find it themselves</span></li>
+          <li><span class="mk">✓</span><span>Duplicates flagged automatically, so nothing is rebuilt twice</span></li>
+          <li><span class="mk">✓</span><span>New files are indexed the moment they land on the drive</span></li>
+        </ul>
+        <p class="ba-foot"><strong>Set up once.</strong> It keeps itself current from then on.</p>
+      </div>
+    </div>
+
+    <div class="delta rv">
+      <div class="d-item"><div class="v">27 min</div><div class="k">Before</div></div>
+      <div class="arrow">→</div>
+      <div class="d-item"><div class="v hi">2 sec</div><div class="k">After</div></div>
+      <div class="arrow">=</div>
+      <div class="d-item"><div class="v">≈ 6 hrs</div><div class="k">Saved per person / month</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 03 · HOW IT WORKS ═══ -->
+<section class="sec" id="how" style="border-top:1px solid var(--rule)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-num">03 / 06</span>
+      <div class="txt">
+        <h2>One line of Terminal. <em>That's the hard part.</em></h2>
+        <p>We're not hiding it: step one happens in a Terminal window. It is a single line you paste. Everything after that is a browser.</p>
+      </div>
+    </div>
+
+    <div class="steps rv">
+      <div class="step">
+        <span class="n">STEP 01</span>
+        <h3>Paste one command</h3>
+        <p>Open Terminal on the machine that holds your shared drive. Paste the line below and press Enter. Findex installs itself and starts indexing.</p>
+        <span class="t">≈ 90 seconds</span>
+      </div>
+      <div class="step">
+        <span class="n">STEP 02</span>
+        <h3>Open your browser</h3>
+        <p>Go to <code style="font-family:'JetBrains Mono',monospace;font-size:.86em">findex.local:7420</code>. That's the whole interface. Share the address with your team — no accounts to create.</p>
+        <span class="t">≈ 10 seconds</span>
+      </div>
+      <div class="step">
+        <span class="n">STEP 03</span>
+        <h3>Everything is findable</h3>
+        <p>Search across every folder, division and scanned page at once. Findex watches the drive and re-indexes new files on its own.</p>
+        <span class="t">Ongoing · automatic</span>
+      </div>
+    </div>
+
+    <div class="term rv">
+      <div class="term-bar">
+        <span class="d d1"></span><span class="d d2"></span><span class="d d3"></span>
+        <span class="ttl">— bash — 92×24</span>
+      </div>
+      <div class="term-body">
+        <div><span class="pr">$</span> <span class="cmd" id="typed"></span><span class="caret" id="tcaret"></span></div>
+        <div id="tout" style="opacity:0;transition:opacity .5s .1s">
+          <div class="out">→ verifying environment ......................... <span class="ok">ok</span></div>
+          <div class="out">→ installing findex v3.1 ........................ <span class="ok">ok</span></div>
+          <div class="out">→ scanning /shared ............ <span class="hl">128,441 files</span></div>
+          <div class="out">→ extracting text + OCR on scans ................ <span class="ok">ok</span></div>
+          <div class="out">→ building index ............................... <span class="ok">ok</span></div>
+          <div style="margin-top:.6em"><span class="ok">✓ Findex is running.</span> <span class="out">Open</span> <span class="hl">http://findex.local:7420</span></div>
+        </div>
+      </div>
+      <div class="term-foot">
+        <span class="lbl">Copy this one line — that's step 1, complete</span>
+        <button class="copy" id="copyBtn" type="button">Copy command</button>
+      </div>
+    </div>
+
+    <div class="helper rv">
+      <span class="ico">✦</span>
+      <p><strong>Need help? We'll do the installation for you, free.</strong> Book a 15-minute screen share and we'll run it on your server while you watch. No extra charge, included with every licence.</p>
+      <a href="#pricing">Book free install →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 04 · SOCIAL PROOF ═══ -->
+<section class="sec" id="proof" style="border-top:1px solid var(--rule)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-num">04 / 06</span>
+      <div class="txt">
+        <h2>Installed by people who <em>are not technical.</em></h2>
+        <p>Office managers, clinic administrators, bookkeepers. Not one of them had touched a Terminal before.</p>
+      </div>
+    </div>
+
+    <div class="quotes rv">
+      <div class="q">
+        <div class="mark">"</div>
+        <blockquote>I'm not a technical person at all. But I just copied and pasted <em>one</em> command and everything worked. Now my team never asks "where's the file?" anymore.</blockquote>
+        <div class="who">
+          <span class="av">MK</span>
+          <div><div class="nm">Marta Kelder</div><div class="rl">Office Manager, Halden &amp; Roos</div></div>
+        </div>
+      </div>
+      <div class="q">
+        <div class="mark">"</div>
+        <blockquote>We had twelve years of scanned patient paperwork nobody could search. Findex read <em>all of it</em> overnight. Front desk finds a 2014 referral in seconds.</blockquote>
+        <div class="who">
+          <span class="av">DR</span>
+          <div><div class="nm">Deniz Rahimi</div><div class="rl">Practice Administrator, Meridian Clinic</div></div>
+        </div>
+      </div>
+      <div class="q">
+        <div class="mark">"</div>
+        <blockquote>The part I didn't expect: clients now find their own documents through the shared link. My inbox lost about <em>forty emails a week.</em></blockquote>
+        <div class="who">
+          <span class="av">JV</span>
+          <div><div class="nm">Joris Vantel</div><div class="rl">Partner, Bureau Vantel</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo rv">
+      <div>
+        <h3>Rather see it than read about it?</h3>
+        <p>A 60-second, unedited recording: opening Terminal, pasting the command, waiting for the index, and finding a document in a browser. Start to finish, nothing cut.</p>
+      </div>
+      <a href="#pricing" class="play"><span class="tri"></span><span class="txt">Watch the full install</span><span class="len">0:60</span></a>
+    </div>
+
+    <div class="guarantee rv">
+      <div class="seal"><div><div class="big">30</div><div class="sm">Day<br>Refund</div></div></div>
+      <div>
+        <h3>If the installation fails, you don't pay.</h3>
+        <p>30-day money-back guarantee, no questions and no forms. If the command doesn't run on your server, or Findex doesn't do what this page says it does, email us and we refund you in full — after we've first offered to fix it for free.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 05 · OFFER + PRICING ═══ -->
+<section class="sec" id="pricing" style="border-top:1px solid var(--rule)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="sec-num">05 / 06</span>
+      <div class="txt">
+        <h2>One price. <em>Paid once.</em></h2>
+        <p>Not per seat, not per month, not per document. One licence covers your entire organisation, forever.</p>
+      </div>
+    </div>
+
+    <div class="price-grid">
+      <div class="stack rv">
+        <div class="stack-row">
+          <div><div class="t">Findex — unlimited company licence</div><div class="d">Unlimited users, unlimited documents, unlimited divisions. Yours permanently.</div></div>
+          <div class="v">$390</div>
+        </div>
+        <div class="stack-row bonus">
+          <div><div class="t">Free 1-on-1 setup call</div><div class="d">15 minutes on a screen share. We run the install on your server while you watch.</div></div>
+          <div class="v">$150</div>
+        </div>
+        <div class="stack-row bonus">
+          <div><div class="t">Document structure template — 5 divisions</div><div class="d">A ready folder taxonomy for Finance, Legal, HR, Operations and Sales. Drop it in and go.</div></div>
+          <div class="v">$120</div>
+        </div>
+        <div class="stack-row bonus">
+          <div><div class="t">OCR pack for scanned archives</div><div class="d">Makes text inside old scans and photographed pages fully searchable.</div></div>
+          <div class="v">$95</div>
+        </div>
+        <div class="stack-row bonus">
+          <div><div class="t">Lifetime updates + email support</div><div class="d">Every future version included. Replies from the people who built it.</div></div>
+          <div class="v">$180</div>
+        </div>
+        <div class="stack-total">
+          <div class="t">Total stacked value</div>
+          <div class="v">$935</div>
+        </div>
+      </div>
+
+      <div class="card rv">
+        <div class="badge">Everything included</div>
+        <div class="card-top">
+          <div class="plan">Findex · Company licence</div>
+          <div class="price">
+            <span class="cur">$</span><span class="amt">79</span>
+            <span class="per">one-time<br>whole company</span>
+          </div>
+          <p class="price-note"><s>$935 in stacked value</s> — introductory price while we're under 1,000 installs.</p>
+        </div>
+        <ul class="card-list">
+          <li><span class="ck"></span>Unlimited users &amp; unlimited documents</li>
+          <li><span class="ck"></span>Free 1-on-1 remote installation</li>
+          <li><span class="ck"></span>5-division folder template</li>
+          <li><span class="ck"></span>OCR for scanned &amp; photographed pages</li>
+          <li><span class="ck"></span>Read-only share links for clients</li>
+          <li><span class="ck"></span>Runs fully offline — no file ever leaves your server</li>
+          <li><span class="ck"></span>Lifetime updates &amp; email support</li>
+        </ul>
+        <div class="card-foot">
+          <a href="#final" class="btn"><span>Get Started Now — 30-Day Guarantee</span><span class="arw">→</span></a>
+          <p class="fine">5-minute installation. If you get stuck, we'll help.</p>
+          <div class="scarce">
+            <span>724 / 1000 at $79</span>
+            <span class="bar"><i></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 06 · CTA ═══ -->
+<section class="final" id="final">
+  <div class="wrap">
+    <span class="mono rv">06 / 06 — Start today</span>
+    <h2 class="rv">Stop hunting. Start finding.</h2>
+    <p class="lead rv">One command tonight, and tomorrow morning every document your company owns is two seconds away — for everyone.</p>
+    <div class="rv"><a href="#" class="btn big"><span>Get Started Now — 30-Day Guarantee</span><span class="arw">→</span></a></div>
+    <p class="under rv"><strong>5-minute installation.</strong> If you get stuck, we'll help — free remote install included.</p>
+    <div class="final-marks rv">
+      <div><b>$79</b> one-time</div>
+      <div><b>30-day</b> money-back</div>
+      <div><b>Zero</b> files leave your server</div>
+      <div><b>Free</b> remote install</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="logo" style="font-size:1.15rem"><span class="dot"></span>Findex</div>
+    <p class="cr">© 2026 Findex. Self-hosted document search.</p>
+    <div class="foot-links">
+      <a href="#compare">Before / After</a>
+      <a href="#how">Install</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#final">Get started</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var nav=document.getElementById('nav');
+  var onScroll=function(){nav.classList.toggle('stuck',window.scrollY>12)};
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+    })
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+
+  document.querySelectorAll('.rv').forEach(function(el,i){
+    var p=el.parentElement;
+    var sibs=p?Array.prototype.filter.call(p.children,function(c){return c.classList.contains('rv')}):[];
+    el.style.transitionDelay=(sibs.indexOf(el)>0?Math.min(sibs.indexOf(el),4)*.07:0)+'s';
+    io.observe(el);
+  });
+
+  // terminal typing
+  var CMD='curl -fsSL https://findex.sh/install | sh';
+  var typed=document.getElementById('typed');
+  var tcaret=document.getElementById('tcaret');
+  var tout=document.getElementById('tout');
+  var started=false;
+
+  function type(){
+    if(started)return;started=true;
+    if(reduce){typed.textContent=CMD;tout.style.opacity=1;tcaret.style.display='none';return}
+    var i=0;
+    (function step(){
+      typed.textContent=CMD.slice(0,i++);
+      if(i<=CMD.length){setTimeout(step,34)}
+      else{setTimeout(function(){tout.style.opacity=1;tcaret.style.display='none'},420)}
+    })();
+  }
+  var tio=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){type();tio.disconnect()}})
+  },{threshold:.4});
+  tio.observe(document.querySelector('.term'));
+
+  // copy
+  var btn=document.getElementById('copyBtn');
+  btn.addEventListener('click',function(){
+    var done=function(){
+      btn.textContent='Copied ✓';btn.classList.add('done');
+      setTimeout(function(){btn.textContent='Copy command';btn.classList.remove('done')},1900);
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(CMD).then(done).catch(fallback);
+    }else{fallback()}
+    function fallback(){
+      var ta=document.createElement('textarea');
+      ta.value=CMD;ta.setAttribute('readonly','');
+      ta.style.cssText='position:absolute;left:-9999px';
+      document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');done()}catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>

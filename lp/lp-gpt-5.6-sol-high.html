@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Solbase turns scattered company documents into a private, searchable workspace in five minutes.">
+  <title>Solbase — Find any company document in seconds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f7f7f3;
+      --white: #ffffff;
+      --ink: #121417;
+      --muted: #62676f;
+      --line: #dfe1dc;
+      --soft: #eceee9;
+      --blue: #1958d1;
+      --blue-dark: #10449f;
+      --blue-soft: #eaf0ff;
+      --green: #14725d;
+      --red: #b4473b;
+      --display: "Newsreader", Georgia, serif;
+      --body: "Manrope", sans-serif;
+      --mono: "DM Mono", monospace;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 3px solid rgba(25, 88, 209, .32); outline-offset: 3px; }
+
+    .wrap { width: min(calc(100% - 48px), var(--max)); margin-inline: auto; }
+    .topbar {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; font-weight: 700; }
+    .brand-mark { width: 28px; height: 28px; position: relative; border: 2px solid var(--ink); }
+    .brand-mark::before, .brand-mark::after { content: ""; position: absolute; background: var(--blue); }
+    .brand-mark::before { width: 10px; height: 10px; top: 4px; left: 4px; }
+    .brand-mark::after { width: 6px; height: 6px; right: 4px; bottom: 4px; }
+    .nav { display: flex; align-items: center; gap: 28px; }
+    .nav a { color: var(--muted); text-decoration: none; font-size: .84rem; font-weight: 600; }
+    .nav a:hover { color: var(--ink); }
+    .nav .nav-cta { color: var(--white); background: var(--ink); padding: 9px 15px; border-radius: 4px; }
+    .nav .nav-cta:hover { color: var(--white); background: var(--blue); }
+
+    section { border-bottom: 1px solid var(--line); }
+    .hero { min-height: calc(92vh - 72px); min-height: calc(92svh - 72px); display: grid; align-items: center; padding: 68px 0 50px; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(430px, .98fr); align-items: center; gap: 76px; }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--blue); font: 500 .72rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .eyebrow::before { content: ""; width: 22px; height: 1px; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 680px; margin: 24px 0 25px; font: 500 clamp(3.6rem, 6.6vw, 6.8rem)/.91 var(--display); letter-spacing: 0; }
+    h1 span { color: var(--blue); font-style: italic; }
+    .hero-copy { max-width: 590px; color: var(--muted); font-size: clamp(1rem, 1.35vw, 1.2rem); }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 34px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 23px; border: 1px solid var(--ink); border-radius: 4px; text-decoration: none; font-weight: 700; font-size: .9rem; transition: transform .18s, background .18s, border-color .18s; }
+    .button:hover { transform: translateY(-2px); }
+    .button.primary { color: var(--white); background: var(--blue); border-color: var(--blue); }
+    .button.primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
+    .button.secondary { background: transparent; }
+    .arrow { font-size: 1.25rem; line-height: 1; }
+    .microcopy { margin-top: 18px; color: var(--muted); font-size: .76rem; }
+
+    .product-shot { position: relative; background: var(--white); border: 1px solid #cfd2cc; box-shadow: 18px 18px 0 var(--soft); }
+    .window-bar { height: 44px; display: flex; align-items: center; gap: 7px; padding: 0 15px; border-bottom: 1px solid var(--line); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #c6c8c3; }
+    .window-title { margin-left: auto; color: #8c908a; font: .62rem var(--mono); }
+    .app { min-height: 434px; display: grid; grid-template-columns: 122px 1fr; }
+    .sidebar { padding: 21px 13px; color: #858a83; background: #f4f5f2; border-right: 1px solid var(--line); font-size: .64rem; }
+    .side-label { margin-bottom: 17px; color: var(--ink); font-weight: 700; }
+    .side-item { margin: 11px 0; }
+    .side-item.active { color: var(--blue); font-weight: 700; }
+    .workspace { padding: 27px 24px; }
+    .searchbar { display: flex; align-items: center; gap: 9px; height: 44px; padding: 0 14px; border: 1px solid var(--ink); font-size: .72rem; }
+    .search-icon { width: 13px; height: 13px; border: 1.5px solid currentColor; border-radius: 50%; position: relative; }
+    .search-icon::after { content: ""; position: absolute; width: 5px; height: 1.5px; right: -4px; bottom: -2px; background: currentColor; transform: rotate(45deg); }
+    .result-meta { margin: 19px 0 10px; color: var(--green); font: .58rem var(--mono); }
+    .result { padding: 13px 0; border-top: 1px solid var(--line); }
+    .fileline { display: flex; justify-content: space-between; gap: 12px; font-size: .69rem; font-weight: 700; }
+    .filetype { color: var(--blue); font: .55rem var(--mono); }
+    .excerpt { margin: 5px 0 0; color: #777c75; font-size: .6rem; line-height: 1.45; }
+    .search-time { position: absolute; right: -16px; bottom: 25px; padding: 13px 17px; color: var(--white); background: var(--ink); font: 500 .65rem var(--mono); }
+    .search-time strong { color: #78a6ff; font-size: 1.05rem; }
+
+    .section-pad { padding: 110px 0; }
+    .section-head { display: grid; grid-template-columns: 165px minmax(0, 700px); gap: 28px; margin-bottom: 55px; }
+    .kicker { color: var(--blue); font: 500 .7rem var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .section-head h2 { margin: 0; font: 500 clamp(2.6rem, 4.4vw, 4.5rem)/.98 var(--display); letter-spacing: 0; }
+    .section-head p { grid-column: 2; max-width: 600px; margin: -32px 0 0; color: var(--muted); }
+
+    .compare { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); background: var(--white); }
+    .compare-panel { padding: 38px; }
+    .compare-panel + .compare-panel { border-left: 1px solid var(--line); }
+    .compare-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 34px; font: 500 .67rem var(--mono); text-transform: uppercase; }
+    .compare-label .state { color: var(--red); }
+    .after .compare-label .state { color: var(--green); }
+    .big-time { margin-bottom: 30px; font: 500 clamp(3rem, 5vw, 5.5rem)/1 var(--display); }
+    .big-time small { color: var(--muted); font: 500 .8rem var(--body); }
+    .compare-list { list-style: none; margin: 0; padding: 0; }
+    .compare-list li { display: grid; grid-template-columns: 24px 1fr; gap: 12px; padding: 14px 0; color: var(--muted); border-top: 1px solid var(--line); font-size: .88rem; }
+    .mark { color: var(--red); font-weight: 700; }
+    .after .mark { color: var(--green); }
+    .delta { padding: 19px 24px; color: var(--white); background: var(--ink); text-align: center; font-size: .86rem; }
+    .delta strong { color: #8eb3ff; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .step { min-height: 390px; padding: 31px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--white); }
+    .step-number { margin-bottom: 70px; color: var(--blue); font: 500 .68rem var(--mono); }
+    .step h3 { margin-bottom: 10px; font-size: 1.08rem; }
+    .step p { color: var(--muted); font-size: .86rem; }
+    .terminal { margin-top: 25px; overflow: hidden; color: #e8e9e6; background: #171a1d; box-shadow: 8px 8px 0 #dfe2dc; font: .55rem/1.6 var(--mono); }
+    .terminal-head { padding: 7px 10px; color: #8e9499; border-bottom: 1px solid #303438; }
+    .terminal-body { padding: 13px 11px; white-space: nowrap; overflow: hidden; }
+    .prompt { color: #7ea7ff; }
+    .terminal-ok { color: #69c5a3; }
+    .copy-command { width: 100%; padding: 8px 10px; border: 0; border-top: 1px solid #303438; color: #aeb3b7; background: #202429; font: .52rem var(--mono); text-align: left; }
+    .browser-mini { margin-top: 26px; padding: 14px; border: 1px solid var(--line); }
+    .urlbar { padding: 8px; background: var(--soft); font: .57rem var(--mono); }
+    .folder-stack { margin-top: 25px; }
+    .folder { display: flex; justify-content: space-between; margin-top: -1px; padding: 9px 10px; border: 1px solid var(--line); font-size: .6rem; }
+    .folder span { color: var(--green); }
+    .support { display: flex; justify-content: space-between; align-items: center; gap: 25px; padding: 24px 28px; border: 1px solid var(--blue); border-top: 0; color: var(--blue-dark); background: var(--blue-soft); font-size: .87rem; }
+    .support strong { color: var(--ink); }
+
+    .proof-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 24px; }
+    .demo { min-height: 430px; position: relative; overflow: hidden; color: var(--white); background: #16191c; }
+    .demo-stage { height: 100%; min-height: 430px; padding: 44px; display: flex; flex-direction: column; justify-content: space-between; }
+    .demo-grid { position: absolute; inset: 0; opacity: .16; background-image: linear-gradient(#788087 1px, transparent 1px), linear-gradient(90deg, #788087 1px, transparent 1px); background-size: 40px 40px; }
+    .demo-status { position: relative; display: flex; justify-content: space-between; font: .64rem var(--mono); text-transform: uppercase; }
+    .demo-copy { position: relative; max-width: 470px; }
+    .demo-copy h3 { margin-bottom: 13px; font: 500 clamp(2.3rem, 3.7vw, 4rem)/.98 var(--display); }
+    .demo-copy p { color: #b4bac0; font-size: .88rem; }
+    .play { position: relative; width: 64px; height: 64px; border: 1px solid #697079; color: var(--white); background: transparent; border-radius: 50%; font-size: 1.15rem; transition: background .2s, color .2s; }
+    .play:hover { color: var(--ink); background: var(--white); }
+    .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #31363b; }
+    .progress span { display: block; width: 0; height: 100%; background: #729fff; }
+    .demo.playing .progress span { animation: progress 8s linear forwards; }
+    @keyframes progress { to { width: 100%; } }
+    .assurance { display: grid; gap: 24px; }
+    .assurance-block { padding: 34px; border: 1px solid var(--line); background: var(--white); }
+    .assurance-block:first-child { flex: 1; }
+    .assurance-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 52px; border: 1px solid var(--green); color: var(--green); font-weight: 700; }
+    .assurance h3 { font: 500 1.8rem/1.1 var(--display); }
+    .assurance p { margin-bottom: 0; color: var(--muted); font-size: .84rem; }
+    .privacy-line { display: flex; gap: 11px; color: var(--muted); font-size: .78rem; }
+    .privacy-line strong { color: var(--ink); }
+
+    .pricing-layout { display: grid; grid-template-columns: .85fr 1.15fr; align-items: stretch; max-width: 950px; margin: auto; border: 1px solid var(--ink); background: var(--white); }
+    .price-side { display: flex; flex-direction: column; justify-content: space-between; padding: 44px; color: var(--white); background: var(--ink); }
+    .price-side .kicker { color: #8eb3ff; }
+    .price { margin: 32px 0 5px; font: 500 5rem/1 var(--display); }
+    .price sup { font: 500 1.3rem var(--body); vertical-align: top; }
+    .price-term { color: #aeb2b6; font-size: .76rem; }
+    .price-note { color: #aeb2b6; font-size: .72rem; }
+    .included { padding: 44px; }
+    .included h3 { margin-bottom: 22px; font: 500 2rem var(--display); }
+    .included ul { list-style: none; margin: 0 0 31px; padding: 0; }
+    .included li { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .86rem; }
+    .included li::before { content: "✓"; color: var(--green); font-weight: 700; }
+    .included .bonus { color: var(--ink); font-weight: 700; }
+    .included .button { width: 100%; }
+
+    .final { padding: 120px 0; text-align: center; background: var(--white); }
+    .final .eyebrow { justify-content: center; }
+    .final h2 { max-width: 780px; margin: 27px auto 22px; font: 500 clamp(3rem, 5.6vw, 5.8rem)/.95 var(--display); }
+    .final p { max-width: 520px; margin: 0 auto; color: var(--muted); }
+    .final .button { margin-top: 32px; }
+    .final-note { margin-top: 16px; color: var(--muted); font-size: .75rem; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px 0; color: var(--muted); font-size: .72rem; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      .hero { min-height: auto; }
+      .hero-grid, .proof-grid, .pricing-layout { grid-template-columns: 1fr; }
+      .hero-grid { gap: 60px; }
+      .product-shot { max-width: 650px; }
+      .steps { grid-template-columns: 1fr; }
+      .step { min-height: auto; }
+      .step-number { margin-bottom: 36px; }
+      .section-head { grid-template-columns: 120px 1fr; }
+      .price-side { min-height: 350px; }
+    }
+
+    @media (max-width: 650px) {
+      .wrap { width: min(calc(100% - 30px), var(--max)); }
+      .nav a:not(.nav-cta) { display: none; }
+      .hero { padding: 58px 0 45px; }
+      h1 { font-size: clamp(3.2rem, 16vw, 5rem); }
+      .actions .button { width: 100%; }
+      .app { grid-template-columns: 78px 1fr; min-height: 355px; }
+      .workspace { padding: 20px 14px; }
+      .sidebar { padding-inline: 8px; }
+      .search-time { right: -7px; }
+      .section-pad { padding: 80px 0; }
+      .section-head { display: block; }
+      .section-head .kicker { margin-bottom: 21px; }
+      .section-head p { margin: 20px 0 0; }
+      .compare { grid-template-columns: 1fr; }
+      .compare-panel { padding: 28px 22px; }
+      .compare-panel + .compare-panel { border-left: 0; border-top: 1px solid var(--line); }
+      .step { padding: 25px 22px; }
+      .support { align-items: flex-start; flex-direction: column; }
+      .demo-stage { padding: 30px 24px; }
+      .pricing-layout, .price-side { border-color: var(--ink); }
+      .price-side, .included { padding: 32px 24px; }
+      .final { padding: 85px 0; }
+      footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="#top" aria-label="Solbase home"><span class="brand-mark" aria-hidden="true"></span>Solbase</a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#how">How it works</a>
+      <a href="#proof">60-sec demo</a>
+      <a class="nav-cta" href="#pricing">Get Solbase</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="reveal">
+          <div class="eyebrow">Private document search</div>
+          <h1>Every answer, <span>two seconds away.</span></h1>
+          <p class="hero-copy">Turn scattered files, old email attachments, and shared drives into one private workspace your team and clients can search themselves.</p>
+          <div class="actions">
+            <a class="button primary" href="#pricing">Get Solbase for $79 <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="button secondary" href="#proof">Watch the 60-sec demo</a>
+          </div>
+          <div class="microcopy">5-minute setup · Runs on your server · 30-day guarantee</div>
+        </div>
+
+        <div class="product-shot reveal" aria-label="Solbase search interface preview">
+          <div class="window-bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="window-title">localhost:4173 / search</span></div>
+          <div class="app">
+            <aside class="sidebar"><div class="side-label">SOLBASE</div><div class="side-item active">Search</div><div class="side-item">Documents</div><div class="side-item">People</div><div class="side-item">Access</div></aside>
+            <div class="workspace">
+              <div class="searchbar"><span class="search-icon" aria-hidden="true"></span>Q3 distributor agreement</div>
+              <div class="result-meta">3 matching documents</div>
+              <div class="result"><div class="fileline"><span>Distributor Agreement — North</span><span class="filetype">PDF</span></div><p class="excerpt">Renewal date: September 30 · Territory: North region · Owner: Legal</p></div>
+              <div class="result"><div class="fileline"><span>Q3 Partner Terms</span><span class="filetype">DOCX</span></div><p class="excerpt">Updated payment schedule and partner support terms for Q3.</p></div>
+              <div class="result"><div class="fileline"><span>Commercial Agreements Index</span><span class="filetype">XLSX</span></div><p class="excerpt">Master record for active distributor and reseller agreements.</p></div>
+            </div>
+          </div>
+          <div class="search-time"><strong>1.8s</strong><br>answer found</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad" id="before-after">
+      <div class="wrap">
+        <div class="section-head reveal"><div class="kicker">01 / Before and after</div><h2>Stop losing half an hour to one missing file.</h2><p>The same document. A completely different working day.</p></div>
+        <div class="compare reveal">
+          <article class="compare-panel before"><div class="compare-label"><span>Before Solbase</span><span class="state">Search mode</span></div><div class="big-time">30 min <small>per document</small></div><ul class="compare-list"><li><span class="mark">×</span><span>Check three drives and six email threads</span></li><li><span class="mark">×</span><span>Ask the group chat who has the latest version</span></li><li><span class="mark">×</span><span>Reply to another client asking for the same file</span></li></ul></article>
+          <article class="compare-panel after"><div class="compare-label"><span>After Solbase</span><span class="state">Found</span></div><div class="big-time">2 sec <small>from any browser</small></div><ul class="compare-list"><li><span class="mark">✓</span><span>Everything indexed in one searchable workspace</span></li><li><span class="mark">✓</span><span>The right version appears first, with context</span></li><li><span class="mark">✓</span><span>Clients use secure self-service access</span></li></ul></article>
+        </div>
+        <div class="delta reveal">One five-minute setup replaces the next <strong>“Where’s that file?”</strong></div>
+      </div>
+    </section>
+
+    <section class="section-pad" id="how">
+      <div class="wrap">
+        <div class="section-head reveal"><div class="kicker">02 / How it works</div><h2>One command. Then stay in your browser.</h2><p>You do not need to become technical. Copy one line, open one link, and Solbase handles the rest.</p></div>
+        <div class="steps reveal">
+          <article class="step"><div class="step-number">STEP 01</div><h3>Paste one command</h3><p>Open Terminal, paste the line, and press Enter. That is the entire command-line setup.</p><div class="terminal" role="img" aria-label="Terminal showing the one-line Solbase installation command"><div class="terminal-head">Terminal — install</div><div class="terminal-body"><span class="prompt">$</span> curl -fsSL get.solbase.app | sh<br><span class="terminal-ok">✓ Solbase is ready</span></div><button class="copy-command" type="button" data-command="curl -fsSL get.solbase.app | sh">Copy command</button></div></article>
+          <article class="step"><div class="step-number">STEP 02</div><h3>Open your browser</h3><p>Solbase gives you a private local address. Open it in the browser you already use.</p><div class="browser-mini"><div class="urlbar">localhost:4173/setup</div><p style="margin:15px 0 0;font-size:.65rem;color:var(--muted)">Create workspace<br>Choose document folders<br>Invite your team</p></div></article>
+          <article class="step"><div class="step-number">STEP 03</div><h3>Your documents organize themselves</h3><p>Solbase indexes folders and makes every file searchable without moving the originals.</p><div class="folder-stack"><div class="folder">Operations <span>426 files</span></div><div class="folder">Finance <span>182 files</span></div><div class="folder">Sales <span>311 files</span></div><div class="folder">Legal <span>94 files</span></div></div></article>
+        </div>
+        <div class="support reveal"><span><strong>Prefer not to touch Terminal?</strong> We can do a free remote installation with you.</span><a href="#pricing">Included with your license →</a></div>
+      </div>
+    </section>
+
+    <section class="section-pad" id="proof">
+      <div class="wrap">
+        <div class="section-head reveal"><div class="kicker">03 / See the proof</div><h2>Watch a blank server become searchable in 60 seconds.</h2><p>No edited testimonial reel. Just the complete install, first document import, and first search.</p></div>
+        <div class="proof-grid reveal">
+          <div class="demo" id="demo">
+            <div class="demo-grid"></div>
+            <div class="demo-stage"><div class="demo-status"><span>Uncut product demo</span><span id="demoTime">00:60</span></div><div class="demo-copy"><h3 id="demoTitle">Install to first answer.</h3><p id="demoText">See every step, including the single Terminal command.</p></div><button class="play" id="playDemo" type="button" aria-label="Play 60-second demo">▶</button></div>
+            <div class="progress"><span></span></div>
+          </div>
+          <div class="assurance">
+            <article class="assurance-block"><div class="assurance-icon" aria-hidden="true">30</div><h3>Try it for 30 days, without carrying the risk.</h3><p>If installation fails or Solbase does not work for your team, tell us within 30 days and we will refund your purchase.</p></article>
+            <article class="assurance-block"><div class="privacy-line"><span>■</span><span><strong>Your files stay yours.</strong><br>Solbase runs on your server. Your documents are not used to train public models.</span></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad" id="pricing">
+      <div class="wrap">
+        <div class="section-head reveal"><div class="kicker">04 / The complete offer</div><h2>One license. No feature maze.</h2><p>Everything a small team needs to make company knowledge searchable, plus personal help getting started.</p></div>
+        <div class="pricing-layout reveal">
+          <div class="price-side"><div><div class="kicker">Solbase Team</div><div class="price"><sup>$</sup>79</div><div class="price-term">one-time license · up to 15 users</div></div><div class="price-note">30-day money-back guarantee<br>No subscription required</div></div>
+          <div class="included"><h3>Everything included</h3><ul><li>Unlimited document indexing on your server</li><li>Fast natural-language search and source previews</li><li>Secure links for external clients and partners</li><li>Role-based access for up to 15 team members</li><li class="bonus">Bonus: Free one-on-one remote setup call</li><li class="bonus">Bonus: Document structure template for 5 divisions</li></ul><a class="button primary" href="mailto:hello@solbase.app?subject=Get%20Solbase%20Team%20for%20%2479">Get Started Now — 30-Day Guarantee <span class="arrow" aria-hidden="true">→</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="start">
+      <div class="wrap reveal"><div class="eyebrow">Your next search can take two seconds</div><h2>Put every document within reach.</h2><p>Get Solbase running in five minutes. If you get stuck, we will install it with you for free.</p><a class="button primary" href="mailto:hello@solbase.app?subject=Get%20Started%20with%20Solbase">Get Started Now — 30-Day Guarantee <span class="arrow" aria-hidden="true">→</span></a><div class="final-note">5-minute installation · Personal setup help included</div></div>
+    </section>
+  </main>
+
+  <footer class="wrap"><span>© 2026 Solbase. Private search for working teams.</span><span>One-time license · 30-day guarantee</span></footer>
+
+  <script>
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+
+    const copyButton = document.querySelector('.copy-command');
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(copyButton.dataset.command);
+        copyButton.textContent = 'Copied to clipboard';
+      } catch (error) {
+        copyButton.textContent = 'Select the command above to copy';
+      }
+      window.setTimeout(() => { copyButton.textContent = 'Copy command'; }, 2200);
+    });
+
+    const demo = document.getElementById('demo');
+    const playButton = document.getElementById('playDemo');
+    const demoTime = document.getElementById('demoTime');
+    const demoTitle = document.getElementById('demoTitle');
+    const demoText = document.getElementById('demoText');
+    let demoTimer;
+    const scenes = [
+      ['00:45', 'One command. Installed.', 'The private workspace starts on your server.'],
+      ['00:30', 'Folders connected.', 'Solbase indexes the files where they already live.'],
+      ['00:15', 'First question asked.', 'Natural-language search checks every document at once.'],
+      ['00:00', 'Answer found in 1.8 seconds.', 'The source file is one click away.']
+    ];
+
+    playButton.addEventListener('click', () => {
+      window.clearInterval(demoTimer);
+      demo.classList.remove('playing');
+      void demo.offsetWidth;
+      demo.classList.add('playing');
+      playButton.textContent = '↻';
+      playButton.setAttribute('aria-label', 'Replay 60-second demo');
+      let scene = 0;
+      const updateScene = () => {
+        const [time, title, text] = scenes[scene];
+        demoTime.textContent = time;
+        demoTitle.textContent = title;
+        demoText.textContent = text;
+        scene += 1;
+        if (scene === scenes.length) window.clearInterval(demoTimer);
+      };
+      updateScene();
+      demoTimer = window.setInterval(updateScene, 2000);
+    });
+  </script>
+</body>
+</html>
