@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Luna makes company documents searchable, shareable, and easy to find from any browser.">
+  <meta name="theme-color" content="#f3f1eb">
+  <title>Luna — Find any document in seconds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f3f1eb;
+      --paper-deep: #e8e6df;
+      --white: #fbfaf7;
+      --ink: #17191b;
+      --muted: #686b6b;
+      --faint: #92948f;
+      --line: #d1d0c8;
+      --line-dark: #a8aaa3;
+      --blue: #3658df;
+      --blue-deep: #2945bc;
+      --blue-pale: #e0e5fb;
+      --green: #2b725c;
+      --serif: "Libre Baskerville", Georgia, serif;
+      --sans: "Manrope", sans-serif;
+      --mono: "DM Mono", monospace;
+      --max: 1180px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .18; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E"); }
+    a { color: inherit; }
+    button { color: inherit; font: inherit; }
+    ::selection { color: var(--white); background: var(--blue); }
+    :focus-visible { outline: 3px solid rgba(54, 88, 223, .4); outline-offset: 4px; }
+    .wrap { width: min(calc(100% - 48px), var(--max)); margin-inline: auto; }
+    .hairline { border-bottom: 1px solid var(--line); }
+
+    .site-header { position: sticky; top: 0; z-index: 20; background: rgba(243,241,235,.88); backdrop-filter: blur(18px); border-bottom: 1px solid transparent; transition: border-color .2s ease; }
+    .site-header.scrolled { border-color: var(--line); }
+    .nav { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 700; text-decoration: none; letter-spacing: -.03em; }
+    .brand-mark { width: 27px; height: 27px; position: relative; display: grid; place-items: center; border: 1.5px solid var(--ink); border-radius: 50%; }
+    .brand-mark::before { content: ""; width: 11px; height: 11px; border-radius: 50%; background: var(--blue); box-shadow: 5px -3px 0 var(--paper); }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { color: var(--muted); font-size: .75rem; font-weight: 600; text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-start { padding: 9px 14px; color: var(--white) !important; background: var(--ink); border: 1px solid var(--ink); transition: background .2s ease, border-color .2s ease; }
+    .nav-start:hover { color: var(--white) !important; background: var(--blue); border-color: var(--blue); }
+
+    .eyebrow { display: flex; align-items: center; gap: 11px; color: var(--blue); font: 500 .66rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+    .section-no { color: var(--line-dark); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; letter-spacing: -.045em; line-height: .98; }
+    h1 { max-width: 790px; margin: 24px 0 27px; font-size: clamp(3.3rem, 7vw, 6.95rem); }
+    h1 em, h2 em { color: var(--blue); font-style: italic; }
+    h2 { max-width: 780px; margin: 17px 0 0; font-size: clamp(2.55rem, 5.1vw, 5rem); }
+    .section-intro { display: grid; grid-template-columns: 175px 1fr; gap: 30px; margin-bottom: 56px; }
+    .section-intro > p { grid-column: 2; max-width: 570px; margin: -28px 0 0; color: var(--muted); font-size: .92rem; }
+    .section-pad { padding: 116px 0; }
+
+    .hero { min-height: calc(100svh - 72px); display: flex; align-items: center; padding: 70px 0 84px; border-bottom: 1px solid var(--line); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(390px, .94fr); gap: clamp(42px, 6vw, 90px); align-items: center; }
+    .hero-copy { max-width: 700px; color: var(--muted); font-size: clamp(1rem, 1.35vw, 1.16rem); }
+    .hero-action { display: flex; align-items: flex-start; gap: 23px; margin-top: 35px; }
+    .button { display: inline-flex; min-height: 53px; align-items: center; justify-content: center; gap: 13px; padding: 0 21px; color: var(--white); background: var(--blue); border: 1px solid var(--blue); text-decoration: none; font-size: .81rem; font-weight: 700; transition: transform .2s ease, background .2s ease; }
+    .button:hover { background: var(--blue-deep); transform: translateY(-2px); }
+    .button .arrow { font-size: 1.15rem; transition: transform .2s ease; }
+    .button:hover .arrow { transform: translateX(3px); }
+    .status-line { max-width: 300px; margin: 1px 0 0; color: var(--muted); font-size: .72rem; line-height: 1.55; }
+
+    .search-scene { position: relative; min-width: 0; padding: 21px 0 28px 25px; }
+    .search-scene::before { content: ""; position: absolute; inset: 0 25px 0 0; border: 1px solid var(--line); background: var(--paper-deep); }
+    .orbit { position: absolute; width: 110px; height: 110px; top: -38px; right: -22px; border: 1px solid var(--line-dark); border-radius: 50%; opacity: .6; }
+    .orbit::after { content: ""; position: absolute; top: 10px; left: 8px; width: 5px; height: 5px; background: var(--blue); border-radius: 50%; box-shadow: 0 0 0 4px rgba(54,88,223,.1); }
+    .search-window { position: relative; background: var(--white); border: 1px solid var(--ink); box-shadow: 15px 15px 0 rgba(23,25,27,.08); }
+    .window-bar { height: 42px; display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid var(--line); }
+    .window-dots { display: flex; gap: 6px; }
+    .window-dots i { width: 7px; height: 7px; border: 1px solid var(--line-dark); border-radius: 50%; }
+    .window-url { margin-left: auto; color: var(--line-dark); font: .56rem var(--mono); }
+    .search-workspace { min-height: 425px; display: grid; grid-template-columns: 103px 1fr; }
+    .mini-sidebar { padding: 23px 13px; background: #eeece5; border-right: 1px solid var(--line); color: #7b7d78; font-size: .58rem; }
+    .mini-logo { margin-bottom: 25px; color: var(--ink); font-weight: 700; letter-spacing: .08em; }
+    .mini-nav { padding: 8px; margin: 0 -3px 8px; }
+    .mini-nav.active { color: var(--blue); background: var(--blue-pale); font-weight: 700; }
+    .search-main { padding: 27px 22px; overflow: hidden; }
+    .search-label { margin-bottom: 9px; color: var(--muted); font: .55rem var(--mono); }
+    .search-input { position: relative; height: 47px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border: 1.5px solid var(--ink); font-size: .67rem; white-space: nowrap; overflow: hidden; }
+    .magnify { width: 13px; height: 13px; flex: 0 0 auto; position: relative; border: 1.5px solid currentColor; border-radius: 50%; }
+    .magnify::after { content: ""; position: absolute; width: 5px; height: 1.5px; right: -4px; bottom: -2px; background: currentColor; transform: rotate(45deg); }
+    .search-beam { position: absolute; top: 0; bottom: 0; left: -55px; width: 48px; background: linear-gradient(90deg, transparent, rgba(54,88,223,.15), transparent); animation: scan 3.8s 1.4s ease-in-out infinite; }
+    .result-count { margin: 22px 0 9px; color: var(--green); font: .56rem var(--mono); }
+    .result { padding: 15px 0; border-top: 1px solid var(--line); }
+    .result-title { display: flex; justify-content: space-between; gap: 12px; font-size: .65rem; font-weight: 700; }
+    .filetype { color: var(--blue); font: .5rem var(--mono); }
+    .result p { margin: 6px 0 0; color: #797b76; font-size: .55rem; line-height: 1.5; }
+    .speed-tag { position: absolute; right: -18px; bottom: 8px; min-width: 132px; padding: 15px 18px; color: var(--white); background: var(--ink); font: .56rem var(--mono); }
+    .speed-tag strong { display: block; margin-bottom: 2px; color: #aebdff; font: 400 1.4rem var(--serif); }
+
+    .compare { display: grid; grid-template-columns: 1fr 82px 1fr; align-items: stretch; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .compare-panel { padding: 43px 6px 43px 0; }
+    .compare-panel.after { padding-left: 38px; }
+    .compare-label { margin-bottom: 55px; color: var(--blue); font: .66rem var(--mono); text-transform: uppercase; }
+    .after .compare-label { color: var(--green); }
+    .compare-time { margin-bottom: 21px; font: 400 clamp(4rem, 7vw, 7rem)/.85 var(--serif); letter-spacing: -.06em; }
+    .compare-time small { color: var(--muted); font: 500 .65rem var(--mono); letter-spacing: 0; text-transform: uppercase; }
+    .compare-panel p { max-width: 440px; margin: 0; color: var(--muted); font-size: .9rem; }
+    .compare-arrow { display: grid; place-items: center; color: var(--blue); border-inline: 1px solid var(--line); font-size: 1.7rem; }
+    .time-note { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 22px; color: var(--white); background: var(--ink); font-size: .78rem; }
+    .time-note strong { color: #b2c0ff; font: 400 1.08rem var(--serif); }
+
+    .products { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+    .product { min-height: 430px; display: flex; flex-direction: column; padding: 30px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); background: var(--white); transition: background .22s ease; }
+    .product:hover { background: #fff; }
+    .product.featured { color: var(--white); background: var(--ink); }
+    .product-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 82px; font: .6rem var(--mono); text-transform: uppercase; }
+    .product.featured .product-top { color: #b8bab5; }
+    .flag { padding: 4px 8px; color: #afbdff; border: 1px solid currentColor; }
+    .product h3 { max-width: 290px; margin-bottom: 24px; font-size: 2rem; line-height: 1; }
+    .product ul { list-style: none; padding: 0; margin: 0 0 28px; color: var(--muted); font-size: .78rem; }
+    .product.featured ul { color: #bbbdb8; }
+    .product li { display: grid; grid-template-columns: 14px 1fr; gap: 8px; padding: 9px 0; border-top: 1px solid var(--line); }
+    .product.featured li { border-color: #3d4044; }
+    .product li::before { content: "↳"; color: var(--blue); }
+    .product-link { margin-top: auto; color: var(--blue); font: 500 .67rem var(--mono); text-decoration: none; }
+    .product.featured .product-link { color: #afbdff; }
+    .product-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    .how { color: var(--white); background: var(--ink); }
+    .how .section-intro > p { color: #acafaa; }
+    .how .section-no { color: #777b79; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #42464c; border-left: 1px solid #42464c; }
+    .step { min-height: 250px; padding: 27px; border-right: 1px solid #42464c; border-bottom: 1px solid #42464c; }
+    .step-no { display: block; margin-bottom: 60px; color: #aebdff; font: .6rem var(--mono); }
+    .step h3 { max-width: 320px; margin-bottom: 12px; font-size: 1.62rem; line-height: 1.05; }
+    .step p { max-width: 330px; margin: 0; color: #aaada8; font-size: .76rem; }
+    .command-shot { margin-top: 30px; border: 1px solid #555a61; background: #101214; box-shadow: 12px 12px 0 #292d32; }
+    .terminal-bar { height: 40px; display: flex; align-items: center; gap: 7px; padding: 0 14px; color: #777c80; border-bottom: 1px solid #393e44; font: .58rem var(--mono); }
+    .terminal-bar i { width: 7px; height: 7px; border: 1px solid #666d73; border-radius: 50%; }
+    .terminal-title { margin-left: auto; }
+    .terminal-body { padding: 28px 24px 22px; font: .72rem/1.9 var(--mono); overflow-x: auto; }
+    .prompt { color: #aebdff; }
+    .terminal-muted { color: #747a7e; }
+    .terminal-ok { color: #67b596; }
+    .copy-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 13px 17px; border-top: 1px solid #393e44; color: #a9ada9; font: .6rem var(--mono); }
+    .copy-button { padding: 8px 12px; color: var(--white); background: transparent; border: 1px solid #5a6067; cursor: pointer; font: .58rem var(--mono); }
+    .copy-button:hover { border-color: #aebdff; }
+    .derisk { display: flex; align-items: center; gap: 12px; margin: 30px 0 0; color: #d8dad7; font-size: .79rem; }
+    .derisk span { display: grid; place-items: center; width: 24px; height: 24px; color: var(--ink); background: #aebdff; }
+
+    .proof-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+    .testimonial { min-height: 465px; display: flex; flex-direction: column; justify-content: space-between; padding: 44px; background: var(--white); border: 1px solid var(--line); }
+    .quote-mark { color: var(--blue); font: 400 4.5rem/.7 var(--serif); }
+    blockquote { max-width: 650px; margin: 30px 0 50px; font: 400 clamp(2rem, 3.7vw, 3.6rem)/1.04 var(--serif); letter-spacing: -.045em; }
+    .person { display: flex; align-items: center; gap: 13px; font-size: .7rem; }
+    .avatar { width: 39px; height: 39px; display: grid; place-items: center; color: var(--white); background: var(--green); font: .6rem var(--mono); }
+    .person span { display: block; margin-top: 2px; color: var(--muted); }
+    .proof-stack { display: grid; grid-template-rows: 1fr auto; gap: 24px; }
+    .demo { min-height: 325px; position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 28px; color: var(--white); background: #202328; border: 0; text-align: left; cursor: pointer; }
+    .demo::before { content: ""; position: absolute; inset: 0; opacity: .15; background-image: linear-gradient(#a8afb4 1px, transparent 1px), linear-gradient(90deg, #a8afb4 1px, transparent 1px); background-size: 32px 32px; }
+    .demo > * { position: relative; }
+    .demo-meta { display: flex; justify-content: space-between; color: #aeb2b4; font: .57rem var(--mono); text-transform: uppercase; }
+    .demo-center { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+    .demo h3 { max-width: 300px; margin: 0; font-size: 2.2rem; line-height: 1; }
+    .play { width: 55px; height: 55px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid #777e84; border-radius: 50%; font-size: 1rem; }
+    .demo:hover .play { color: var(--ink); background: var(--white); border-color: var(--white); }
+    .demo-progress { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 4px; background: #34383e; }
+    .demo-progress span { display: block; width: 0; height: 100%; background: var(--blue); }
+    .demo.playing .demo-progress span { animation: progress 8s linear forwards; }
+    .proof-stat { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding: 25px 27px; border: 1px solid var(--green); color: var(--green); background: #e5ede7; }
+    .proof-stat strong { flex: 0 0 auto; font: 400 2.4rem var(--serif); }
+    .proof-stat span { max-width: 240px; font-size: .7rem; }
+
+    .guarantee { position: relative; overflow: hidden; color: var(--white); background: var(--blue); }
+    .guarantee::after { content: "30"; position: absolute; right: -2vw; bottom: -16vw; color: rgba(255,255,255,.1); font: 400 42vw/.8 var(--serif); pointer-events: none; }
+    .guarantee-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 270px 1fr; align-items: center; gap: 70px; }
+    .seal { width: 238px; aspect-ratio: 1; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.7); border-radius: 50%; }
+    .seal-inner { width: 183px; aspect-ratio: 1; display: grid; place-items: center; border: 1px dashed rgba(255,255,255,.7); border-radius: 50%; text-align: center; }
+    .seal strong { display: block; font: 400 5rem/.7 var(--serif); }
+    .seal span { font: .55rem var(--mono); text-transform: uppercase; }
+    .guarantee-copy h2 { max-width: 750px; margin: 0 0 24px; }
+    .guarantee-copy p { max-width: 700px; margin: 0; color: #e3e8ff; font-size: .92rem; }
+    .guarantee-copy strong { color: var(--white); }
+
+    .final { min-height: 78svh; display: grid; align-items: center; padding: 110px 0; text-align: center; background: var(--white); }
+    .final .eyebrow { justify-content: center; }
+    .final h2 { max-width: 910px; margin: 24px auto 32px; font-size: clamp(3.5rem, 7.3vw, 7.4rem); line-height: .87; }
+    .final .button { margin-inline: auto; }
+    .final-note { margin: 18px 0 0; color: var(--muted); font-size: .7rem; }
+    footer { border-top: 1px solid var(--line); }
+    .footer-inner { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--muted); font-size: .66rem; }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-links a { text-decoration: none; }
+    .footer-links a:hover { color: var(--blue); }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.72,.2,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    @keyframes scan { 0%,20% { transform: translateX(0); opacity: 0; } 36% { opacity: 1; } 68%,100% { transform: translateX(390px); opacity: 0; } }
+    @keyframes progress { to { width: 100%; } }
+    @media (max-width: 960px) {
+      .hero { min-height: auto; padding-block: 78px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-grid > div:first-child { max-width: 800px; }
+      .search-scene { max-width: 690px; }
+      .products { grid-template-columns: 1fr 1fr; }
+      .product:first-child { grid-column: 1 / -1; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .proof-stack { grid-template-columns: 1fr .55fr; grid-template-rows: 1fr; }
+      .guarantee-grid { grid-template-columns: 220px 1fr; gap: 45px; }
+      .seal { width: 210px; }
+      .seal-inner { width: 162px; }
+    }
+    @media (max-width: 680px) {
+      .wrap { width: min(calc(100% - 30px), var(--max)); }
+      .nav { height: 64px; }
+      .nav-links a:not(.nav-start) { display: none; }
+      .nav-start { padding: 8px 11px; }
+      .hero { padding: 55px 0 62px; }
+      h1 { font-size: clamp(3.3rem, 16vw, 5.25rem); }
+      .hero-action { display: block; }
+      .hero-action .button { width: 100%; }
+      .status-line { max-width: none; margin-top: 15px; }
+      .search-scene { padding: 12px 0 18px 10px; }
+      .search-scene::before { right: 10px; }
+      .orbit { right: -12px; }
+      .search-workspace { min-height: 350px; grid-template-columns: 70px 1fr; }
+      .mini-sidebar { padding: 18px 7px; }
+      .search-main { padding: 20px 12px; }
+      .speed-tag { right: -7px; }
+      .section-pad { padding: 80px 0; }
+      .section-intro { display: block; margin-bottom: 42px; }
+      .section-intro .eyebrow { margin-bottom: 20px; }
+      .section-intro > p { margin: 20px 0 0; }
+      .compare { grid-template-columns: 1fr; }
+      .compare-panel, .compare-panel.after { padding: 32px 0; }
+      .compare-label { margin-bottom: 35px; }
+      .compare-arrow { min-height: 55px; border: 0; border-block: 1px solid var(--line); transform: rotate(90deg); }
+      .time-note { align-items: flex-start; flex-direction: column; }
+      .products { grid-template-columns: 1fr; }
+      .product:first-child { grid-column: auto; }
+      .product { min-height: 390px; padding: 25px; }
+      .product-top { margin-bottom: 60px; }
+      .steps { grid-template-columns: 1fr; }
+      .step { min-height: 230px; }
+      .step-no { margin-bottom: 45px; }
+      .terminal-body { font-size: .62rem; padding-inline: 16px; }
+      .copy-row { align-items: flex-start; flex-direction: column; }
+      .copy-button { width: 100%; }
+      .testimonial { min-height: 410px; padding: 29px 24px; }
+      .proof-stack { grid-template-columns: 1fr; }
+      .proof-stat { align-items: flex-start; flex-direction: column; }
+      .guarantee-grid { grid-template-columns: 1fr; gap: 50px; }
+      .seal { width: 190px; }
+      .seal-inner { width: 146px; }
+      .final { min-height: auto; padding: 90px 0; }
+      .footer-inner { align-items: flex-start; flex-direction: column; padding-block: 28px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Luna home"><span class="brand-mark" aria-hidden="true"></span>Luna</a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#products">Products</a><a href="#how">How it works</a><a href="#proof">Proof</a><a href="#guarantee">Guarantee</a>
+        <a class="nav-start" href="#start">Start now <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="reveal">
+          <div class="eyebrow">For B2B owners tired of hunting for files</div>
+          <h1>Stop hunting for documents. Stop resending files. Find anything <em>in seconds.</em></h1>
+          <p class="hero-copy">Organize your company documents so your team, clients, and partners access what they need instantly — from any browser.</p>
+          <div class="hero-action"><a class="button" href="#start">Start with Luna <span class="arrow" aria-hidden="true">→</span></a><p class="status-line">Your clients notice when you answer fast. Your team stops asking where things are.</p></div>
+        </div>
+        <div class="search-scene reveal" aria-label="Luna finding a supplier contract in 1.8 seconds">
+          <span class="orbit" aria-hidden="true"></span>
+          <div class="search-window">
+            <div class="window-bar"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="window-url">luna.local / search</span></div>
+            <div class="search-workspace">
+              <aside class="mini-sidebar" aria-hidden="true"><div class="mini-logo">LUNA</div><div class="mini-nav active">Search</div><div class="mini-nav">Files</div><div class="mini-nav">Shared</div><div class="mini-nav">People</div></aside>
+              <div class="search-main"><div class="search-label">SEARCH ALL DOCUMENTS</div><div class="search-input"><span class="magnify" aria-hidden="true"></span><span>Q3 supplier agreement</span><span class="search-beam"></span></div><div class="result-count">3 MATCHES · SORTED BY RELEVANCE</div>
+                <div class="result"><div class="result-title"><span>Supplier Agreement — North</span><span class="filetype">PDF</span></div><p>Renewal: September 30 · Territory: North region · Owner: Legal</p></div>
+                <div class="result"><div class="result-title"><span>Q3 Partner Terms</span><span class="filetype">DOCX</span></div><p>Updated payment schedule and partner support terms for Q3.</p></div>
+                <div class="result"><div class="result-title"><span>Commercial Agreements Index</span><span class="filetype">XLSX</span></div><p>Master record for active supplier and reseller agreements.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="speed-tag"><strong>1.8 seconds</strong>DOCUMENT FOUND</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad hairline" id="change"><div class="wrap"><div class="section-intro reveal"><div class="eyebrow"><span class="section-no">02 /</span> Before and after</div><h2>Days away from never asking, <em>“Where is it?”</em></h2><p>The change is not a six-month migration. Put Luna beside the folders you already use and make them searchable.</p></div><div class="compare reveal"><article class="compare-panel"><div class="compare-label">Before / Search mode</div><div class="compare-time">30 min <small>per file</small></div><p>30 minutes searching. “Can you resend that?” emails. Panic when an employee leaves and takes the files with them.</p></article><div class="compare-arrow" aria-hidden="true">→</div><article class="compare-panel after"><div class="compare-label">After / Found</div><div class="compare-time">2 sec <small>from any browser</small></div><p>Everything indexed and searchable. External partners get a link, not a waiting game. Files found in 2 seconds.</p></article></div><div class="time-note reveal"><span>The same folders. A completely different working day.</span><strong>The change is days away, not months.</strong></div></div></section>
+
+    <section class="section-pad hairline" id="products"><div class="wrap"><div class="section-intro reveal"><div class="eyebrow"><span class="section-no">03 /</span> Products</div><h2>One calm place for every <em>working document.</em></h2><p>Start with the complete search workspace, then add focused tools only when the job calls for them.</p></div><div class="products reveal">
+      <article class="product featured"><div class="product-top"><span>01 / Luna Search</span><span class="flag">Flagship</span></div><h3>Your documents, finally findable.</h3><ul><li>Search PDFs, documents, sheets, images, and email attachments</li><li>Open in any browser with no client software to manage</li><li>Find the right file in under 2 seconds</li></ul><a class="product-link" href="#start">Explore Luna Search →</a></article>
+      <article class="product"><div class="product-top"><span>02 / Luna Share</span></div><h3>Give partners a link, not a waiting game.</h3><ul><li>Create a secure client space in seconds</li><li>Set access and expiry without moving the original</li><li>End the loop of resending the same files</li></ul><a class="product-link" href="#start">Explore Luna Share →</a></article>
+      <article class="product"><div class="product-top"><span>03 / Luna Vault</span></div><h3>Keep company knowledge with the company.</h3><ul><li>Run privately on a server you control</li><li>Keep permissions clear as the team changes</li><li>Preserve one searchable record through every handoff</li></ul><a class="product-link" href="#start">Explore Luna Vault →</a></article>
+    </div></div></section>
+
+    <section class="section-pad how" id="how"><div class="wrap"><div class="section-intro reveal"><div class="eyebrow"><span class="section-no">04 /</span> How it works</div><h2>One command. Then <em>stay in your browser.</em></h2><p>There is no long rollout to manage. Copy one line, open the address Luna gives you, and invite the people who need access.</p></div><div class="steps reveal"><article class="step"><span class="step-no">STEP 01 / TERMINAL</span><h3>Copy-paste one command into your Terminal.</h3><p>That is the entire install. No package hunt and no configuration maze.</p></article><article class="step"><span class="step-no">STEP 02 / BROWSER</span><h3>Open your browser. Everything is already there.</h3><p>Connect folders, search documents, and manage access in one familiar tab.</p></article><article class="step"><span class="step-no">STEP 03 / SHARE</span><h3>Share access with your team and partners. Done.</h3><p>Invite teammates or send a secure link. Revoke access whenever you need.</p></article></div><div class="command-shot reveal" role="img" aria-label="Terminal screenshot showing the one-line Luna installation command"><div class="terminal-bar"><i></i><i></i><i></i><span class="terminal-title">Terminal — luna install</span></div><div class="terminal-body"><div><span class="prompt">$</span> curl -fsSL get.luna.app | sh</div><div class="terminal-muted">→ Detecting system · Connecting document folders</div><div class="terminal-ok">✓ Luna is ready at http://luna.local</div></div><div class="copy-row"><span>ONE LINE · ABOUT 60 SECONDS</span><button class="copy-button" id="copyCommand" type="button" data-command="curl -fsSL get.luna.app | sh">Copy command</button></div></div><p class="derisk reveal"><span aria-hidden="true">✓</span>No IT department needed. If you can copy-paste, you can run this.</p></div></section>
+
+    <section class="section-pad hairline" id="proof"><div class="wrap"><div class="section-intro reveal"><div class="eyebrow"><span class="section-no">05 /</span> Proof</div><h2>From zero to searchable in <em>60 seconds.</em></h2><p>See the complete install, the first folder connection, and the first search. No technical detours and no hidden setup.</p></div><div class="proof-grid reveal"><article class="testimonial"><div><div class="quote-mark" aria-hidden="true">“</div><blockquote>I'm not technical. I ran the command, it worked, and my team never asks me where files are anymore.</blockquote></div><div class="person"><div class="avatar">MR</div><div><strong>Marisol R.</strong><span>Owner, 14-person logistics firm</span></div></div></article><div class="proof-stack"><button class="demo" id="demo" type="button" aria-label="Play the 60-second Luna installation walkthrough"><div class="demo-meta"><span>Install walkthrough</span><span id="demoTime">00:60</span></div><div class="demo-center"><h3 id="demoTitle">Watch the full install — zero to searchable.</h3><span class="play" id="playIcon" aria-hidden="true">▶</span></div><div class="demo-progress"><span></span></div></button><div class="proof-stat"><strong>&lt; 2 sec</strong><span>Documents found in under 2 seconds across a connected company workspace.</span></div></div></div></div></section>
+
+    <section class="section-pad guarantee" id="guarantee"><div class="wrap guarantee-grid"><div class="seal reveal" aria-label="30-day guarantee"><div class="seal-inner"><div><strong>30</strong><span>Day guarantee</span></div></div></div><div class="guarantee-copy reveal"><div class="eyebrow" style="color:#fff">No forms. No questions.</div><h2>Try it on your <em style="color:#fff">real documents.</em> Then decide.</h2><p><strong>30-day money-back guarantee.</strong> Install it. Put your real documents in it. If finding files isn't dramatically easier, email us for a full refund. No forms, no questions.</p></div></div></section>
+
+    <section class="final" id="start"><div class="wrap reveal"><div class="eyebrow">Your next search can take two seconds</div><h2>Your files are waiting. <em>Stop searching</em> for them.</h2><a class="button" href="mailto:hello@luna.app?subject=Start%20with%20Luna">Start now — 30-day guarantee <span class="arrow" aria-hidden="true">→</span></a><p class="final-note">5-minute install. Browser-based after that. Stuck? We'll help.</p></div></section>
+  </main>
+
+  <footer><div class="wrap footer-inner"><span>© 2026 Luna. Private document search for working teams.</span><div class="footer-links"><a href="#products">Products</a><a href="#how">Install</a><a href="#guarantee">Guarantee</a></div></div></footer>
+
+  <script>
+    const header = document.getElementById('siteHeader');
+    const updateHeader = () => header.classList.toggle('scrolled', window.scrollY > 8);
+    document.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } }), { threshold: .1 });
+    document.querySelectorAll('.reveal').forEach((element) => reduceMotion ? element.classList.add('visible') : revealObserver.observe(element));
+
+    const copyButton = document.getElementById('copyCommand');
+    copyButton.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(copyButton.dataset.command); copyButton.textContent = 'Copied'; }
+      catch (error) { copyButton.textContent = 'Select command above'; }
+      window.setTimeout(() => { copyButton.textContent = 'Copy command'; }, 2200);
+    });
+
+    const demo = document.getElementById('demo');
+    const demoTime = document.getElementById('demoTime');
+    const demoTitle = document.getElementById('demoTitle');
+    const playIcon = document.getElementById('playIcon');
+    const scenes = [['00:45', 'One command. Luna is installed.'], ['00:30', 'Your folders connect where they are.'], ['00:15', 'Every document becomes searchable.'], ['00:00', 'The first file appears in 1.8 seconds.']];
+    let demoTimer;
+    demo.addEventListener('click', () => {
+      window.clearInterval(demoTimer); demo.classList.remove('playing'); void demo.offsetWidth; demo.classList.add('playing'); playIcon.textContent = '↻'; let scene = 0;
+      const updateScene = () => { demoTime.textContent = scenes[scene][0]; demoTitle.textContent = scenes[scene][1]; scene += 1; if (scene === scenes.length) window.clearInterval(demoTimer); };
+      updateScene(); demoTimer = window.setInterval(updateScene, 2000);
+    });
+  </script>
+</body>
+</html>

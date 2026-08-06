@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qwen3.7-Plus — Intelligent Document Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --accent: #2563eb;
+            --accent-light: #dbeafe;
+            --border: #e5e5e5;
+            --shadow: rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Before/After Section */
+        .comparison {
+            padding: 80px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .comparison-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .comparison-card.before {
+            border-left: 4px solid #ef4444;
+        }
+
+        .comparison-card.after {
+            border-left: 4px solid #22c55e;
+        }
+
+        .comparison-card h3 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .comparison-card ul {
+            list-style: none;
+        }
+
+        .comparison-card li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .comparison-card li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .comparison-card.before li::before {
+            background: #ef4444;
+        }
+
+        .comparison-card.after li::before {
+            background: #22c55e;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: var(--surface);
+        }
+
+        .section-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 48px;
+            font-weight: 400;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 32px;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 auto 20px;
+            font-size: 1.25rem;
+        }
+
+        .step h4 {
+            font-size: 1.125rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .step p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .terminal-preview {
+            background: #1a1a1a;
+            color: #22c55e;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.875rem;
+            margin-top: 16px;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .help-note {
+            text-align: center;
+            margin-top: 32px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .help-note strong {
+            color: var(--accent);
+        }
+
+        /* Social Proof */
+        .testimonials {
+            padding: 80px 0;
+        }
+
+        .testimonial-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .testimonial-card blockquote {
+            font-size: 1.25rem;
+            font-style: italic;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .guarantee {
+            margin-top: 32px;
+            padding: 16px 24px;
+            background: var(--accent-light);
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 80px 0;
+            background: var(--surface);
+        }
+
+        .pricing-card {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .price {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 3.5rem;
+            font-weight: 400;
+            margin: 24px 0;
+        }
+
+        .price span {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+        }
+
+        .bonus {
+            background: var(--accent-light);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+            font-size: 0.95rem;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s ease;
+            margin-bottom: 16px;
+        }
+
+        .cta-button:hover {
+            background: #1d4ed8;
+        }
+
+        .cta-subtext {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 80px 0 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Qwen3.7-Plus</div>
+        </div>
+    </header>
+
+    <!-- Part 1: Headline + Sub-headline -->
+    <section class="hero">
+        <div class="container">
+            <h1>Never Search for Documents Again</h1>
+            <p>Intelligent document management that indexes everything automatically. What used to take 30 minutes now takes 2 seconds — no IT team required.</p>
+        </div>
+    </section>
+
+    <!-- Part 2: Before vs After -->
+    <section class="comparison">
+        <div class="container">
+            <h2 class="section-title">The Difference Is Clear</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card before">
+                    <h3>Before</h3>
+                    <ul>
+                        <li>30+ minutes searching through folders</li>
+                        <li>Endless email chains asking "where's the file?"</li>
+                        <li>Duplicate documents everywhere</li>
+                        <li>Version confusion across teams</li>
+                        <li>External users can't access anything</li>
+                    </ul>
+                </div>
+                <div class="comparison-card after">
+                    <h3>After</h3>
+                    <ul>
+                        <li>2-second search finds exactly what you need</li>
+                        <li>Everything indexed and organized automatically</li>
+                        <li>Single source of truth for all documents</li>
+                        <li>External collaborators get instant access</li>
+                        <li>Zero manual filing required</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 3: How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Run One Command</h4>
+                    <p>Copy and paste a single command into your terminal</p>
+                    <div class="terminal-preview">$ npx qwen37-plus install</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Open Your Browser</h4>
+                    <p>The dashboard launches automatically at localhost:3000</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Everything Organized</h4>
+                    <p>All documents indexed, searchable, and ready to share</p>
+                </div>
+            </div>
+            <p class="help-note"><strong>Need help?</strong> We offer free remote installation support.</p>
+        </div>
+    </section>
+
+    <!-- Part 4: Social Proof -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Users Say</h2>
+            <div class="testimonial-card">
+                <blockquote>"I'm not a technical person at all. But I just copied and pasted one command and everything worked perfectly. Now my entire team never asks 'where's the file?' anymore. It's saved us hours every week."</blockquote>
+                <p class="testimonial-author">— Sarah Chen, Operations Manager</p>
+                <div class="guarantee">✓ 30-day money-back guarantee — if installation fails or doesn't work, we'll refund you</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 5: Pricing -->
+    <section class="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple Pricing</h2>
+            <div class="pricing-card">
+                <div class="price">$67<span>/one-time</span></div>
+                <p>Complete document management system</p>
+                <div class="bonus">🎁 Bonus: Free 1-on-1 setup call + Document structure template for 5 divisions</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 6: CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <a href="#" class="cta-button">Get Started Now — 30-Day Guarantee</a>
+            <p class="cta-subtext">5-minute installation. If you get stuck, we'll help.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Qwen3.7-Plus. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

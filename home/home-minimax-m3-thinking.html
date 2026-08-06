@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cardinal — Documents that find themselves.</title>
+<meta name="description" content="Stop hunting for documents. Stop resending files. Organize your company documents so your team, clients, and partners access what they need instantly — from any browser." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#F6F3EC;
+    --paper-2:#EFEADF;
+    --ink:#0B1220;
+    --ink-soft:#3A4150;
+    --ink-mute:#6B6F7A;
+    --rule:#E2DAC7;
+    --rule-soft:#ECE5D2;
+    --cobalt:#1B3DFF;
+    --cobalt-ink:#0A1F99;
+    --accent:#FF5B1E;   /* a single sharp warm accent, used sparingly */
+    --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.06  0 0 0 0 0.07  0 0 0 0 0.13  0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+
+    --serif:"Fraunces", ui-serif, Georgia, serif;
+    --sans:"Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --max:1240px;
+    --pad:clamp(20px, 4vw, 56px);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{background:var(--paper); color:var(--ink); font-family:var(--sans); font-feature-settings:"ss01","cv11"; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+  body{
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(27,61,255,0.07), transparent 60%),
+      radial-gradient(900px 600px at -10% 110%, rgba(255,91,30,0.05), transparent 55%),
+      var(--paper);
+    overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:1;
+    background-image:var(--grain); opacity:.55; mix-blend-mode:multiply;
+  }
+
+  a{color:inherit; text-decoration:none}
+  img,svg{display:block; max-width:100%}
+  button{font:inherit; color:inherit; cursor:pointer}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 var(--pad); position:relative; z-index:2}
+
+  /* ───────── header ───────── */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:saturate(140%) blur(10px);
+    -webkit-backdrop-filter:saturate(140%) blur(10px);
+    background:rgba(246,243,236,.78);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; height:68px}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--serif); font-weight:600; font-size:20px; letter-spacing:-0.01em}
+  .brand-mark{width:22px; height:22px; border:1.5px solid var(--ink); border-radius:2px; position:relative; transform:rotate(45deg)}
+  .brand-mark::after{content:""; position:absolute; inset:3px; background:var(--ink); border-radius:1px}
+  nav ul{display:flex; gap:28px; list-style:none; margin:0; padding:0; font-size:14px; color:var(--ink-soft)}
+  nav a{position:relative}
+  nav a:hover{color:var(--ink)}
+  nav a::after{content:""; position:absolute; left:0; right:0; bottom:-6px; height:1px; background:var(--ink); transform:scaleX(0); transform-origin:left; transition:transform .35s ease}
+  nav a:hover::after{transform:scaleX(1)}
+  .nav-cta{display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid var(--ink); border-radius:999px; font-size:13.5px; font-weight:500; background:var(--ink); color:var(--paper); transition:transform .2s ease}
+  .nav-cta:hover{transform:translateY(-1px)}
+
+  @media (max-width:760px){ nav ul{display:none} }
+
+  /* ───────── shared ───────── */
+  .num{
+    font-family:var(--serif); font-weight:300; font-variation-settings:"opsz" 144, "SOFT" 0;
+    font-size:clamp(72px, 11vw, 168px); line-height:.85; letter-spacing:-0.04em; color:var(--ink);
+  }
+  .num .slash{color:var(--cobalt); font-style:italic; font-weight:400}
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-mute); display:inline-flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:24px; height:1px; background:var(--ink-mute)}
+  .h-display{
+    font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 144, "SOFT" 30;
+    letter-spacing:-0.025em; line-height:1.02;
+    font-size:clamp(40px, 6.4vw, 88px);
+  }
+  .h-display em{font-style:italic; color:var(--cobalt); font-variation-settings:"opsz" 144, "SOFT" 100}
+  .lede{font-size:clamp(16px, 1.4vw, 19px); line-height:1.55; color:var(--ink-soft); max-width:60ch}
+  .rule{height:1px; background:var(--rule); border:0; margin:0}
+
+  /* buttons */
+  .btn{
+    display:inline-flex; align-items:center; gap:12px;
+    padding:16px 22px; border-radius:999px; font-weight:500; font-size:15.5px;
+    border:1px solid var(--ink); transition:transform .25s ease, background .25s ease, color .25s ease;
+    will-change:transform;
+  }
+  .btn--ink{background:var(--ink); color:var(--paper)}
+  .btn--ink:hover{transform:translateY(-2px); background:var(--cobalt-ink)}
+  .btn--ghost{background:transparent; color:var(--ink)}
+  .btn--ghost:hover{background:var(--ink); color:var(--paper)}
+  .btn .arrow{width:14px; height:14px; display:inline-block; position:relative}
+  .btn .arrow::before{content:""; position:absolute; inset:0; border-top:1.5px solid currentColor; border-right:1.5px solid currentColor; transform:rotate(45deg) translate(-2px,2px)}
+
+  /* scroll reveal */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1; transform:none}
+  .reveal-1.in{transition-delay:.05s}
+  .reveal-2.in{transition-delay:.15s}
+  .reveal-3.in{transition-delay:.25s}
+  .reveal-4.in{transition-delay:.35s}
+  .reveal-5.in{transition-delay:.45s}
+
+  /* ───────── HERO ───────── */
+  section.hero{
+    position:relative; padding:clamp(56px, 8vw, 120px) 0 clamp(60px, 9vw, 140px);
+    border-bottom:1px solid var(--rule);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns: 1.15fr 1fr; gap:clamp(28px, 5vw, 72px); align-items:end;
+  }
+  .hero-meta{display:flex; align-items:center; gap:14px; margin-bottom:28px}
+  .hero h1{margin:0 0 22px}
+  .hero .lede{margin:0 0 32px}
+  .hero-cta{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+  .hero-status{margin-top:18px; font-size:14px; color:var(--ink-mute); max-width:42ch}
+  .hero-status b{color:var(--ink); font-weight:500}
+
+  /* hero visual: live search box that already found something */
+  .hero-visual{
+    position:relative; aspect-ratio: 4/3.2; border:1px solid var(--rule); border-radius:6px;
+    background:linear-gradient(180deg, #FBF8F1 0%, #F1ECDD 100%);
+    padding:18px;
+    box-shadow:
+      0 1px 0 rgba(0,0,0,.04),
+      0 30px 60px -30px rgba(11,18,32,.25),
+      0 8px 18px -8px rgba(11,18,32,.12);
+    overflow:hidden;
+  }
+  .hv-bar{
+    display:flex; align-items:center; justify-content:space-between; padding-bottom:14px;
+    border-bottom:1px solid var(--rule); margin-bottom:14px;
+  }
+  .hv-dots{display:flex; gap:6px}
+  .hv-dots i{width:10px; height:10px; border-radius:50%; background:var(--rule); display:block}
+  .hv-dots i:nth-child(1){background:#E2644A}
+  .hv-dots i:nth-child(2){background:#E5B14B}
+  .hv-dots i:nth-child(3){background:#7CB26A}
+  .hv-path{font-family:var(--mono); font-size:11px; color:var(--ink-mute); letter-spacing:.02em}
+
+  .hv-search{
+    display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--paper);
+    border:1px solid var(--ink); border-radius:4px;
+    box-shadow:0 0 0 4px rgba(27,61,255,.08);
+  }
+  .hv-search svg{width:16px; height:16px; color:var(--ink)}
+  .hv-search .q{font-family:var(--serif); font-size:18px; color:var(--ink); letter-spacing:-.01em}
+  .hv-search .caret{
+    display:inline-block; width:1px; height:18px; background:var(--cobalt); vertical-align:-3px;
+    animation:blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{opacity:0} }
+
+  .hv-results{margin-top:14px; display:grid; gap:8px}
+  .hv-row{
+    display:grid; grid-template-columns: 28px 1fr auto; gap:12px; align-items:center;
+    padding:10px 12px; border:1px solid var(--rule-soft); border-radius:4px;
+    background:rgba(255,255,255,.55);
+    opacity:0; transform:translateY(8px);
+    animation:rowIn .6s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .hv-row.r2{animation-delay:.6s}
+  .hv-row.r3{animation-delay:.95s}
+  .hv-row.r4{animation-delay:1.3s}
+  .hv-row .ic{font-family:var(--mono); font-size:10px; color:var(--ink-mute); border:1px solid var(--rule); padding:2px 4px; border-radius:3px; text-align:center}
+  .hv-row .name{font-size:13.5px; color:var(--ink)}
+  .hv-row .name em{font-style:normal; background:linear-gradient(180deg, transparent 60%, rgba(27,61,255,.18) 60%); padding:0 1px}
+  .hv-row .meta{font-family:var(--mono); font-size:10.5px; color:var(--ink-mute)}
+  @keyframes rowIn{ to{opacity:1; transform:none} }
+
+  .hv-pill{
+    position:absolute; top:14px; right:14px;
+    font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+    background:var(--ink); color:var(--paper); padding:6px 8px; border-radius:999px;
+  }
+  .hv-tick{
+    position:absolute; bottom:14px; left:14px; display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:11px; color:var(--ink-mute);
+  }
+  .hv-tick .dot{width:6px; height:6px; border-radius:50%; background:#1A9F62; box-shadow:0 0 0 3px rgba(26,159,98,.18)}
+
+  /* tape sticker */
+  .tape{
+    position:absolute; top:-14px; left:36px; width:90px; height:22px;
+    background:rgba(255,91,30,.85); color:#fff;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    display:flex; align-items:center; justify-content:center;
+    transform:rotate(-4deg);
+    box-shadow:0 4px 10px -3px rgba(0,0,0,.15);
+  }
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr; align-items:start}
+    .hero-visual{aspect-ratio:5/4}
+  }
+
+  /* ───────── marquee ───────── */
+  .marquee{
+    border-bottom:1px solid var(--rule); border-top:1px solid var(--rule);
+    background:var(--paper-2); overflow:hidden;
+  }
+  .track{
+    display:flex; gap:64px; padding:14px 0; white-space:nowrap;
+    animation:scroll 38s linear infinite;
+    font-family:var(--mono); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft);
+  }
+  .track span{display:inline-flex; align-items:center; gap:18px}
+  .track .sep{color:var(--ink-mute)}
+  @keyframes scroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ───────── SECTION COMMONS ───────── */
+  section.block{padding:clamp(72px, 10vw, 140px) 0; border-bottom:1px solid var(--rule); position:relative}
+  .block-head{
+    display:grid; grid-template-columns: 180px 1fr; gap:clamp(20px, 4vw, 56px); align-items:start;
+    margin-bottom:clamp(40px, 5vw, 72px);
+  }
+  .block-head .num-cell{display:flex; flex-direction:column; gap:8px}
+  .block-head .label{font-family:var(--mono); font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-mute)}
+  .block-head h2{margin:0}
+  @media (max-width:760px){ .block-head{grid-template-columns:1fr} .block-head .num{display:none} }
+
+  /* ───────── 2: BEFORE / AFTER ───────── */
+  .ba-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:0;
+    border:1px solid var(--rule); border-radius:6px; overflow:hidden;
+    background:#FCFAF3;
+  }
+  .ba-col{padding:clamp(28px, 4vw, 48px)}
+  .ba-col + .ba-col{border-left:1px solid var(--rule); position:relative}
+  .ba-col .tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:18px;
+  }
+  .ba-before .tag{color:var(--ink-mute)}
+  .ba-before .tag::before{content:""; width:10px; height:10px; border-radius:50%; background:#C9C2B0}
+  .ba-after .tag{color:var(--cobalt-ink)}
+  .ba-after .tag::before{content:""; width:10px; height:10px; border-radius:50%; background:var(--cobalt)}
+  .ba-col h3{
+    font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 96, "SOFT" 30;
+    font-size:clamp(22px, 2.4vw, 30px); letter-spacing:-.02em; line-height:1.15; margin:0 0 18px;
+  }
+  .ba-col p{margin:0 0 12px; color:var(--ink-soft); font-size:15.5px; line-height:1.55}
+  .ba-after h3 em{font-style:italic; color:var(--cobalt); font-variation-settings:"opsz" 96, "SOFT" 100}
+  .ba-time{
+    margin-top:22px; padding-top:18px; border-top:1px dashed var(--rule);
+    font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-mute);
+  }
+  .ba-time b{color:var(--cobalt-ink); font-weight:500}
+  @media (max-width:760px){ .ba-grid{grid-template-columns:1fr} .ba-col + .ba-col{border-left:0; border-top:1px solid var(--rule)} }
+
+  /* ───────── 3: PRODUCTS ───────── */
+  .products{
+    display:grid; grid-template-columns: repeat(12, 1fr); gap:clamp(16px, 1.6vw, 22px);
+  }
+  .pcard{
+    grid-column: span 4;
+    background:#FBF8F1; border:1px solid var(--rule); border-radius:6px; padding:28px;
+    display:flex; flex-direction:column; gap:18px; min-height:340px;
+    position:relative; transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
+  }
+  .pcard:hover{transform:translateY(-4px); box-shadow:0 30px 60px -30px rgba(11,18,32,.25)}
+  .pcard .ico{
+    width:44px; height:44px; border:1px solid var(--ink); border-radius:4px;
+    display:grid; place-items:center; background:var(--paper); color:var(--ink);
+  }
+  .pcard h4{
+    font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 96, "SOFT" 30;
+    font-size:24px; letter-spacing:-.02em; line-height:1.15; margin:0;
+  }
+  .pcard ul{margin:0; padding:0; list-style:none; display:grid; gap:10px; color:var(--ink-soft); font-size:14.5px; line-height:1.5}
+  .pcard ul li{display:flex; gap:10px; align-items:flex-start}
+  .pcard ul li::before{content:"→"; color:var(--cobalt); font-family:var(--mono); margin-top:1px}
+  .pcard .more{
+    margin-top:auto; padding-top:12px; border-top:1px dashed var(--rule);
+    display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink);
+  }
+  .pcard .more::after{content:"↗"; font-family:var(--mono); transition:transform .25s ease}
+  .pcard:hover .more::after{transform:translate(2px,-2px)}
+
+  .pcard.featured{grid-column: span 12; display:grid; grid-template-columns: 1.1fr 1fr; gap:36px; align-items:stretch; padding:36px; min-height:0}
+  .pcard.featured .right{
+    border-left:1px dashed var(--rule); padding-left:36px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .pcard.featured h4{font-size:clamp(26px, 3vw, 38px)}
+  .pcard.featured .badge{position:absolute; top:-1px; left:28px; transform:translateY(-50%); background:var(--cobalt); color:#fff; font-family:var(--mono); font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; padding:6px 10px; border-radius:999px}
+
+  @media (max-width:900px){
+    .pcard{grid-column: span 12}
+    .pcard.featured{grid-template-columns:1fr}
+    .pcard.featured .right{border-left:0; padding-left:0; border-top:1px dashed var(--rule); padding-top:24px}
+  }
+
+  /* ───────── 4: HOW IT WORKS ───────── */
+  .steps{display:grid; grid-template-columns: repeat(3, 1fr); gap:0; border:1px solid var(--rule); border-radius:6px; background:#FCFAF3; overflow:hidden}
+  .step{padding:clamp(28px, 3vw, 40px); position:relative}
+  .step + .step{border-left:1px solid var(--rule)}
+  .step .index{font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:var(--ink-mute); margin-bottom:18px; display:flex; align-items:center; gap:10px}
+  .step .index span{width:18px; height:18px; border:1px solid var(--ink); border-radius:50%; display:grid; place-items:center; font-size:9px}
+  .step h5{
+    font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 96, "SOFT" 30;
+    font-size:clamp(20px, 2vw, 26px); letter-spacing:-.02em; line-height:1.15; margin:0 0 12px;
+  }
+  .step p{margin:0; color:var(--ink-soft); font-size:15px; line-height:1.55}
+  @media (max-width:760px){ .steps{grid-template-columns:1fr} .step + .step{border-left:0; border-top:1px solid var(--rule)} }
+
+  .terminal{
+    margin-top:48px; border:1px solid var(--ink); border-radius:6px; background:#0B1220; color:#D7DAE5;
+    box-shadow:0 30px 80px -40px rgba(11,18,32,.6); overflow:hidden;
+  }
+  .terminal-head{display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.08); font-family:var(--mono); font-size:11px; color:#8A91A4}
+  .terminal-head i{width:10px; height:10px; border-radius:50%; background:#3A4150}
+  .terminal-head i:nth-child(1){background:#E2644A}
+  .terminal-head i:nth-child(2){background:#E5B14B}
+  .terminal-head i:nth-child(3){background:#7CB26A}
+  .terminal-head .title{margin-left:14px}
+  .terminal-body{padding:22px 24px 28px; font-family:var(--mono); font-size:14px; line-height:1.7}
+  .terminal-body .prompt{color:#7CB26A}
+  .terminal-body .cmd{color:#fff}
+  .terminal-body .ok{color:#7CB26A}
+  .terminal-body .info{color:#8A91A4}
+  .terminal-body .typed{display:inline-block; overflow:hidden; white-space:nowrap; border-right:2px solid var(--cobalt); animation:type 2.4s steps(40,end) .4s forwards, blink 1.05s steps(1) infinite; width:0}
+  @keyframes type{ to{width:100%} }
+  .cursor-line{height:1.6em}
+
+  .derisk{
+    margin-top:28px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    font-size:14.5px; color:var(--ink-soft);
+  }
+  .derisk .check{
+    width:22px; height:22px; border-radius:50%; background:var(--cobalt); color:#fff;
+    display:grid; place-items:center; font-size:12px; flex-shrink:0;
+  }
+
+  /* ───────── 5: PROOF ───────── */
+  .proof{display:grid; grid-template-columns: 1.05fr 1fr; gap:0; border:1px solid var(--rule); border-radius:6px; background:#FCFAF3; overflow:hidden}
+  .quote{padding:clamp(28px, 4vw, 56px); display:flex; flex-direction:column; gap:24px}
+  .quote .mark{
+    font-family:var(--serif); font-size:80px; line-height:.5; color:var(--cobalt); font-variation-settings:"opsz" 144, "SOFT" 100;
+  }
+  .quote blockquote{
+    margin:0; font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 96, "SOFT" 30;
+    font-size:clamp(22px, 2.4vw, 30px); letter-spacing:-.02em; line-height:1.25; color:var(--ink);
+  }
+  .quote blockquote em{font-style:italic; color:var(--cobalt-ink)}
+  .quote .who{display:flex; align-items:center; gap:14px; padding-top:18px; border-top:1px dashed var(--rule)}
+  .quote .who .avatar{
+    width:44px; height:44px; border-radius:50%; background:var(--ink); color:var(--paper);
+    display:grid; place-items:center; font-family:var(--serif); font-size:18px;
+  }
+  .quote .who .meta b{font-weight:500}
+  .quote .who .meta span{display:block; color:var(--ink-mute); font-size:13px}
+
+  .demo{padding:0; position:relative; border-left:1px solid var(--rule); background:#0B1220; color:#fff; min-height:380px; display:flex; flex-direction:column}
+  .demo .frame{position:relative; flex:1; overflow:hidden}
+  .demo .frame::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(420px 260px at 30% 30%, rgba(27,61,255,.35), transparent 60%),
+      radial-gradient(380px 240px at 80% 80%, rgba(255,91,30,.18), transparent 60%),
+      linear-gradient(180deg, #0F1626 0%, #0B1220 100%);
+  }
+  .demo .frame::after{
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(circle at 50% 50%, #000 35%, transparent 75%);
+  }
+  .demo .play{
+    position:absolute; inset:0; display:grid; place-items:center; z-index:2;
+  }
+  .demo .play button{
+    width:84px; height:84px; border-radius:50%; background:#fff; color:#0B1220; border:0;
+    display:grid; place-items:center; box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+    transition:transform .25s ease;
+  }
+  .demo .play button:hover{transform:scale(1.06)}
+  .demo .play button svg{margin-left:4px}
+  .demo .caption{
+    position:relative; z-index:3; padding:20px 24px; border-top:1px solid rgba(255,255,255,.08);
+    display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:12px; color:#8A91A4;
+  }
+  .demo .caption b{color:#fff; font-weight:500; letter-spacing:.02em}
+
+  .stats{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:0; margin-top:48px;
+    border:1px solid var(--rule); border-radius:6px; background:#FCFAF3; overflow:hidden;
+  }
+  .stat{padding:28px; position:relative}
+  .stat + .stat{border-left:1px solid var(--rule)}
+  .stat .k{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-mute)}
+  .stat .v{
+    font-family:var(--serif); font-weight:300; font-variation-settings:"opsz" 144, "SOFT" 30;
+    font-size:clamp(40px, 5vw, 64px); letter-spacing:-.03em; line-height:1; color:var(--ink); margin-top:10px;
+  }
+  .stat .v em{font-style:italic; color:var(--cobalt)}
+  .stat .s{color:var(--ink-soft); font-size:14px; margin-top:8px}
+  @media (max-width:760px){ .stats{grid-template-columns:1fr} .stat + .stat{border-left:0; border-top:1px solid var(--rule)} }
+
+  @media (max-width:900px){
+    .proof{grid-template-columns:1fr}
+    .demo{border-left:0; border-top:1px solid var(--rule); min-height:300px}
+  }
+
+  /* ───────── 6: GUARANTEE ───────── */
+  .guarantee{
+    display:grid; grid-template-columns: 1.1fr 1fr; gap:clamp(28px, 4vw, 56px); align-items:center;
+    background:#FBF8F1; border:1px solid var(--rule); border-radius:6px; padding:clamp(36px, 5vw, 64px);
+    position:relative; overflow:hidden;
+  }
+  .guarantee::before{
+    content:""; position:absolute; right:-80px; top:-80px; width:280px; height:280px; border-radius:50%;
+    border:1px solid var(--rule);
+  }
+  .guarantee::after{
+    content:""; position:absolute; right:-40px; top:-40px; width:200px; height:200px; border-radius:50%;
+    border:1px solid var(--rule);
+  }
+  .guarantee .seal{
+    position:relative; z-index:2; aspect-ratio:1; border-radius:50%;
+    background:var(--ink); color:var(--paper);
+    display:grid; place-items:center; text-align:center; padding:24px;
+    box-shadow:0 30px 60px -30px rgba(11,18,32,.4);
+  }
+  .guarantee .seal .days{
+    font-family:var(--serif); font-weight:300; font-variation-settings:"opsz" 144, "SOFT" 30;
+    font-size:clamp(60px, 8vw, 110px); line-height:1; letter-spacing:-.04em;
+  }
+  .guarantee .seal .days em{font-style:italic; color:#FF5B1E}
+  .guarantee .seal .sub{font-family:var(--mono); font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; margin-top:10px; color:#D7DAE5}
+  .guarantee-text{position:relative; z-index:2}
+  .guarantee-text h3{
+    font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 96, "SOFT" 30;
+    font-size:clamp(26px, 3vw, 38px); letter-spacing:-.02em; line-height:1.15; margin:0 0 14px;
+  }
+  .guarantee-text p{margin:0 0 12px; color:var(--ink-soft); font-size:16px; line-height:1.6}
+  .guarantee-text ul{margin:18px 0 0; padding:0; list-style:none; display:grid; gap:10px; color:var(--ink-soft); font-size:14.5px}
+  .guarantee-text ul li{display:flex; gap:10px; align-items:flex-start}
+  .guarantee-text ul li::before{content:"✓"; color:var(--cobalt); font-weight:600}
+  @media (max-width:900px){ .guarantee{grid-template-columns:1fr} .guarantee .seal{max-width:260px} }
+
+  /* ───────── 7: FINAL CTA ───────── */
+  section.cta{
+    padding:clamp(80px, 12vw, 160px) 0;
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(700px 400px at 20% 30%, rgba(27,61,255,.18), transparent 60%),
+      radial-gradient(600px 380px at 90% 90%, rgba(255,91,30,.12), transparent 60%),
+      var(--ink);
+    color:var(--paper);
+    border-bottom:1px solid var(--ink);
+  }
+  section.cta::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background-image:var(--grain); opacity:.18; mix-blend-mode:overlay;
+  }
+  .cta-inner{position:relative; z-index:2; text-align:center; max-width:900px; margin:0 auto}
+  .cta .eyebrow{color:#8A91A4; justify-content:center}
+  .cta .eyebrow::before{background:#8A91A4}
+  .cta h2{
+    font-family:var(--serif); font-weight:400; font-variation-settings:"opsz" 144, "SOFT" 30;
+    font-size:clamp(44px, 7vw, 96px); letter-spacing:-.03em; line-height:1.02; margin:18px 0 24px;
+  }
+  .cta h2 em{font-style:italic; color:#FF8A5C; font-variation-settings:"opsz" 144, "SOFT" 100}
+  .cta p{margin:0 auto 32px; max-width:46ch; color:#D7DAE5; font-size:17px; line-height:1.6}
+  .cta .btn--paper{background:var(--paper); color:var(--ink); border-color:var(--paper); padding:18px 26px; font-size:16px}
+  .cta .btn--paper:hover{background:#FF8A5C; color:#0B1220; border-color:#FF8A5C; transform:translateY(-2px)}
+  .cta .small{margin-top:18px; font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8A91A4}
+
+  /* footer */
+  footer{padding:48px 0 64px; color:var(--ink-mute); font-size:13.5px}
+  .foot{display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap}
+  .foot .brand{color:var(--ink)}
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none !important; transition:none !important}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="brand" aria-label="Cardinal home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      Cardinal
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#products">Apps</a></li>
+        <li><a href="#how">Install</a></li>
+        <li><a href="#proof">Proof</a></li>
+        <li><a href="#guarantee">Guarantee</a></li>
+      </ul>
+    </nav>
+    <a class="nav-cta" href="#cta">Start now <span aria-hidden="true">→</span></a>
+  </div>
+</header>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-meta reveal reveal-1">
+        <span class="eyebrow">For B2B owners tired of hunting for files</span>
+      </div>
+
+      <h1 class="h-display reveal reveal-2">
+        Stop hunting for documents.<br>
+        Stop resending files.<br>
+        Find <em>anything</em> — in seconds.
+      </h1>
+
+      <p class="lede reveal reveal-3">
+        Organize your company documents so your team, clients, and partners
+        access what they need instantly — from any browser.
+      </p>
+
+      <div class="hero-cta reveal reveal-4">
+        <a class="btn btn--ink" href="#cta">
+          Start with Cardinal Files
+          <span class="arrow" aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <p class="hero-status reveal reveal-5">
+        Your clients notice when you answer fast. Your team stops asking <b>where things are.</b>
+      </p>
+    </div>
+
+    <div class="hero-visual reveal reveal-3" aria-hidden="true">
+      <div class="tape">Live · Instant</div>
+      <div class="hv-pill">2,148 docs</div>
+
+      <div class="hv-bar">
+        <div class="hv-dots"><i></i><i></i><i></i></div>
+        <div class="hv-path">cardinal › shared › q3-contracts</div>
+      </div>
+
+      <div class="hv-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span class="q">Q3 contract with Northwind</span>
+        <span class="caret"></span>
+      </div>
+
+      <div class="hv-results">
+        <div class="hv-row r1">
+          <span class="ic">PDF</span>
+          <span class="name"><em>Northwind_Q3_MSA</em>_signed.pdf</span>
+          <span class="meta">0.31 s</span>
+        </div>
+        <div class="hv-row r2">
+          <span class="ic">PDF</span>
+          <span class="name"><em>Northwind_Q3</em>_addendum_v2.pdf</span>
+          <span class="meta">0.41 s</span>
+        </div>
+        <div class="hv-row r3">
+          <span class="ic">DOCX</span>
+          <span class="name">Pricing_<em>Q3</em>_<em>Northwind</em>.docx</span>
+          <span class="meta">0.52 s</span>
+        </div>
+        <div class="hv-row r4">
+          <span class="ic">XLSX</span>
+          <span class="name">Renewal_tracker_<em>Q3</em>.xlsx</span>
+          <span class="meta">0.58 s</span>
+        </div>
+      </div>
+
+      <div class="hv-tick"><span class="dot"></span> indexed · 4 results in 0.6 s</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── MARQUEE ─────────── -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Self-hosted</span><span class="sep">/</span>
+    <span>Indexed in seconds</span><span class="sep">/</span>
+    <span>Browser-native</span><span class="sep">/</span>
+    <span>One-line install</span><span class="sep">/</span>
+    <span>Full-text search</span><span class="sep">/</span>
+    <span>Share-by-link</span><span class="sep">/</span>
+    <span>Permission-aware</span><span class="sep">/</span>
+    <span>Audit trails</span><span class="sep">/</span>
+    <!-- duplicate for seamless loop -->
+    <span>Self-hosted</span><span class="sep">/</span>
+    <span>Indexed in seconds</span><span class="sep">/</span>
+    <span>Browser-native</span><span class="sep">/</span>
+    <span>One-line install</span><span class="sep">/</span>
+    <span>Full-text search</span><span class="sep">/</span>
+    <span>Share-by-link</span><span class="sep">/</span>
+    <span>Permission-aware</span><span class="sep">/</span>
+    <span>Audit trails</span><span class="sep">/</span>
+  </div>
+</div>
+
+<!-- ─────────── 2: BEFORE / AFTER ─────────── -->
+<section class="block" id="before-after">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <div class="num-cell">
+        <span class="num"><span class="slash">/</span>02</span>
+        <span class="label">The shift</span>
+      </div>
+      <div>
+        <span class="eyebrow">Time delay · days, not months</span>
+        <h2 class="h-display" style="font-size:clamp(32px, 4.4vw, 56px); margin-top:14px">
+          From <em style="font-family:var(--serif); font-style:italic; color:var(--ink-mute)">"can you resend that?"</em><br>
+          to <em>found in 2 seconds.</em>
+        </h2>
+      </div>
+    </div>
+
+    <div class="ba-grid reveal">
+      <div class="ba-col ba-before">
+        <span class="tag">Before</span>
+        <h3>Files live in inboxes, drives, and laptops.</h3>
+        <p>30 minutes searching. "Can you resend that?" emails. Panic when an employee leaves and takes the files with them.</p>
+        <p>Every client question becomes a small excavation project.</p>
+        <div class="ba-time">Time to answer · <b>up to 30 min</b></div>
+      </div>
+      <div class="ba-col ba-after">
+        <span class="tag">After</span>
+        <h3>Everything <em>indexed</em> and <em>searchable</em>.</h3>
+        <p>External partners get a link, not a waiting game. Files found in 2 seconds. The same answer for your team, your clients, and your auditor.</p>
+        <div class="ba-time">Time to answer · <b>≈ 2 seconds</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 3: PRODUCTS ─────────── -->
+<section class="block" id="products">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <div class="num-cell">
+        <span class="num"><span class="slash">/</span>03</span>
+        <span class="label">The apps</span>
+      </div>
+      <div>
+        <span class="eyebrow">Each app is a focused, single-purpose tool</span>
+        <h2 class="h-display" style="font-size:clamp(32px, 4.4vw, 56px); margin-top:14px">
+          Pick the one that solves <em>this week's headache.</em>
+        </h2>
+      </div>
+    </div>
+
+    <div class="products">
+      <article class="pcard featured reveal">
+        <span class="badge">Flagship</span>
+        <div>
+          <div class="ico" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="4" width="18" height="16" rx="1.5"/>
+              <path d="M3 9h18M9 4v16"/>
+            </svg>
+          </div>
+          <h4 style="margin-top:18px">Cardinal Files.<br>Your documents, finally findable.</h4>
+          <p class="lede" style="margin-top:14px; font-size:16px">The flagship. A self-hosted document hub with full-text search, share-by-link, and permission-aware access — for teams of 5 to 500.</p>
+        </div>
+        <div class="right">
+          <ul>
+            <li>Full-text search across every PDF, DOCX, XLSX, image and email.</li>
+            <li>Share-by-link with expiring URLs — no "resend the file" emails.</li>
+            <li>Role-based access; audit trails for every open, edit, and share.</li>
+          </ul>
+          <a class="more" href="#cta">Open Cardinal Files <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
+      <article class="pcard reveal">
+        <div class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M4 7h16M4 12h10M4 17h16"/>
+          </svg>
+        </div>
+        <h4>Cardinal Inbox.<br>Shared email, finally organized.</h4>
+        <ul>
+          <li>One inbox for sales@, support@, info@ — searchable as one.</li>
+          <li>Auto-tag by sender, intent, or attachment type.</li>
+          <li>Assign threads to a teammate without forwarding.</li>
+        </ul>
+        <a class="more" href="#cta">Learn more <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="pcard reveal">
+        <div class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+          </svg>
+        </div>
+        <h4>Cardinal Clients.<br>One record per relationship.</h4>
+        <ul>
+          <li>Every email, file, invoice and note — attached to the client.</li>
+          <li>Hand off accounts without losing context.</li>
+          <li>Replace three spreadsheets and two inboxes.</li>
+        </ul>
+        <a class="more" href="#cta">Learn more <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="pcard reveal">
+        <div class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+            <path d="M3 12l9 4 9-4M3 17l9 4 9-4"/>
+          </svg>
+        </div>
+        <h4>Cardinal Vault.<br>Contracts, signed and searchable.</h4>
+        <ul>
+          <li>Auto-extract parties, dates, and renewal terms from PDFs.</li>
+          <li>Get a heads-up 60 days before anything expires.</li>
+          <li>Find any clause across your entire contract corpus.</li>
+        </ul>
+        <a class="more" href="#cta">Learn more <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 4: HOW IT WORKS ─────────── -->
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <div class="num-cell">
+        <span class="num"><span class="slash">/</span>04</span>
+        <span class="label">The install</span>
+      </div>
+      <div>
+        <span class="eyebrow">What is expected of you · almost nothing</span>
+        <h2 class="h-display" style="font-size:clamp(32px, 4.4vw, 56px); margin-top:14px">
+          One line of code. Then <em>open your browser.</em>
+        </h2>
+      </div>
+    </div>
+
+    <div class="steps reveal">
+      <div class="step">
+        <div class="index"><span>1</span> TERMINAL</div>
+        <h5>Copy-paste one command. That's the entire install.</h5>
+        <p>No installer wizard. No "next-next-finish." One curl command, one minute. Cardinal runs on your own machine or server.</p>
+      </div>
+      <div class="step">
+        <div class="index"><span>2</span> BROWSER</div>
+        <h5>Open your browser. Everything is already there.</h5>
+        <p>Your documents are indexed the moment the install finishes. The same UI whether you run it locally or on a VPS.</p>
+      </div>
+      <div class="step">
+        <div class="index"><span>3</span> SHARE</div>
+        <h5>Share access with your team and partners. Done.</h5>
+        <p>One link per folder, per client, or per file. Set an expiry. Revoke anytime. No more "can you resend?" emails.</p>
+      </div>
+    </div>
+
+    <!-- the "screenshot" of the single command -->
+    <div class="terminal reveal" aria-label="Terminal showing the install command">
+      <div class="terminal-head">
+        <i></i><i></i><i></i>
+        <span class="title">~/cardinal — zsh — 92×24</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="prompt">$</span> <span class="cmd typed">curl -sSL cardinal.app/install | sh</span></div>
+        <div class="cursor-line"></div>
+        <div class="info">→ Detecting OS… macOS 14.4 · arm64</div>
+        <div class="info">→ Fetching Cardinal 1.4.2 (12.3 MB)…</div>
+        <div class="info">→ Generating workspace at <span style="color:#fff">~/.cardinal</span></div>
+        <div class="info">→ Starting daemon on <span style="color:#fff">http://localhost:7878</span></div>
+        <div class="ok">✓ Cardinal is ready. Open http://localhost:7878 in your browser.</div>
+      </div>
+    </div>
+
+    <p class="derisk reveal">
+      <span class="check" aria-hidden="true">✓</span>
+      No IT department needed. If you can copy-paste, you can run this.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────── 5: PROOF ─────────── -->
+<section class="block" id="proof">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <div class="num-cell">
+        <span class="num"><span class="slash">/</span>05</span>
+        <span class="label">The proof</span>
+      </div>
+      <div>
+        <span class="eyebrow">Can it really help? Here's evidence.</span>
+        <h2 class="h-display" style="font-size:clamp(32px, 4.4vw, 56px); margin-top:14px">
+          A non-technical owner.<br>A <em>60-second</em> demo. Real numbers.
+        </h2>
+      </div>
+    </div>
+
+    <div class="proof reveal">
+      <div class="quote">
+        <span class="mark">"</span>
+        <blockquote>
+          I'm <em>not technical.</em> I ran the command, it worked, and my team
+          never asks me <em>where files are</em> anymore. That alone gave me
+          my Friday afternoons back.
+        </blockquote>
+        <div class="who">
+          <div class="avatar">MR</div>
+          <div class="meta">
+            <b>Maya R.</b>
+            <span>Founder · 14-person logistics firm · Cardiff</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo" aria-label="60-second install demo">
+        <div class="frame">
+          <div class="play">
+            <button aria-label="Play 60-second demo">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="caption">
+          <span><b>60-second demo</b> · zero → searchable</span>
+          <span>0:00 / 1:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats reveal">
+      <div class="stat">
+        <div class="k">Time to first answer</div>
+        <div class="v">&lt; <em>2</em>s</div>
+        <div class="s">Documents found in under 2 seconds — across 100k+ files.</div>
+      </div>
+      <div class="stat">
+        <div class="k">"Resend?" emails</div>
+        <div class="v">− <em>92</em>%</div>
+        <div class="s">Reported by teams in the first 30 days after install.</div>
+      </div>
+      <div class="stat">
+        <div class="k">Setup time</div>
+        <div class="v"><em>5</em> min</div>
+        <div class="s">Median install time across all supported platforms.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 6: GUARANTEE ─────────── -->
+<section class="block" id="guarantee">
+  <div class="wrap">
+    <div class="block-head reveal">
+      <div class="num-cell">
+        <span class="num"><span class="slash">/</span>06</span>
+        <span class="label">The guarantee</span>
+      </div>
+      <div>
+        <span class="eyebrow">If this doesn't help, we don't deserve your money.</span>
+        <h2 class="h-display" style="font-size:clamp(32px, 4.4vw, 56px); margin-top:14px">
+          <em>30 days.</em> Real documents. Full refund.
+        </h2>
+      </div>
+    </div>
+
+    <div class="guarantee reveal">
+      <div class="seal" aria-hidden="true">
+        <div>
+          <div class="days"><em>30</em></div>
+          <div class="sub">Day money-back</div>
+        </div>
+      </div>
+      <div class="guarantee-text">
+        <h3>Install it. Put your real documents in it.</h3>
+        <p>If finding files isn't dramatically easier, email us for a full refund.
+           No forms, no questions, no exit interviews.</p>
+        <ul>
+          <li>You have a full 30 days from purchase.</li>
+          <li>Refund processed within two business days.</li>
+          <li>Keep every document — we don't lock your data.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 7: FINAL CTA ─────────── -->
+<section class="cta" id="cta">
+  <div class="wrap cta-inner reveal">
+    <span class="eyebrow">The last section</span>
+    <h2>Your files are waiting.<br><em>Stop searching for them.</em></h2>
+    <p>5-minute install. Browser-based after that. Stuck? We'll help.</p>
+    <a class="btn btn--paper" href="#">
+      Start now — 30-day guarantee
+      <span class="arrow" aria-hidden="true"></span>
+    </a>
+    <div class="small">One command · Self-hosted · Refundable for 30 days</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a href="#" class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      Cardinal
+    </a>
+    <div>© 2026 Cardinal Software · A small, opinionated team.</div>
+    <div style="font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;">Press · /index · /docs</div>
+  </div>
+</footer>
+
+<script>
+  // scroll-triggered reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // hero plays its animation immediately on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('section.hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('in'), 80 + i * 90);
+    });
+  });
+
+  // smooth anchor scroll (offset for sticky header)
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      const top = t.getBoundingClientRect().top + window.scrollY - 64;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Folio — Stop hunting for documents. Find anything in seconds.</title>
+<meta name="description" content="Organize your company documents so your team, clients, and partners access what they need instantly — from any browser. One command to install." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ---------- Reset ---------- */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{min-height:100vh}
+  img,svg{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  a{color:inherit;text-decoration:none}
+  ul{list-style:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+  /* ---------- Tokens ---------- */
+  :root{
+    --bg:#F4F0E6;
+    --bg-2:#EFEADD;
+    --surface:#FBF8F0;
+    --surface-2:#F8F3E7;
+    --ink:#1A1813;
+    --ink-2:#4B463A;
+    --ink-3:#8A8472;
+    --rule:#D8CFB8;
+    --rule-2:#C5BB9E;
+    --accent:#2A4A3C;
+    --accent-2:#3A6650;
+    --accent-ink:#F4F0E6;
+    --match:rgba(42,74,60,.14);
+    --shadow:0 1px 0 rgba(26,24,19,.04), 0 18px 40px -28px rgba(26,24,19,.28);
+
+    --f-display:"Fraunces","Fraunces Fallback",Georgia,serif;
+    --f-body:"Geist","Geist Fallback",system-ui,sans-serif;
+    --f-mono:"JetBrains Mono",ui-monospace,monospace;
+
+    --wrap:1180px;
+    --gutter:clamp(20px,5vw,56px);
+  }
+
+  body{
+    font-family:var(--f-body);
+    background:var(--bg);
+    color:var(--ink);
+    font-size:17px;
+    line-height:1.6;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+
+  /* paper grain */
+  .grain{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* ---------- Layout ---------- */
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gutter);width:100%}
+  section{position:relative;scroll-margin-top:84px}
+  .rule{height:1px;background:var(--rule);border:0;width:100%}
+
+  /* section chapter marker */
+  .chapter{display:flex;align-items:center;gap:16px;margin-bottom:clamp(34px,5vw,56px)}
+  .chapter__bar{height:1px;width:42px;background:var(--ink-3)}
+  .chapter__num{font-family:var(--f-display);font-style:italic;font-weight:400;font-size:15px;color:var(--accent);letter-spacing:.01em}
+  .chapter__label{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+  .chapter__line{flex:1;height:1px;background:var(--rule)}
+
+  /* ---------- Type ---------- */
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);font-weight:500}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--accent)}
+  .display{font-family:var(--f-display);font-weight:400;letter-spacing:-.022em;line-height:1.02;font-variation-settings:"opsz" 144;color:var(--ink)}
+  .display em{font-style:italic;color:var(--accent);font-weight:500}
+  .lead{color:var(--ink-2);font-weight:300}
+  .mono{font-family:var(--f-mono)}
+
+  /* ---------- Buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-body);font-weight:500;font-size:15.5px;letter-spacing:.004em;padding:15px 24px;border-radius:2px;border:1px solid transparent;transition:transform .35s cubic-bezier(.2,.7,.2,1),background .25s,color .25s,box-shadow .3s;will-change:transform}
+  .btn .arr{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .btn--primary{background:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow)}
+  .btn--primary:hover{background:#234034;transform:translateY(-1px)}
+  .btn--primary:hover .arr{transform:translateX(4px)}
+  .btn--ghost{background:transparent;color:var(--ink);border-color:var(--rule-2)}
+  .btn--ghost:hover{border-color:var(--ink);background:var(--surface)}
+  .btn--lg{padding:18px 30px;font-size:16.5px}
+
+  /* text link with draw underline */
+  .tlink{position:relative;color:var(--accent);font-weight:500;display:inline-flex;align-items:center;gap:7px}
+  .tlink::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+  .tlink:hover::after{transform:scaleX(1)}
+  .tlink .arr{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .tlink:hover .arr{transform:translateX(3px)}
+
+  /* ---------- Nav ---------- */
+  .nav{position:sticky;top:0;z-index:200;backdrop-filter:saturate(140%) blur(8px);transition:background .3s,border-color .3s}
+  .nav__inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .nav.is-scrolled{background:rgba(244,240,230,.82);border-bottom:1px solid var(--rule)}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--f-display);font-weight:500;font-size:21px;letter-spacing:-.01em}
+  .brand__mark{width:26px;height:26px;flex:0 0 auto}
+  .nav__links{display:flex;align-items:center;gap:30px}
+  .nav__links a{font-size:14.5px;color:var(--ink-2);transition:color .2s}
+  .nav__links a:hover{color:var(--ink)}
+  .nav__cta{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:500;color:var(--accent);border:1px solid var(--rule-2);padding:9px 16px;border-radius:2px;transition:.25s}
+  .nav__cta:hover{border-color:var(--accent);background:var(--surface)}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:clamp(54px,9vw,104px) 0 clamp(70px,10vw,120px)}
+  .hero__grid{display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(40px,6vw,84px);align-items:center}
+  .hero__title{font-size:clamp(2.5rem,5.7vw,4.7rem);margin:24px 0 22px}
+  .hero__title .l2{display:block}
+  .hero__sub{max-width:46ch;font-size:clamp(1.02rem,1.4vw,1.18rem);color:var(--ink-2);font-weight:300;margin-bottom:34px}
+  .hero__status{margin-top:24px;font-family:var(--f-display);font-style:italic;font-size:15.5px;color:var(--ink-3);max-width:42ch;line-height:1.5}
+  .hero__status::before{content:"";display:inline-block;width:18px;height:1px;background:var(--ink-3);vertical-align:middle;margin-right:10px;transform:translateY(-2px)}
+
+  /* specimen (hero product mock) */
+  .spec{background:var(--surface);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+  .spec__bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rule);background:var(--surface-2)}
+  .spec__dot{width:8px;height:8px;border-radius:50%;background:var(--rule-2)}
+  .spec__pill{margin-left:8px;font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
+  .spec__search{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--rule)}
+  .spec__search svg{width:16px;height:16px;color:var(--ink-3);flex:0 0 auto}
+  .spec__field{font-family:var(--f-mono);font-size:15px;color:var(--ink);min-width:0}
+  .spec__typed{color:var(--ink)}
+  .spec__cur{display:inline-block;width:1.5px;height:1.05em;background:var(--accent);vertical-align:-2px;margin-left:1px;animation:blink 1.05s steps(1) infinite}
+  .spec__enter{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:var(--ink-3);border:1px solid var(--rule);padding:2px 7px;border-radius:2px}
+  .spec__list{padding:8px 0}
+  .spec__row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--rule);transition:background .2s}
+  .spec__row:last-child{border-bottom:0}
+  .spec__row:hover{background:var(--surface-2)}
+  .spec__name{font-size:14.5px;color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .spec__path{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);margin-top:2px}
+  .spec__tag{font-family:var(--f-mono);font-size:10.5px;color:var(--accent);border:1px solid var(--accent-2);padding:2px 7px;border-radius:20px;white-space:nowrap}
+  mark{background:var(--match);color:var(--ink);border-radius:2px;padding:0 1px}
+  .spec__foot{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-top:1px solid var(--rule);background:var(--surface-2);font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+
+  /* ---------- Before / After ---------- */
+  .ba{padding:clamp(64px,9vw,110px) 0;background:var(--bg-2)}
+  .ba__head{max-width:60ch;margin-bottom:clamp(40px,5vw,60px)}
+  .ba__title{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-top:18px}
+  .ba__title em{font-style:italic;color:var(--accent)}
+  .ba__grid{display:grid;grid-template-columns:1fr 1px 1fr;gap:0}
+  .ba__col{padding:clamp(24px,4vw,44px)}
+  .ba__col--before{padding-left:0}
+  .ba__col--after{padding-right:0}
+  .ba__divider{background:var(--rule)}
+  .ba__lbl{display:flex;align-items:baseline;gap:12px;margin-bottom:26px}
+  .ba__lbl-num{font-family:var(--f-display);font-style:italic;font-size:14px;color:var(--ink-3)}
+  .ba__lbl-txt{font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:600}
+  .ba__col--before .ba__lbl-txt{color:var(--ink-3)}
+  .ba__col--after .ba__lbl-txt{color:var(--accent)}
+  .ba__items li{position:relative;padding:14px 0 14px 30px;border-bottom:1px solid var(--rule);font-size:16px;line-height:1.5}
+  .ba__col--before .ba__items li{color:var(--ink-2)}
+  .ba__col--after .ba__items li{color:var(--ink)}
+  .ba__items li:last-child{border-bottom:0}
+  .ba__items li::before{position:absolute;left:0;top:16px;font-family:var(--f-mono);font-size:13px}
+  .ba__col--before .ba__items li::before{content:"—";color:var(--ink-3)}
+  .ba__col--after .ba__items li::before{content:"+";color:var(--accent);font-weight:600}
+  .ba__note{margin-top:34px;font-family:var(--f-display);font-style:italic;color:var(--ink-2);font-size:16px}
+  .ba__note strong{font-style:normal;font-weight:600;color:var(--accent)}
+
+  /* ---------- Products ---------- */
+  .products{padding:clamp(70px,10vw,120px) 0}
+  .products__head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:clamp(40px,5vw,60px);flex-wrap:wrap}
+  .products__title{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-top:18px;max-width:18ch}
+  .products__title em{font-style:italic;color:var(--accent)}
+  .products__intro{max-width:34ch;color:var(--ink-2);font-weight:300;font-size:15.5px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+  .card{padding:clamp(28px,3.5vw,40px);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);background:var(--surface);transition:background .3s;position:relative}
+  .card:hover{background:var(--surface-2)}
+  .card__idx{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.05em;margin-bottom:22px}
+  .card__title{font-family:var(--f-display);font-weight:500;font-size:clamp(1.35rem,2vw,1.6rem);line-height:1.15;letter-spacing:-.01em;margin-bottom:8px}
+  .card__title em{font-style:italic;color:var(--accent)}
+  .card__sub{font-size:13.5px;color:var(--ink-3);font-family:var(--f-mono);margin-bottom:24px}
+  .card__bullets li{position:relative;padding:10px 0 10px 26px;font-size:15px;color:var(--ink-2);border-top:1px solid var(--rule)}
+  .card__bullets li:first-child{border-top:0}
+  .card__bullets li::before{content:"";position:absolute;left:0;top:18px;width:12px;height:1px;background:var(--accent)}
+  .card__cta{margin-top:26px}
+
+  /* ---------- How it works ---------- */
+  .how{padding:clamp(70px,10vw,120px) 0;background:var(--bg-2)}
+  .how__title{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-top:18px;max-width:16ch}
+  .how__title em{font-style:italic;color:var(--accent)}
+  .how__grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(40px,6vw,80px);align-items:start;margin-top:clamp(40px,5vw,60px)}
+  .steps{display:flex;flex-direction:column}
+  .step{display:grid;grid-template-columns:54px 1fr;gap:18px;padding:24px 0;border-bottom:1px solid var(--rule)}
+  .step:first-child{border-top:1px solid var(--rule)}
+  .step__n{font-family:var(--f-display);font-style:italic;font-size:30px;color:var(--accent);line-height:1;padding-top:2px}
+  .step__t{font-size:16.5px;color:var(--ink);line-height:1.5}
+  .step__t strong{font-weight:600}
+  .how__derisk{margin-top:30px;font-family:var(--f-display);font-style:italic;color:var(--ink-2);font-size:16px;line-height:1.5;padding:18px 0 0;border-top:1px solid var(--rule)}
+
+  /* terminal exhibit */
+  .term{background:#1A1813;border-radius:4px;overflow:hidden;box-shadow:var(--shadow);border:1px solid #2a2620}
+  .term__bar{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid #2a2620;background:#211d17}
+  .term__dot{width:9px;height:9px;border-radius:50%;background:#3a342a}
+  .term__dot:nth-child(2){background:#3a342a}
+  .term__dot:nth-child(3){background:#3a342a}
+  .term__lbl{margin-left:10px;font-family:var(--f-mono);font-size:11.5px;color:#6f6856}
+  .term__copy{margin-left:auto;font-family:var(--f-mono);font-size:11px;color:#9a9176;border:1px solid #3a342a;padding:3px 9px;border-radius:2px;transition:.2s}
+  .term__copy:hover{color:#e8e0c8;border-color:#5a5138}
+  .term__body{padding:26px 24px 30px;font-family:var(--f-mono);font-size:15px;line-height:1.7}
+  .term__line{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .term__pre{color:#6f6856}
+  .term__cmd{color:#e8e0c8}
+  .term__cmd .a{color:#9bbf9a}
+  .term__cmd .b{color:#c9b87a}
+  .term__cur{display:inline-block;width:8px;height:1.05em;background:#9bbf9a;vertical-align:-2px;margin-left:2px;animation:blink 1.05s steps(1) infinite}
+  .term__out{margin-top:14px;color:#9a9176;font-size:13.5px}
+  .term__out .ok{color:#9bbf9a}
+  .term__out .url{color:#c9b87a}
+
+  /* ---------- Proof ---------- */
+  .proof{padding:clamp(70px,10vw,120px) 0}
+  .proof__title{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-top:18px;max-width:18ch}
+  .proof__title em{font-style:italic;color:var(--accent)}
+  .proof__grid{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(36px,5vw,64px);margin-top:clamp(40px,5vw,60px);align-items:start}
+  .quote{font-family:var(--f-display);font-weight:400;font-size:clamp(1.45rem,2.6vw,2.05rem);line-height:1.28;letter-spacing:-.012em;color:var(--ink)}
+  .quote::before{content:"“";font-style:italic;color:var(--accent);font-size:1.4em;line-height:0;vertical-align:-.18em;margin-right:.04em}
+  .quote::after{content:"”";font-style:italic;color:var(--accent);font-size:1.4em;line-height:0;vertical-align:-.32em}
+  .quote__attr{margin-top:26px;display:flex;align-items:center;gap:14px}
+  .quote__attr .av{width:42px;height:42px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:500;font-size:16px;flex:0 0 auto}
+  .quote__attr .who{font-size:14.5px;color:var(--ink);font-weight:500}
+  .quote__attr .role{font-size:13px;color:var(--ink-3);font-family:var(--f-mono)}
+
+  .demo{border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:var(--surface)}
+  .demo__frame{position:relative;aspect-ratio:16/10;background:linear-gradient(160deg,#F8F3E7,#EFEADD);display:grid;place-items:center;border-bottom:1px solid var(--rule)}
+  .demo__play{width:64px;height:64px;border-radius:50%;border:1px solid var(--accent);display:grid;place-items:center;background:var(--surface);transition:transform .3s,background .3s}
+  .demo__play:hover{transform:scale(1.06);background:var(--accent)}
+  .demo__play:hover svg{color:var(--accent-ink)}
+  .demo__play svg{width:20px;height:20px;color:var(--accent);margin-left:3px;transition:color .3s}
+  .demo__runtime{position:absolute;top:14px;right:14px;font-family:var(--f-mono);font-size:11px;color:var(--ink-2);border:1px solid var(--rule-2);background:var(--surface);padding:3px 8px;border-radius:2px}
+  .demo__body{padding:18px 20px}
+  .demo__t{font-size:14.5px;color:var(--ink);font-weight:500;line-height:1.4}
+  .demo__s{font-size:13px;color:var(--ink-3);margin-top:4px;font-family:var(--f-mono)}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(40px,5vw,60px);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .stat{padding:clamp(28px,3.5vw,40px) clamp(18px,2.5vw,32px);border-right:1px solid var(--rule)}
+  .stat:last-child{border-right:0}
+  .stat__n{font-family:var(--f-display);font-weight:500;font-size:clamp(2.4rem,5vw,3.6rem);line-height:1;letter-spacing:-.03em;color:var(--ink)}
+  .stat__n em{font-style:italic;color:var(--accent)}
+  .stat__n .u{font-size:.45em;color:var(--ink-3);font-style:normal;font-weight:400;margin-left:2px;letter-spacing:0}
+  .stat__l{margin-top:14px;font-size:13px;color:var(--ink-3);font-family:var(--f-mono);letter-spacing:.02em}
+
+  /* ---------- Guarantee ---------- */
+  .guar{padding:clamp(80px,12vw,140px) 0;background:var(--bg-2);overflow:hidden}
+  .guar__grid{display:grid;grid-template-columns:1fr auto;gap:clamp(40px,6vw,80px);align-items:center}
+  .guar__title{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-top:18px;max-width:16ch;line-height:1.08}
+  .guar__title em{font-style:italic;color:var(--accent)}
+  .guar__body{margin-top:24px;max-width:54ch;color:var(--ink-2);font-weight:300;font-size:16.5px;line-height:1.65}
+
+  /* seal */
+  .seal{width:clamp(150px,18vw,210px);height:clamp(150px,18vw,210px);flex:0 0 auto;position:relative}
+  .seal__spin{animation:spin 44s linear infinite;transform-origin:50% 50%}
+  .seal:hover .seal__spin{animation-duration:18s}
+  .seal svg{width:100%;height:100%}
+  .seal-outer{fill:none;stroke:var(--accent);stroke-width:1}
+  .seal-inner{fill:none;stroke:var(--accent);stroke-width:.6;opacity:.5}
+  .seal-text{font-family:var(--f-body);font-size:9.2px;letter-spacing:.32em;fill:var(--accent);font-weight:500;text-transform:uppercase}
+  .seal-num{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:58px;fill:var(--accent);letter-spacing:-.02em}
+  .seal-days{font-family:var(--f-body);font-size:9px;letter-spacing:.32em;fill:var(--accent);font-weight:600;text-transform:uppercase}
+  .seal-star{fill:var(--accent);opacity:.7}
+
+  /* ---------- Final CTA ---------- */
+  .final{padding:clamp(90px,13vw,150px) 0;text-align:center;position:relative}
+  .final__title{font-size:clamp(2.3rem,5.2vw,4.2rem);max-width:18ch;margin:22px auto 0;line-height:1.04}
+  .final__title em{font-style:italic;color:var(--accent)}
+  .final__sub{margin:26px auto 38px;max-width:44ch;color:var(--ink-2);font-weight:300;font-size:16px}
+  .final__sub b{font-weight:500;color:var(--ink)}
+  .final__deco{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:6px}
+  .final__deco .ln{height:1px;width:60px;background:var(--rule-2)}
+  .final__deco .mk{font-family:var(--f-display);font-style:italic;color:var(--accent);font-size:15px}
+
+  /* ---------- Footer ---------- */
+  .foot{border-top:1px solid var(--rule);padding:54px 0 40px;background:var(--bg)}
+  .foot__top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  .foot__brand{max-width:34ch}
+  .foot__brand .brand{margin-bottom:14px}
+  .foot__brand p{font-size:14px;color:var(--ink-3);font-weight:300;line-height:1.55}
+  .foot__cols{display:flex;gap:64px;flex-wrap:wrap}
+  .foot__col h5{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin-bottom:16px}
+  .foot__col li{margin-bottom:10px}
+  .foot__col a{font-size:14px;color:var(--ink-2);transition:color .2s}
+  .foot__col a:hover{color:var(--accent)}
+  .foot__bot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:48px;padding-top:22px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-3);font-family:var(--f-mono)}
+
+  /* ---------- Animations ---------- */
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal[data-d="1"]{transition-delay:.08s}
+  .reveal[data-d="2"]{transition-delay:.16s}
+  .reveal[data-d="3"]{transition-delay:.24s}
+  .reveal[data-d="4"]{transition-delay:.32s}
+  .load{opacity:0;transform:translateY(16px);animation:loadIn .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .load[data-d="1"]{animation-delay:.1s}
+  .load[data-d="2"]{animation-delay:.24s}
+  .load[data-d="3"]{animation-delay:.4s}
+  .load[data-d="4"]{animation-delay:.56s}
+  .load[data-d="5"]{animation-delay:.72s}
+  @keyframes loadIn{to{opacity:1;transform:none}}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:980px){
+    .hero__grid{grid-template-columns:1fr;gap:48px}
+    .ba__grid{grid-template-columns:1fr;gap:0}
+    .ba__divider{height:1px;width:100%;background:var(--rule);margin:8px 0}
+    .ba__col--after{padding-right:0;padding-top:8px}
+    .ba__col--before{padding-left:0;padding-bottom:8px}
+    .cards{grid-template-columns:1fr}
+    .how__grid{grid-template-columns:1fr;gap:40px}
+    .proof__grid{grid-template-columns:1fr;gap:40px}
+    .guar__grid{grid-template-columns:1fr;justify-items:start;text-align:left}
+    .seal{order:-1}
+  }
+  @media (max-width:720px){
+    .nav__links a:not(.nav__cta){display:none}
+    .stats{grid-template-columns:1fr}
+    .stat{border-right:0;border-bottom:1px solid var(--rule)}
+    .stat:last-child{border-bottom:0}
+    .foot__cols{gap:40px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .load{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="#top" aria-label="Folio — home">
+      <svg class="brand__mark" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect x="0.5" y="0.5" width="25" height="25" rx="2" stroke="#2A4A3C"/>
+        <rect x="0.5" y="0.5" width="25" height="12.5" fill="#2A4A3C"/>
+        <line x1="0.5" y1="13" x2="25.5" y2="13" stroke="#F4F0E6" stroke-width="1"/>
+      </svg>
+      Folio
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#products">Products</a>
+      <a href="#how">How it works</a>
+      <a href="#proof">Proof</a>
+      <a class="nav__cta" href="#start">Start <span aria-hidden="true">→</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow load" data-d="1">For B2B owners tired of hunting for files</span>
+        <h1 class="display hero__title load" data-d="2" id="hero-title">
+          Stop hunting for documents. Stop resending files. Find anything — <span class="l2">in <em>seconds.</em></span>
+        </h1>
+        <p class="hero__sub lead load" data-d="3">
+          Organize your company documents so your team, clients, and partners access what they need instantly — from any browser.
+        </p>
+        <div class="load" data-d="4">
+          <a class="btn btn--primary btn--lg" href="#start">
+            Start with Folio Archive <span class="arr" aria-hidden="true">→</span>
+          </a>
+        </div>
+        <p class="hero__status load" data-d="5">
+          Your clients notice when you answer fast. Your team stops asking where things are.
+        </p>
+      </div>
+
+      <!-- specimen -->
+      <div class="spec load" data-d="4" role="img" aria-label="Folio Archive search interface showing instant results for supplier contract">
+        <div class="spec__bar">
+          <span class="spec__dot"></span><span class="spec__dot"></span><span class="spec__dot"></span>
+          <span class="spec__pill">folio.archive</span>
+        </div>
+        <div class="spec__search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+          <span class="spec__field"><span class="spec__typed" id="typed"></span><span class="spec__cur" aria-hidden="true"></span></span>
+          <span class="spec__enter">↵</span>
+        </div>
+        <div class="spec__list">
+          <div class="spec__row">
+            <div>
+              <div class="spec__name">Q3_<mark>Supplier</mark>_Agreement.pdf</div>
+              <div class="spec__path">/Contracts/2026</div>
+            </div>
+            <span class="spec__tag">0.4s</span>
+          </div>
+          <div class="spec__row">
+            <div>
+              <div class="spec__name"><mark>Supplier</mark>_Price_List.xlsx</div>
+              <div class="spec__path">/Finance/Vendors</div>
+            </div>
+            <span class="spec__tag">0.6s</span>
+          </div>
+          <div class="spec__row">
+            <div>
+              <div class="spec__name"><mark>Supplier</mark>_NDA.docx</div>
+              <div class="spec__path">/Legal</div>
+            </div>
+            <span class="spec__tag">0.7s</span>
+          </div>
+        </div>
+        <div class="spec__foot">
+          <span>3 results</span>
+          <span>sorted by relevance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BEFORE / AFTER ============ -->
+  <hr class="rule" />
+  <section class="ba" aria-labelledby="ba-title">
+    <div class="wrap">
+      <div class="chapter reveal"><span class="chapter__bar"></span><span class="chapter__num">02</span><span class="chapter__label">Before / After</span><span class="chapter__line"></span></div>
+      <div class="ba__head reveal" data-d="1">
+        <span class="eyebrow">How long until I see it?</span>
+        <h2 class="display ba__title" id="ba-title">The change is <em>days</em> away, not months.</h2>
+      </div>
+
+      <div class="ba__grid">
+        <div class="ba__col ba__col--before reveal" data-d="1">
+          <div class="ba__lbl"><span class="ba__lbl-num">i.</span><span class="ba__lbl-txt">Before</span></div>
+          <ul class="ba__items">
+            <li>30 minutes searching for the one file that matters.</li>
+            <li>“Can you resend that?” emails, every single week.</li>
+            <li>Panic when an employee leaves and takes the files with them.</li>
+          </ul>
+        </div>
+        <div class="ba__divider" aria-hidden="true"></div>
+        <div class="ba__col ba__col--after reveal" data-d="2">
+          <div class="ba__lbl"><span class="ba__lbl-num">ii.</span><span class="ba__lbl-txt">After</span></div>
+          <ul class="ba__items">
+            <li>Everything indexed and searchable, the moment you need it.</li>
+            <li>External partners get a link, not a waiting game.</li>
+            <li>Files found in 2 seconds — by anyone you let in.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="ba__note reveal" data-d="2">From install to <strong>first found file</strong>: under an hour. Most teams finish setup on day one.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTS ============ -->
+  <section class="products" id="products" aria-labelledby="prod-title">
+    <div class="wrap">
+      <div class="chapter reveal"><span class="chapter__bar"></span><span class="chapter__num">03</span><span class="chapter__label">Products</span><span class="chapter__line"></span></div>
+      <div class="products__head">
+        <div class="reveal" data-d="1">
+          <span class="eyebrow">Each app is a mini-offer</span>
+          <h2 class="display products__title" id="prod-title">Three tools. One outcome: <em>nothing lost.</em></h2>
+        </div>
+        <p class="products__intro reveal" data-d="2">Built for speed and ease — the bottom of the equation. Install once, use from any browser.</p>
+      </div>
+
+      <div class="cards">
+        <article class="card reveal" data-d="1">
+          <div class="card__idx">P / 01 — Flagship</div>
+          <h3 class="card__title">Your documents, finally <em>findable.</em></h3>
+          <div class="card__sub">Folio Archive</div>
+          <ul class="card__bullets">
+            <li>Full-text search across every file your company owns.</li>
+            <li>Auto-organized by team, client, and project — no manual tagging.</li>
+            <li>Browser-based. Nothing to install on each machine.</li>
+          </ul>
+          <div class="card__cta"><a class="tlink" href="#start">Start with Folio Archive <span class="arr" aria-hidden="true">→</span></a></div>
+        </article>
+
+        <article class="card reveal" data-d="2">
+          <div class="card__idx">P / 02</div>
+          <h3 class="card__title">Send a <em>link,</em> not a file.</h3>
+          <div class="card__sub">Folio Share</div>
+          <ul class="card__bullets">
+            <li>External partners get a link — no account, no waiting.</li>
+            <li>Expiry dates and view-only controls on every share.</li>
+            <li>No more “can you resend that?” — the link just works.</li>
+          </ul>
+          <div class="card__cta"><a class="tlink" href="#start">Explore Folio Share <span class="arr" aria-hidden="true">→</span></a></div>
+        </article>
+
+        <article class="card reveal" data-d="3">
+          <div class="card__idx">P / 03</div>
+          <h3 class="card__title">Your files stay <em>yours.</em></h3>
+          <div class="card__sub">Folio Vault</div>
+          <ul class="card__bullets">
+            <li>Role-based access — people see only what they should.</li>
+            <li>Audit trail on every view, download, and share.</li>
+            <li>Offboarding-proof: access ends the moment someone leaves.</li>
+          </ul>
+          <div class="card__cta"><a class="tlink" href="#start">Explore Folio Vault <span class="arr" aria-hidden="true">→</span></a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <hr class="rule" />
+  <section class="how" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="chapter reveal"><span class="chapter__bar"></span><span class="chapter__num">04</span><span class="chapter__label">How it works</span><span class="chapter__line"></span></div>
+      <div class="reveal" data-d="1">
+        <span class="eyebrow">What is expected of me?</span>
+        <h2 class="display how__title" id="how-title">Three steps. Most of them are <em>optional.</em></h2>
+      </div>
+
+      <div class="how__grid">
+        <div class="steps reveal" data-d="1">
+          <div class="step">
+            <div class="step__n">01</div>
+            <div class="step__t">Copy-paste <strong>one command</strong> into your Terminal. That’s the entire install.</div>
+          </div>
+          <div class="step">
+            <div class="step__n">02</div>
+            <div class="step__t">Open your browser. <strong>Everything is already there.</strong></div>
+          </div>
+          <div class="step">
+            <div class="step__n">03</div>
+            <div class="step__t">Share access with your team and partners. <strong>Done.</strong></div>
+          </div>
+          <p class="how__derisk">No IT department needed. If you can copy-paste, you can run this.</p>
+        </div>
+
+        <!-- terminal exhibit -->
+        <div class="term reveal" data-d="2">
+          <div class="term__bar">
+            <span class="term__dot"></span><span class="term__dot"></span><span class="term__dot"></span>
+            <span class="term__lbl">Terminal — zsh</span>
+            <button class="term__copy" id="copyBtn" type="button" aria-label="Copy install command">copy</button>
+          </div>
+          <div class="term__body">
+            <div class="term__line">
+              <span class="term__pre">$</span>
+              <span class="term__cmd"><span class="a">curl</span> <span class="b">-sSL</span> folio.sh <span class="a">|</span> sh</span>
+              <span class="term__cur" aria-hidden="true"></span>
+            </div>
+            <div class="term__out">
+              <div>↓ fetching installer…</div>
+              <div>↓ configuring folio.archive…</div>
+              <div><span class="ok">✓</span> ready at <span class="url">http://localhost:8787</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROOF ============ -->
+  <section class="proof" id="proof" aria-labelledby="proof-title">
+    <div class="wrap">
+      <div class="chapter reveal"><span class="chapter__bar"></span><span class="chapter__num">05</span><span class="chapter__label">Proof</span><span class="chapter__line"></span></div>
+      <div class="reveal" data-d="1">
+        <span class="eyebrow">How do I know it actually works?</span>
+        <h2 class="display proof__title" id="proof-title">A non-technical owner ran it. <em>It worked.</em></h2>
+      </div>
+
+      <div class="proof__grid">
+        <div class="reveal" data-d="1">
+          <p class="quote">I’m not technical. I ran the command, it worked, and my team never asks me where files are anymore.</p>
+          <div class="quote__attr">
+            <div class="av">M</div>
+            <div>
+              <div class="who">Mara Ellis</div>
+              <div class="role">Owner · Ellis &amp; Co. Surveyors</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo reveal" data-d="2">
+          <div class="demo__frame">
+            <span class="demo__runtime">0:60</span>
+            <button class="demo__play" type="button" aria-label="Play 60-second install demo">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+          <div class="demo__body">
+            <div class="demo__t">Watch the full install — zero to searchable — in 60 seconds.</div>
+            <div class="demo__s">No edits. No cuts. One command to a working archive.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat reveal" data-d="1">
+          <div class="stat__n">&lt;2<span class="u">s</span></div>
+          <div class="stat__l">Documents found — average</div>
+        </div>
+        <div class="stat reveal" data-d="2">
+          <div class="stat__n">1<span class="u"> cmd</span></div>
+          <div class="stat__l">To install the whole thing</div>
+        </div>
+        <div class="stat reveal" data-d="3">
+          <div class="stat__n">30<span class="u">-day</span></div>
+          <div class="stat__l">Money-back guarantee</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GUARANTEE ============ -->
+  <hr class="rule" />
+  <section class="guar" aria-labelledby="guar-title">
+    <div class="wrap">
+      <div class="chapter reveal"><span class="chapter__bar"></span><span class="chapter__num">06</span><span class="chapter__label">Guarantee</span><span class="chapter__line"></span></div>
+      <div class="guar__grid">
+        <div class="reveal" data-d="1">
+          <span class="eyebrow">If it isn’t dramatically easier</span>
+          <h2 class="display guar__title" id="guar-title">Install it. Use it. <em>Or pay nothing.</em></h2>
+          <p class="guar__body">
+            30-day money-back guarantee. Install it. Put your real documents in it. If finding files isn’t dramatically easier, email us for a full refund. No forms, no questions.
+          </p>
+        </div>
+
+        <div class="seal reveal" data-d="2" aria-hidden="true">
+          <div class="seal__spin">
+            <svg viewBox="0 0 200 200">
+              <defs>
+                <path id="seal-arc" d="M 100,100 m -76,0 a 76,76 0 1,1 152,0 a 76,76 0 1,1 -152,0" />
+              </defs>
+              <circle cx="100" cy="100" r="92" class="seal-outer"/>
+              <circle cx="100" cy="100" r="84" class="seal-inner"/>
+              <text class="seal-text"><textPath href="#seal-arc" startOffset="0">30-DAY MONEY-BACK GUARANTEE  •  NO FORMS  •  NO QUESTIONS  •  </textPath></text>
+              <text x="100" y="116" text-anchor="middle" class="seal-num">30</text>
+              <text x="100" y="138" text-anchor="middle" class="seal-days">Days</text>
+              <path d="M100 54 l3 6 6 1 -4.5 4.5 1 6.5 -5.5 -3 -5.5 3 1 -6.5 -4.5 -4.5 6 -1 z" class="seal-star"/>
+              <path d="M100 146 l3 -6 6 -1 -4.5 -4.5 1 -6.5 -5.5 3 -5.5 -3 1 6.5 -4.5 4.5 6 1 z" class="seal-star"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="final" id="start" aria-labelledby="final-title">
+    <div class="wrap">
+      <div class="final__deco reveal"><span class="ln"></span><span class="mk">start</span><span class="ln"></span></div>
+      <h2 class="display final__title reveal" data-d="1" id="final-title">Your files are waiting. <em>Stop searching</em> for them.</h2>
+      <p class="final__sub reveal" data-d="2"><b>5-minute install.</b> Browser-based after that. Stuck? We’ll help.</p>
+      <div class="reveal" data-d="3">
+        <a class="btn btn--primary btn--lg" href="#">
+          Start now — 30-day guarantee <span class="arr" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div class="foot__brand">
+        <a class="brand" href="#top" aria-label="Folio — home">
+          <svg class="brand__mark" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+            <rect x="0.5" y="0.5" width="25" height="25" rx="2" stroke="#2A4A3C"/>
+            <rect x="0.5" y="0.5" width="25" height="12.5" fill="#2A4A3C"/>
+            <line x1="0.5" y1="13" x2="25.5" y2="13" stroke="#F4F0E6" stroke-width="1"/>
+          </svg>
+          Folio
+        </a>
+        <p>Document organization for B2B teams that would rather find files in seconds than hunt for them for half an hour.</p>
+      </div>
+      <div class="foot__cols">
+        <div class="foot__col">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#products">Folio Archive</a></li>
+            <li><a href="#products">Folio Share</a></li>
+            <li><a href="#products">Folio Vault</a></li>
+          </ul>
+        </div>
+        <div class="foot__col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#proof">Proof</a></li>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#start">Start</a></li>
+          </ul>
+        </div>
+        <div class="foot__col">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Guarantee</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot__bot">
+      <span>© 2026 Folio. Find anything, in seconds.</span>
+      <span>One command. Any browser.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // sticky nav state
+  (function(){
+    var nav=document.getElementById('nav');
+    var onScroll=function(){ if(window.scrollY>8){nav.classList.add('is-scrolled')}else{nav.classList.remove('is-scrolled')} };
+    onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+  })();
+
+  // scroll reveal
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if(reduce || !('IntersectionObserver' in window)){
+      els.forEach(function(e){e.classList.add('in')}); return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    },{rootMargin:'0px 0px -8% 0px', threshold:0.08});
+    els.forEach(function(e){io.observe(e)});
+  })();
+
+  // hero typewriter
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var el = document.getElementById('typed');
+    if(!el) return;
+    var text = 'supplier contract';
+    if(reduce){ el.textContent = text; return; }
+    var i = 0;
+    setTimeout(function start(){
+      var t = setInterval(function(){
+        i++; el.textContent = text.slice(0,i);
+        if(i>=text.length){ clearInterval(t); }
+      }, 70);
+    }, 1100);
+  })();
+
+  // copy install command
+  (function(){
+    var btn = document.getElementById('copyBtn');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var cmd = 'curl -sSL folio.sh | sh';
+      var done = function(){ var o=btn.textContent; btn.textContent='copied'; setTimeout(function(){btn.textContent=o},1400); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(cmd).then(done).catch(function(){ done(); });
+      } else { done(); }
+    });
+  })();
+</script>
+</body>
+</html>

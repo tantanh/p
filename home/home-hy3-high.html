@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stop Hunting for Documents — Find Anything in Seconds</title>
+  <meta name="description" content="Organize your company documents so your team, clients, and partners access what they need instantly — from any browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #0a0a0a;
+      --text-secondary: #525252;
+      --text-muted: #a3a3a3;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e5e5e5;
+      --border-light: #f0f0f0;
+      --font-display: 'IBM Plex Serif', Georgia, serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --section-padding: clamp(60px, 8vw, 120px) 0;
+      --container: 1200px;
+      --radius: 8px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-weight: 400;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    /* Layout */
+    .container {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 40px);
+    }
+
+    section {
+      padding: var(--section-padding);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--surface);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--text);
+      background: var(--text);
+      color: var(--surface);
+    }
+
+    /* Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up-delay-1 { transition-delay: 0.1s; }
+    .fade-up-delay-2 { transition-delay: 0.2s; }
+    .fade-up-delay-3 { transition-delay: 0.3s; }
+
+    /* Section 1: Hero */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-top: 80px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 640px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 540px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .hero-status {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      width: 100%;
+      max-width: 440px;
+      transform: rotate(-2deg);
+      transition: transform 0.4s ease;
+    }
+
+    .hero-card:hover {
+      transform: rotate(0deg);
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .hero-card-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .hero-card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .hero-card-line {
+      height: 8px;
+      background: var(--border-light);
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .hero-card-line:nth-child(1) { width: 85%; }
+    .hero-card-line:nth-child(2) { width: 100%; }
+    .hero-card-line:nth-child(3) { width: 70%; }
+    .hero-card-line:nth-child(4) { width: 90%; }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--accent-light);
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    .search-bar svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent);
+    }
+
+    .search-bar span {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-family: var(--font-body);
+    }
+
+    /* Section 2: Before vs After */
+    .before-after {
+      background: var(--surface);
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .before-after-grid {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .ba-column {
+      padding: 40px;
+    }
+
+    .ba-column h3 {
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      font-family: var(--font-display);
+    }
+
+    .ba-before h3 {
+      color: #dc2626;
+    }
+
+    .ba-after h3 {
+      color: #16a34a;
+    }
+
+    .ba-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .ba-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ba-before .ba-icon {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .ba-after .ba-icon {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+
+    .ba-item p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .ba-divider {
+      width: 1px;
+      background: var(--border);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ba-divider span {
+      background: var(--surface);
+      padding: 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      writing-mode: vertical-rl;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+    }
+
+    .ba-timeline {
+      text-align: center;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .ba-timeline p {
+      font-size: 0.9rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Section 3: Products */
+    .products-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px;
+    }
+
+    .products-header h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin-bottom: 16px;
+    }
+
+    .products-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 32px;
+      transition: all var(--transition);
+      position: relative;
+    }
+
+    .product-card:hover {
+      border-color: var(--border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .product-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .product-card:nth-child(1) .product-card-icon { background: #eff6ff; }
+    .product-card:nth-child(2) .product-card-icon { background: #f0fdf4; }
+    .product-card:nth-child(3) .product-card-icon { background: #fefce8; }
+
+    .product-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      font-family: var(--font-display);
+    }
+
+    .product-card ul {
+      list-style: none;
+      margin-bottom: 24px;
+    }
+
+    .product-card li {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .product-card li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .product-link {
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap var(--transition);
+    }
+
+    .product-link:hover {
+      gap: 8px;
+    }
+
+    /* Section 4: How It Works */
+    .how-it-works {
+      background: var(--surface);
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: var(--border);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .step h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .terminal {
+      background: #0a0a0a;
+      border-radius: 8px;
+      padding: 20px 24px;
+      max-width: 600px;
+      margin: 0 auto 24px;
+      overflow-x: auto;
+    }
+
+    .terminal pre {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: #4ade80;
+      line-height: 1.8;
+      white-space: pre;
+    }
+
+    .terminal pre .comment { color: #525252; }
+    .terminal pre .cmd { color: #4ade80; }
+
+    .de-risk {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Section 5: Proof */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .testimonial {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 40px;
+      position: relative;
+    }
+
+    .testimonial-quote {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testimonial-quote::before {
+      content: '"';
+      font-size: 3rem;
+      color: var(--accent);
+      line-height: 0;
+      vertical-align: -0.8rem;
+      margin-right: 4px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .testimonial-role {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .proof-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .video-placeholder {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      aspect-ratio: 16/9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: 24px;
+    }
+
+    .video-placeholder:hover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .video-play {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--transition);
+    }
+
+    .video-placeholder:hover .video-play {
+      transform: scale(1.05);
+    }
+
+    .video-play svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+      margin-left: 3px;
+    }
+
+    .video-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Section 6: Guarantee */
+    .guarantee {
+      background: var(--accent-light);
+      border-top: 1px solid #bfdbfe;
+      border-bottom: 1px solid #bfdbfe;
+    }
+
+    .guarantee-content {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .guarantee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 24px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .guarantee h2 {
+      font-size: clamp(1.6rem, 2.5vw, 2rem);
+      margin-bottom: 16px;
+    }
+
+    .guarantee p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    /* Section 7: Final CTA */
+    .final-cta {
+      text-align: center;
+      padding: clamp(80px, 10vw, 140px) 0;
+    }
+
+    .final-cta h2 {
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      margin-bottom: 32px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .final-cta .btn {
+      padding: 16px 40px;
+      font-size: 1.05rem;
+    }
+
+    .final-cta-sub {
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-light);
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-content {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-sub {
+        max-width: 100%;
+      }
+
+      .hero-cta {
+        align-items: center;
+      }
+
+      .hero-visual {
+        display: none;
+      }
+
+      .before-after-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .ba-divider {
+        width: 100%;
+        height: 1px;
+        writing-mode: horizontal-tb;
+        padding: 20px 0;
+      }
+
+      .ba-divider span {
+        writing-mode: horizontal-tb;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .proof-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .ba-column {
+        padding: 24px 16px;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Section 1: Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="eyebrow fade-up">For B2B owners tired of hunting for files</div>
+          <h1 class="fade-up fade-up-delay-1">
+            Stop hunting for documents.<br>
+            Stop resending files.<br>
+            Find <em>anything</em> — in seconds.
+          </h1>
+          <p class="hero-sub fade-up fade-up-delay-2">
+            Organize your company documents so your team, clients, and partners access what they need instantly — from any browser.
+          </p>
+          <div class="hero-cta fade-up fade-up-delay-3">
+            <a href="#products" class="btn btn-primary">
+              Start with Flagship App
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <p class="hero-status">
+              Your clients notice when you answer fast. Your team stops asking where things are.
+            </p>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card fade-up">
+            <div class="hero-card-header">
+              <div class="hero-card-icon">📄</div>
+              <div>
+                <div class="hero-card-title">Company Documents</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">127 files indexed</div>
+              </div>
+            </div>
+            <div class="hero-card-line"></div>
+            <div class="hero-card-line"></div>
+            <div class="hero-card-line"></div>
+            <div class="hero-card-line"></div>
+            <div class="search-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <span>Search documents…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Before vs After -->
+  <section class="before-after">
+    <div class="container">
+      <div class="before-after-grid">
+        <div class="ba-column ba-before">
+          <h3>Before</h3>
+          <div class="ba-item">
+            <div class="ba-icon">⏱</div>
+            <p>30 minutes searching for the right file, every single time.</p>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">✉️</div>
+            <p>"Can you resend that?" emails piling up in your inbox.</p>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">😰</div>
+            <p>Panic when an employee leaves and takes the files with them.</p>
+          </div>
+        </div>
+        <div class="ba-divider">
+          <span>vs</span>
+        </div>
+        <div class="ba-column ba-after">
+          <h3>After</h3>
+          <div class="ba-item">
+            <div class="ba-icon">⚡</div>
+            <p>Everything indexed and searchable from one place.</p>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">🔗</div>
+            <p>External partners get a link, not a waiting game.</p>
+          </div>
+          <div class="ba-item">
+            <div class="ba-icon">⏱</div>
+            <p>Files found in 2 seconds flat.</p>
+          </div>
+        </div>
+      </div>
+      <div class="ba-timeline">
+        <p>The change is days away, not months.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Products -->
+  <section id="products">
+    <div class="container">
+      <div class="products-header fade-up">
+        <div class="eyebrow">Our Apps</div>
+        <h2>Each app is a mini-offer built for speed.</h2>
+        <p>Pick the tool that fits your workflow — every one gets you to "found it" faster.</p>
+      </div>
+      <div class="products-grid">
+        <!-- Card 1 -->
+        <div class="product-card fade-up">
+          <div class="product-card-icon">🗂</div>
+          <h3>Your documents, finally findable.</h3>
+          <ul>
+            <li>Index every file on your server instantly</li>
+            <li>Search by name, content, or date</li>
+            <li>Share secure links with one click</li>
+          </ul>
+          <a href="#" class="product-link">Explore Document Search →</a>
+        </div>
+        <!-- Card 2 -->
+        <div class="product-card fade-up fade-up-delay-1">
+          <div class="product-card-icon">👥</div>
+          <h3>Client access, no accounts needed.</h3>
+          <ul>
+            <li>Generate read-only links for external partners</li>
+            <li>Set expiration dates on shared files</li>
+            <li>Revoke access instantly anytime</li>
+          </ul>
+          <a href="#" class="product-link">Explore Client Portal →</a>
+        </div>
+        <!-- Card 3 -->
+        <div class="product-card fade-up fade-up-delay-2">
+          <div class="product-card-icon">📥</div>
+          <h3>Team uploads, zero friction.</h3>
+          <ul>
+            <li>Drag-and-drop upload for your whole team</li>
+            <li>Automatic folder organization by type</li>
+            <li>Version history for every document</li>
+          </ul>
+          <a href="#" class="product-link">Explore Team Uploads →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="products-header fade-up">
+        <div class="eyebrow">How It Works</div>
+        <h2>What is expected of me? Almost nothing.</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step fade-up">
+          <div class="step-number">01</div>
+          <h3>Copy-paste one command</h3>
+          <p>Into your Terminal. That's the entire install. No configuration files, no setup wizard.</p>
+        </div>
+        <div class="step fade-up fade-up-delay-1">
+          <div class="step-number">02</div>
+          <h3>Open your browser</h3>
+          <p>Everything is already there. No "getting started" tutorial required.</p>
+        </div>
+        <div class="step fade-up fade-up-delay-2">
+          <div class="step-number">03</div>
+          <h3>Share access</h3>
+          <p>With your team and partners. Send a link. Done.</p>
+        </div>
+      </div>
+
+      <div class="terminal fade-up">
+        <pre><span class="comment"># Paste this into Terminal and press Enter:</span>
+<span class="cmd">curl -fsSL https://install.example.com | bash</span>
+
+<span class="comment"># That's it. Server starts automatically.</span>
+<span class="cmd">✓ Document indexer running on port 3000</span>
+<span class="cmd">✓ 1,247 files indexed in 3.2s</span></pre>
+      </div>
+
+      <p class="de-risk fade-up">No IT department needed. If you can copy-paste, you can run this.</p>
+    </div>
+  </section>
+
+  <!-- Section 5: Proof -->
+  <section>
+    <div class="container">
+      <div class="products-header fade-up">
+        <div class="eyebrow">Proof</div>
+        <h2>How do you know it actually works?</h2>
+      </div>
+      <div class="proof-grid">
+        <div class="testimonial fade-up">
+          <p class="testimonial-quote">
+            I'm not technical. I ran the command, it worked, and my team never asks me where files are anymore.
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Sarah Chen</div>
+              <div class="testimonial-role">Owner, BrightPath Consulting</div>
+            </div>
+          </div>
+        </div>
+        <div class="proof-stats">
+          <div class="stat-card fade-up">
+            <div class="stat-number">2s</div>
+            <div class="stat-label">Average document find time</div>
+          </div>
+          <div class="stat-card fade-up fade-up-delay-1">
+            <div class="stat-number">5 min</div>
+            <div class="stat-label">From install to first search</div>
+          </div>
+          <div class="video-placeholder fade-up fade-up-delay-2">
+            <div class="video-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <div class="video-label">Watch the full install — zero to searchable in 60 seconds</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Guarantee -->
+  <section class="guarantee">
+    <div class="container">
+      <div class="guarantee-content fade-up">
+        <div class="guarantee-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          30-Day Guarantee
+        </div>
+        <h2>Install it. Put your real documents in it.</h2>
+        <p>
+          If finding files isn't dramatically easier within 30 days, email us for a full refund.
+          No forms, no questions, no hoops to jump through.
+        </p>
+        <p style="margin-top: 8px; font-size: 0.95rem; color: var(--accent); font-weight: 500;">
+          We're that confident it works.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="fade-up">
+        <h2>Your files are waiting.<br>Stop searching for them.</h2>
+        <a href="#products" class="btn btn-primary">Start now — 30-day guarantee</a>
+        <p class="final-cta-sub">5-minute install. Browser-based after that. Stuck? We'll help.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Your Company. All rights reserved. Built for B2B owners who value their time.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-triggered fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.fade-up').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Video placeholder click handler (placeholder)
+    document.querySelector('.video-placeholder')?.addEventListener('click', () => {
+      alert('Demo video would open here. Replace with actual video embed.');
+    });
+  </script>
+</body>
+</html>

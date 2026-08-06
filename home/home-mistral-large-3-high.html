@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — Find Anything in Seconds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --surface-hover: #f1f3f4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+        }
+        .font-serif-display {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero-headline {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.1;
+            font-weight: 500;
+        }
+        .section-headline {
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.2;
+            font-weight: 500;
+        }
+        .eyebrow {
+            letter-spacing: 0.1em;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .cta-button {
+            background-color: var(--accent);
+            color: white;
+            transition: background-color 0.2s ease;
+        }
+        .cta-button:hover {
+            background-color: var(--accent-hover);
+        }
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .testimonial-card {
+            background-color: var(--surface);
+            border-left: 4px solid var(--accent);
+        }
+        .command-snippet {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        .command-prompt::before {
+            content: "$";
+            color: #9cdcfe;
+            margin-right: 0.75rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Hero Section -->
+    <section class="py-20 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <p class="eyebrow mb-4">For B2B owners tired of hunting for files</p>
+            <h1 class="font-serif-display hero-headline mb-6">
+                Stop hunting for documents.<br>
+                Stop resending files.<br>
+                Find anything — in seconds.
+            </h1>
+            <p class="text-xl md:text-2xl text-secondary max-w-2xl mx-auto mb-8">
+                Organize your company documents so your team, clients, and partners access what they need instantly — from any browser.
+            </p>
+            <a href="#" class="cta-button inline-block px-8 py-4 rounded-lg text-lg font-semibold shadow-md">
+                Start with Flagship App
+            </a>
+            <p class="mt-6 text-sm text-secondary">
+                Your clients notice when you answer fast. Your team stops asking where things are.
+            </p>
+        </div>
+    </section>
+
+    <!-- Before vs After Section -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-secondary mb-4">Before</h3>
+                    <p class="text-lg text-secondary leading-relaxed">
+                        30 minutes searching. "Can you resend that?" emails. Panic when an employee leaves and takes the files with them.
+                    </p>
+                </div>
+                <div class="text-center md:text-right">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-secondary mb-4">After</h3>
+                    <p class="text-lg text-secondary leading-relaxed">
+                        Everything indexed and searchable. External partners get a link, not a waiting game. Files found in 2 seconds.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-serif-display section-headline text-center mb-16">Our Products</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product Card 1 -->
+                <div class="card rounded-xl p-8 flex flex-col">
+                    <h3 class="font-serif-display text-2xl mb-4">Your documents, finally findable.</h3>
+                    <ul class="space-y-3 text-secondary mb-8 flex-grow">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Instant search across all your documents</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Secure sharing with clients and partners</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>No more "where is that file?" questions</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="text-accent font-semibold hover:underline">Learn more →</a>
+                </div>
+                <!-- Product Card 2 -->
+                <div class="card rounded-xl p-8 flex flex-col">
+                    <h3 class="font-serif-display text-2xl mb-4">Knowledge base, self-updating.</h3>
+                    <ul class="space-y-3 text-secondary mb-8 flex-grow">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Automatically organizes your team's knowledge</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Always up-to-date for new hires</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Integrates with your existing tools</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="text-accent font-semibold hover:underline">Learn more →</a>
+                </div>
+                <!-- Product Card 3 -->
+                <div class="card rounded-xl p-8 flex flex-col">
+                    <h3 class="font-serif-display text-2xl mb-4">Client portal, always ready.</h3>
+                    <ul class="space-y-3 text-secondary mb-8 flex-grow">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Clients access files instantly, no waiting</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Branded with your company's identity</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-accent mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>No more emailing files back and forth</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="text-accent font-semibold hover:underline">Learn more →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="font-serif-display section-headline mb-16">How It Works</h2>
+            <div class="space-y-16">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center text-xl font-bold">1</div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-semibold mb-2">Copy-paste one command into your Terminal.</h3>
+                        <p class="text-secondary">That's the entire install.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center text-xl font-bold">2</div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-semibold mb-2">Open your browser.</h3>
+                        <p class="text-secondary">Everything is already there.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center text-xl font-bold">3</div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-semibold mb-2">Share access with your team and partners.</h3>
+                        <p class="text-secondary">Done.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16 p-6 rounded-xl bg-gray-900 shadow-lg">
+                <div class="command-snippet rounded-lg p-4 overflow-x-auto">
+                    <span class="command-prompt"></span>bash -c "$(curl -fsSL https://get.home.com/install.sh)"
+                </div>
+            </div>
+            <p class="mt-6 text-sm text-secondary">
+                No IT department needed. If you can copy-paste, you can run this.
+            </p>
+        </div>
+    </section>
+
+    <!-- Proof Section -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-serif-display section-headline text-center mb-16">Proof It Works</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial -->
+                <div class="testimonial-card rounded-xl p-6 shadow-md">
+                    <p class="text-secondary italic mb-4">
+                        "I'm not technical. I ran the command, it worked, and my team never asks me where files are anymore."
+                    </p>
+                    <p class="font-semibold">— Sarah K., Business Owner</p>
+                </div>
+                <!-- Demo Video -->
+                <div class="card rounded-xl p-6 shadow-md flex flex-col items-center justify-center">
+                    <svg class="w-12 h-12 text-accent mb-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                    <p class="font-semibold mb-2">60-second demo video</p>
+                    <p class="text-sm text-secondary text-center">Watch the full install — zero to searchable — in 60 seconds.</p>
+                </div>
+                <!-- Stat -->
+                <div class="card rounded-xl p-6 shadow-md flex flex-col items-center justify-center">
+                    <p class="text-5xl font-bold text-accent mb-2">2s</p>
+                    <p class="text-secondary">Documents found in under 2 seconds.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="py-16 md:py-24">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="rounded-xl border-2 border-dashed border-accent p-8 md:p-12">
+                <h2 class="font-serif-display text-2xl md:text-3xl mb-4">30-day money-back guarantee.</h2>
+                <p class="text-secondary max-w-2xl mx-auto">
+                    Install it. Put your real documents in it. If finding files isn't dramatically easier, email us for a full refund. No forms, no questions.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="py-20 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="font-serif-display hero-headline mb-6">
+                Your files are waiting.<br>
+                Stop searching for them.
+            </h2>
+            <a href="#" class="cta-button inline-block px-8 py-4 rounded-lg text-lg font-semibold shadow-md mb-6">
+                Start now — 30-day guarantee
+            </a>
+            <p class="text-sm text-secondary">
+                5-minute install. Browser-based after that. Stuck? We'll help.
+            </p>
+        </div>
+    </section>
+</body>
+</html>
